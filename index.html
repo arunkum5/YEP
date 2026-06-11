@@ -330,11 +330,11 @@
     border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   .leader-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 64px; align-items: center; }
-  .leader-photo-wrap { position: relative; }
-  .leader-photo-wrap img { width: 100%; border-radius: 6px; border: 2px solid var(--gold); display: block; }
+  .leader-photo-wrap { position: relative; width: 280px; height: 280px; max-width: 100%; }
+  .leader-photo-wrap img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--gold); display: block; object-fit: cover; object-position: center; }
   .leader-photo-wrap::after {
-    content: ''; position: absolute; bottom: -12px; right: -12px;
-    width: 100%; height: 100%; border: 2px solid var(--saffron); border-radius: 6px; z-index: -1;
+    content: ''; position: absolute; bottom: -10px; right: -10px;
+    width: 100%; height: 100%; border: 2px dashed var(--saffron); border-radius: 50%; z-index: -1;
   }
   .leader-info .role { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--saffron); margin-bottom: 10px; }
   .leader-info h2 { font-family: 'Rajdhani', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 8px; }
@@ -402,7 +402,7 @@
     .hero-image-wrap::before { width: 200px; height: 200px; }
     .pillars-grid { grid-template-columns: 1fr 1fr; }
     .leader-inner { grid-template-columns: 1fr; text-align: center; }
-    .leader-photo-wrap { width: 220px; margin: 0 auto; }
+    .leader-photo-wrap { width: 220px; height: 220px; margin: 0 auto; }
     .contact-chips { justify-content: center; }
     .stats-grid { grid-template-columns: repeat(2,1fr); }
     .footer-inner { grid-template-columns: 1fr 1fr; }
@@ -729,12 +729,12 @@
 <section class="leader-section" id="leader">
   <div class="leader-inner">
     <div class="leader-photo-wrap">
-      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="K N Jagadish Kumar">
+      <img src="leader_profile.jpg" alt="K N Jagadish Kumar">
     </div>
     <div class="leader-info">
       <div class="role">
-        <span class="en">Party Founder &amp; Leader</span>
-        <span class="kn">ಪಕ್ಷದ ಸ್ಥಾಪಕ ಮತ್ತು ನಾಯಕ</span>
+        <span class="en">⚖️ Party Founder &amp; Leader</span>
+        <span class="kn">⚖️ ಪಕ್ಷದ ಸ್ಥಾಪಕ ಮತ್ತು ನಾಯಕ</span>
       </div>
       <h2>K N Jagadish Kumar</h2>
       <div class="profession">
