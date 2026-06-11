@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join YEP for Change – membership Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --deep-saffron: #E05500;
+    --white: #FFFFFF;
+    --green: #138808;
+    --dark-green: #0A5C06;
+    --navy: #1A237E;
+    --gold: #F4C430;
+    --dark-gold: #C9A227;
+    --charcoal: #1C1C2E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 40px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 5px 14px; border-radius: 40px;
+    border: none; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+
+  /* lang-aware text */
+  body.lang-en  .kn { display: none !important; }
+  body.lang-kn  .en { display: none !important; }
+  .kn { font-family: 'Tiro Kannada', serif !important; }
+
+  /* ── HEADER / NAV ── */
+  header {
+    background: rgba(28,28,46,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--saffron);
+    padding: 12px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+  }
+  .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .header-logo img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--gold); }
+  .header-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .header-brand span { color: var(--gold); }
+
+  /* ── MAIN LAYOUT ── */
+  .container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 5%;
+    position: relative;
+  }
+  .container::before {
+    content: ''; position: absolute; top: 20%; left: 15%; width: 300px; height: 300px;
+    background: rgba(255, 107, 0, 0.08); filter: blur(100px); border-radius: 50%; pointer-events: none;
+  }
+  .container::after {
+    content: ''; position: absolute; bottom: 20%; right: 15%; width: 300px; height: 300px;
+    background: rgba(19, 136, 8, 0.06); filter: blur(100px); border-radius: 50%; pointer-events: none;
+  }
+
+  /* ── REGISTRATION CARD ── */
+  .form-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 4px solid var(--saffron);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 620px;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Progress Bar */
+  .progress-container {
+    margin-bottom: 35px;
+    position: relative;
+  }
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    position: relative;
+    margin-bottom: 25px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 33.3%;
+    background: linear-gradient(90deg, var(--saffron), var(--gold));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .steps-indicator {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: -8px;
+    width: 100%;
+  }
+  .step-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--charcoal);
+    border: 2px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .step-dot.active {
+    border-color: var(--saffron);
+    background: var(--saffron);
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 107, 0, 0.6);
+  }
+  .step-dot.completed {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+
+  .form-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--white), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .form-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  /* ── STEPS CONTENT ── */
+  .form-step {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .form-step.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .form-group label {
+    display: block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 8px;
+  }
+  .form-group label span.required {
+    color: var(--saffron);
+    margin-left: 4px;
+  }
+  .form-control {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s;
+  }
+  .form-control:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 8px rgba(244, 196, 48, 0.25);
+  }
+  .form-control::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+  select.form-control {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+  select.form-control option {
+    background: var(--charcoal);
+    color: white;
+  }
+
+  /* Feedback Validation Msg */
+  .feedback-msg {
+    font-size: 0.8rem;
+    margin-top: 6px;
+    display: none;
+  }
+  .feedback-msg.error {
+    color: #FF5252;
+    display: block;
+  }
+  .feedback-msg.success {
+    color: #4CAF50;
+    display: block;
+  }
+  .form-group.has-error .form-control {
+    border-color: #FF5252;
+  }
+  .form-group.has-success .form-control {
+    border-color: #4CAF50;
+  }
+
+  /* ── PHOTO UPLOAD & CAMERA ── */
+  .photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .photo-preview-box {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    background: rgba(0,0,0,0.2);
+  }
+  .photo-preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.78rem;
+    text-align: center;
+  }
+  .photo-placeholder span.icon {
+    font-size: 2rem;
+  }
+  .photo-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .photo-btn {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .photo-btn.primary {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+  }
+  .photo-btn.primary:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  .photo-btn.accent {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+  .photo-btn.accent:hover {
+    background: var(--dark-gold);
+  }
+
+  /* Camera Container */
+  .camera-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 16px;
+    margin-top: 15px;
+    position: relative;
+  }
+  .camera-stream {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 4/3;
+    background: #000;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  .camera-controls {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+  }
+
+  /* ── NAVIGATION BUTTONS ── */
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 35px;
+    gap: 16px;
+  }
+  .btn-nav {
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .btn-nav.back {
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .btn-nav.back:hover {
+    color: white;
+    border-color: white;
+    background: rgba(255,255,255,0.05);
+  }
+  .btn-nav.next {
+    background: var(--saffron);
+    color: white;
+    margin-left: auto;
+  }
+  .btn-nav.next:hover {
+    background: var(--deep-saffron);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+  }
+  .btn-nav.submit {
+    background: var(--gold);
+    color: var(--charcoal);
+    margin-left: auto;
+  }
+  .btn-nav.submit:hover {
+    background: var(--dark-gold);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.4);
+  }
+
+  /* ── MODAL MEMBERSHIP CARD ── */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(8, 8, 16, 0.85);
+    backdrop-filter: blur(15px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeInModal 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  @keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Membership Card mockup style */
+  .membership-card {
+    background: linear-gradient(135deg, rgba(28,28,46,0.95), rgba(10,10,16,0.98));
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244,196,48,0.15);
+    overflow: hidden;
+  }
+  /* Tri-color stripe on card edge */
+  .membership-card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+    background: linear-gradient(to bottom, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    padding-left: 10px;
+  }
+  .card-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-logo img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+  }
+  .card-title-wrap {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .card-title-main {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .card-title-sub {
+    font-size: 0.65rem;
+    color: var(--gold);
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.5px;
+  }
+  .card-badge {
+    background: rgba(244,196,48,0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .card-body {
+    display: flex;
+    gap: 18px;
+    padding-left: 10px;
+  }
+  .card-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.15);
+    overflow: hidden;
+    background: rgba(0,0,0,0.3);
+  }
+  .card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+  .card-field {
+    margin-bottom: 6px;
+  }
+  .card-field.name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+  .card-label {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-val {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+  }
+  .card-id-highlight {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  .card-footer {
+    margin-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+  }
+  .card-seal {
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.3;
+  }
+  .card-seal span {
+    color: var(--saffron);
+    font-weight: 600;
+  }
+
+  .modal-actions {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    align-items: center;
+  }
+  .modal-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .modal-btn.share {
+    background: #25D366;
+    color: white;
+  }
+  .modal-btn.share:hover {
+    background: #128C7E;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  }
+  .modal-btn.home {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .modal-btn.home:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: #0C0C14;
+    position: relative;
+    z-index: 10;
+  }
+  footer span.yep {
+    color: var(--saffron);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body class="lang-en">
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="header-logo">
+    <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="YEP Logo">
+    <div class="header-brand">
+      <span class="en">YoungSTAR <span>PARTY</span></span>
+      <span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ <span>ಪಕ್ಷ</span></span>
+    </div>
+  </a>
+  <!-- LANGUAGE TOGGLE -->
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-kn" onclick="setLang('kn')">ಕನ್ನಡ</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="form-card">
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="steps-indicator">
+        <div class="step-dot active" id="dot-1">1</div>
+        <div class="step-dot" id="dot-2">2</div>
+        <div class="step-dot" id="dot-3">3</div>
+      </div>
+    </div>
+
+    <h1 class="form-title">
+      <span class="en">Join the Movement</span>
+      <span class="kn">ಬದಲಾವಣೆಗಾಗಿ ಜೊತೆಯಾಗಿ</span>
+    </h1>
+    <p class="form-subtitle">
+      <span class="en">Complete the membership form to become a registered voice of change.</span>
+      <span class="kn">ನೋಂದಾಯಿತ ಬದಲಾವಣೆಯ ಧ್ವನಿಯಾಗಲು ಸದಸ್ಯತ್ವ ಅರ್ಜಿಯನ್ನು ಭರ್ತಿ ಮಾಡಿ.</span>
+    </p>
+
+    <form id="membership-form" onsubmit="event.preventDefault();">
+      <!-- STEP 1: IDENTITY -->
+      <div class="form-step active" id="step-1">
+        <div class="form-group" id="group-name">
+          <label for="reg-name">
+            <span class="en">Full Name</span>
+            <span class="kn">ಪೂರ್ಣ ಹೆಸರು</span>
+            <span class="required">*</span>
+          </label>
+          <input type="text" id="reg-name" class="form-control" placeholder="Enter your full name" required>
+          <span class="feedback-msg error" id="error-name">
+            <span class="en">Please enter your name.</span>
+            <span class="kn">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.</span>
+          </span>
+        </div>
+
+        <div class="form-group" id="group-phone">
+          <label for="reg-phone">
+            <span class="en">Mobile Number</span>
+            <span class="kn">ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</span>
+            <span class="required">*</span>
+          </label>
+          <input type="tel" id="reg-phone" class="form-control" maxlength="10" placeholder="10-digit mobile number" required>
+          <span class="feedback-msg error" id="error-phone">
+            <span class="en">Enter a valid 10-digit number starting with 6-9.</span>
+            <span class="kn">6-9 ರಿಂದ ಆರಂಭವಾಗುವ ಮಾನ್ಯವಾದ 10-ಅಂಕಿಯ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.</span>
+          </span>
+        </div>
+
+        <div class="form-group" id="group-aadhaar">
+          <label for="reg-aadhaar">
+            <span class="en">Aadhaar Number</span>
+            <span class="kn">ಆಧಾರ್ ಸಂಖ್ಯೆ</span>
+            <span class="required">*</span>
+          </label>
+          <input type="text" id="reg-aadhaar" class="form-control" maxlength="14" placeholder="12-digit Aadhaar number" required>
+          <span class="feedback-msg error" id="error-aadhaar">
+            <span class="en">Please enter a valid 12-digit Aadhaar number.</span>
+            <span class="kn">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ 12-ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.</span>
+          </span>
+        </div>
+
+        <div class="form-group" id="group-qualification">
+          <label for="reg-qualification">
+            <span class="en">Educational Qualification</span>
+            <span class="kn">ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ</span>
+            <span class="required">*</span>
+          </label>
+          <select id="reg-qualification" class="form-control" required>
+            <option value="" disabled selected class="en">Select Qualification</option>
+            <option value="" disabled selected class="kn">ಅರ್ಹತೆ ಆಯ್ಕೆಮಾಡಿ</option>
+            
+            <option value="Primary Education" class="en">Primary School</option>
+            <option value="Primary Education" class="kn">ಪ್ರಾಥಮಿಕ ಶಿಕ್ಷಣ</option>
+            
+            <option value="SSLC" class="en">High School (SSLC)</option>
+            <option value="SSLC" class="kn">ಪ್ರೌಢ ಶಿಕ್ಷಣ (SSLC)</option>
+            
+            <option value="PUC" class="en">Pre-University (PUC)</option>
+            <option value="PUC" class="kn">ಪದವಿ ಪೂರ್ವ (PUC)</option>
+            
+            <option value="Graduate" class="en">Graduate Degree</option>
+            <option value="Graduate" class="kn">ಪದವೀಧರ</option>
+            
+            <option value="Post Graduate" class="en">Post Graduate</option>
+            <option value="Post Graduate" class="kn">ಸ್ನಾತಕೋತ್ತರ ಪದವಿ</option>
+            
+            <option value="Professional" class="en">Professional Degree</option>
+            <option value="Professional" class="kn">ವೃತ್ತಿಪರ ಪದವಿ</option>
+            
+            <option value="Others" class="en">Others</option>
+            <option value="Others" class="kn">ಇತರರು</option>
+          </select>
+          <span class="feedback-msg error" id="error-qualification">
+            <span class="en">Please select your qualification.</span>
+            <span class="kn">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- STEP 2: LOCATION -->
+      <div class="form-step" id="step-2">
+        <div class="form-group">
+          <label for="reg-state">
+            <span class="en">State</span>
+            <span class="kn">ರಾಜ್ಯ</span>
+            <span class="required">*</span>
+          </label>
+          <select id="reg-state" class="form-control" onchange="handleStateChange()" required>
+            <option value="Karnataka" selected>Karnataka</option>
+            <option value="Other">Other State</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-district">
+          <label for="reg-district">
+            <span class="en">District</span>
+            <span class="kn">ಜಿಲ್ಲೆ</span>
+            <span class="required">*</span>
+          </label>
+          <select id="reg-district" class="form-control" onchange="handleDistrictChange()" required>
+            <option value="" disabled selected class="en">Select District</option>
+            <option value="" disabled selected class="kn">ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</option>
+          </select>
+          <input type="text" id="reg-district-text" class="form-control" style="display:none;" placeholder="Enter your district">
+          <span class="feedback-msg error" id="error-district">
+            <span class="en">Please select or enter your district.</span>
+            <span class="kn">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ನಮೂದಿಸಿ.</span>
+          </span>
+        </div>
+
+        <div class="form-group" id="group-taluk">
+          <label for="reg-taluk">
+            <span class="en">Taluk</span>
+            <span class="kn">ತಾಲ್ಲೂಕು</span>
+            <span class="required">*</span>
+          </label>
+          <select id="reg-taluk" class="form-control" required>
+            <option value="" disabled selected class="en">Select Taluk</option>
+            <option value="" disabled selected class="kn">ತಾಲ್ಲೂಕನ್ನು ಆಯ್ಕೆಮಾಡಿ</option>
+          </select>
+          <input type="text" id="reg-taluk-text" class="form-control" style="display:none;" placeholder="Enter your taluk">
+          <span class="feedback-msg error" id="error-taluk">
+            <span class="en">Please select or enter your taluk.</span>
+            <span class="kn">ದಯವಿಟ್ಟು ನಿಮ್ಮ ತಾಲ್ಲೂಕನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ನಮೂದಿಸಿ.</span>
+          </span>
+        </div>
+
+        <div class="form-group" id="group-village">
+          <label for="reg-village">
+            <span class="en">Village / City Area</span>
+            <span class="kn">ಹಳ್ಳಿ / ನಗರ ಪ್ರದೇಶ</span>
+            <span class="required">*</span>
+          </label>
+          <input type="text" id="reg-village" class="form-control" placeholder="Enter your village or city area name" required>
+          <span class="feedback-msg error" id="error-village">
+            <span class="en">Please enter your village or city area name.</span>
+            <span class="kn">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹಳ್ಳಿ ಅಥವಾ ನಗರ ಪ್ರದೇಶದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- STEP 3: PHOTO -->
+      <div class="form-step" id="step-3">
+        <div class="form-group" id="group-photo" style="margin-bottom: 10px;">
+          <label style="text-align: center; display: block; font-size: 1.1rem; color: var(--gold);">
+            <span class="en">Profile Photo Registration</span>
+            <span class="kn">ಪ್ರೊಫೈಲ್ ಫೋಟೋ ನೋಂದಣಿ</span>
+            <span class="required">*</span>
+          </label>
+          
+          <div class="photo-section">
+            <div class="photo-preview-box" id="photo-preview-container">
+              <div class="photo-placeholder" id="preview-placeholder">
+                <span class="icon">👤</span>
+                <span class="en">Preview<br>appears here</span>
+                <span class="kn">ಮುನ್ನೋಟ ಇಲ್ಲಿದೆ</span>
+              </div>
+              <img id="img-preview" src="" style="display: none;" alt="Avatar Preview">
+            </div>
+
+            <div class="photo-actions">
+              <!-- Capture via webcam -->
+              <button type="button" class="photo-btn primary" onclick="openCamera()">
+                📷 <span class="en">Take Photo</span><span class="kn">ಫೋಟೋ ತೆಗೆಯಿರಿ</span>
+              </button>
+              <!-- Upload via file browser -->
+              <button type="button" class="photo-btn accent" onclick="triggerFileInput()">
+                📁 <span class="en">Upload Image</span><span class="kn">ಗ್ಯಾಲರಿಯಿಂದ ಅಪ್ಲೋಡ್</span>
+              </button>
+              <input type="file" id="file-input" accept="image/*" onchange="handleFileInput(event)" style="display: none;">
+            </div>
+
+            <!-- Webcam Streaming Container -->
+            <div class="camera-container" id="camera-wrap">
+              <video id="video-stream" class="camera-stream" autoplay playsinline></video>
+              <div class="camera-controls">
+                <button type="button" class="photo-btn primary" onclick="captureSnapshot()" style="background:#4CAF50;border-color:#4CAF50;color:white;">
+                  📸 <span class="en">Capture</span><span class="kn">ಕ್ಲಿಕ್ ಮಾಡಿ</span>
+                </button>
+                <button type="button" class="photo-btn back" onclick="closeCamera()" style="background:#FF5252;color:white;border:none;">
+                  ✕ <span class="en">Cancel</span><span class="kn">ರದ್ದುಮಾಡಿ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <span class="feedback-msg error" id="error-photo" style="text-align: center;">
+            <span class="en">Please provide a profile photo (either capture or upload).</span>
+            <span class="kn">ದಯವಿಟ್ಟು ಫೋಟೋ ಒದಗಿಸಿ (ತೆಗೆಯಿರಿ ಅಥವಾ ಅಪ್ಲೋಡ್ ಮಾಡಿ).</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- NAV CONTROLS -->
+      <div class="nav-buttons">
+        <button type="button" class="btn-nav back" id="btn-back" onclick="navigateStep(-1)" style="display: none;">
+          ← <span class="en">Back</span><span class="kn">ಹಿಂದಕ್ಕೆ</span>
+        </button>
+        
+        <button type="button" class="btn-nav next" id="btn-next" onclick="navigateStep(1)">
+          <span class="en">Continue</span><span class="kn">ಮುಂದುವರಿಯಿರಿ</span> →
+        </button>
+
+        <button type="button" class="btn-nav submit" id="btn-submit" onclick="submitForm()" style="display: none;">
+          ✊ <span class="en">Submit Membership</span><span class="kn">ಸದಸ್ಯತ್ವ ಸಲ್ಲಿಸಿ</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SUCCESS CARD MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="membership-card" id="membership-id-card">
+    <div class="card-header">
+      <div class="card-logo">
+        <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="YEP logo">
+        <div class="card-title-wrap">
+          <span class="card-title-main">YoungSTAR PARTY</span>
+          <span class="card-title-sub">YEP KARNATAKA</span>
+        </div>
+      </div>
+      <div class="card-badge">MEMBER</div>
+    </div>
+
+    <div class="card-body">
+      <div class="card-avatar">
+        <img id="card-photo" src="" alt="Member Photo">
+      </div>
+      <div class="card-info">
+        <div class="card-field name" id="card-name-val">Loading Name</div>
+        
+        <div class="card-field">
+          <div class="card-label">Member ID</div>
+          <div class="card-val card-id-highlight" id="card-id-val">YEP-KA-2026-10492</div>
+        </div>
+
+        <div class="card-field">
+          <div class="card-label">District &amp; Taluk</div>
+          <div class="card-val" id="card-location-val">Bengaluru · South</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="card-seal">
+        YoungSTAR Empowerment Party<br>
+        <span>Youth Power – Our Strength – Our Future</span>
+      </div>
+      <div class="card-badge" style="background:rgba(19, 136, 8, 0.1);border-color:var(--green);color:var(--green)">VERIFIED</div>
+    </div>
+  </div>
+
+  <div class="modal-actions">
+    <!-- WhatsApp Share link -->
+    <a href="#" id="whatsapp-share-link" target="_blank" class="modal-btn share">
+      ✊ <span class="en">Share on WhatsApp</span><span class="kn">ವಾಟ್ಸ್ಆ್ಯಪ್‌ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ</span>
+    </a>
+    <a href="index.html" class="modal-btn home">
+      🏠 <span class="en">Return to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 <span class="yep">YoungSTAR</span> Empowerment Party · ECI Registered · All Rights Reserved
+</footer>
+
+<script>
+  /* ── KARNATAKA DISTRICTS & TALUKS DATA ── */
+  const districtTalukData = {
+    "Bagalkote": ["Bagalkote", "Badami", "Bilagi", "Hunagunda", "Jamkhandi", "Mudhola", "Ilkal", "Rabkavi Banhatti", "Guledgudda"],
+    "Ballari": ["Ballari", "Kurugodu", "Kampli", "Sanduru", "Siraguppa"],
+    "Belagavi": ["Belagavi", "Athani", "Bailhongal", "Chikkodi", "Gokak", "Hukkeri", "Khanapur", "Ramdurg", "Raybag", "Saudatti", "Kittur", "Nippani", "Kagwad", "Mudalgi"],
+    "Bengaluru Rural": ["Devanahalli", "Doddaballapura", "Hosakote", "Nelamangala"],
+    "Bengaluru Urban": ["Bengaluru North", "Bengaluru South", "Bengaluru East", "Yelahanka", "Anekal"],
+    "Bidar": ["Bidar", "Bhalki", "Humnabad", "Aurad", "Basavakalyan", "Chitgoppa", "Hulsoor", "Kamalnagar"],
+    "Chamarajanagar": ["Chamarajanagar", "Gundlupet", "Kollegal", "Yelandur", "Hanur"],
+    "Chikballapur": ["Chikballapur", "Bagepalli", "Chintamani", "Gauribidanur", "Sidlaghatta", "Gudibanda"],
+    "Chikkamagaluru": ["Chikkamagaluru", "Kadur", "Koppa", "Mudigere", "Narasimharajapura", "Sringeri", "Tarikere", "Ajjampura"],
+    "Chitradurga": ["Chitradurga", "Challakere", "Hiriyur", "Holalkere", "Hosadurga", "Molakalmuru"],
+    "Dakshina Kannada": ["Mangaluru", "Bantwal", "Puttur", "Sullia", "Belthangady", "Moodabidri", "Kadaba"],
+    "Davanagere": ["Davanagere", "Harihar", "Channagiri", "Honnali", "Jagalur", "Nyamathi"],
+    "Dharwad": ["Dharwad", "Hubballi (Rural)", "Hubballi (Urban)", "Kundgol", "Navalgund", "Kalghatgi", "Alnavar", "Annigeri"],
+    "Gadag": ["Gadag", "Ron", "Shirahatti", "Nargund", "Mundargi", "Gajendragad", "Lakshmeshwar"],
+    "Hassan": ["Hassan", "Alur", "Belur", "Channarayapatna", "Holenarasipura", "Sakleshpur", "Arkalgud", "Arsikere"],
+    "Haveri": ["Haveri", "Byadgi", "Hangal", "Hirekerur", "Ranibennur", "Savanur", "Shiggaon", "Rattihalli"],
+    "Kalaburagi": ["Kalaburagi", "Aland", "Afzalpur", "Chincholi", "Chitapur", "Sedam", "Jewargi", "Kamalapur", "Kalagi", "Shahabad", "Yedrami"],
+    "Kodagu": ["Madikeri", "Somwarpet", "Virajpet"],
+    "Kolar": ["Kolar", "Bangarapet", "Malur", "Mulbagal", "Srinivaspur", "Kolar Gold Fields (KGF)"],
+    "Koppal": ["Koppal", "Gangavathi", "Kushtagi", "Yelburga", "Kanakagiri", "Karatagi", "Kuknoor"],
+    "Mandya": ["Mandya", "Maddur", "Malavalli", "Srirangapatna", "Pandavapura", "Krishnarajapet", "Nagamangala"],
+    "Mysuru": ["Mysuru", "Hunsur", "Krishnarajanagara", "Nanjangud", "Heggadadevanakote", "T. Narasipura", "Periyapatna", "Saragur", "Saligrama"],
+    "Raichur": ["Raichur", "Devadurga", "Lingsugur", "Manvi", "Sindhanur", "Maski", "Sirwar"],
+    "Ramanagara": ["Ramanagara", "Channapatna", "Kanakapura", "Magadi"],
+    "Shivamogga": ["Shivamogga", "Bhadravathi", "Hosanagara", "Sagar", "Shikaripura", "Soraba", "Thirthahalli"],
+    "Tumakuru": ["Tumakuru", "Chiknayakanhalli", "Gubbi", "Koratagere", "Kunigal", "Madhugiri", "Pavagada", "Sira", "Tiptur", "Turuvekere"],
+    "Udupi": ["Udupi", "Karkala", "Kundapura", "Byndoor", "Brahmavar", "Kaup", "Hebri"],
+    "Uttara Kannada": ["Karwar", "Ankola", "Bhatkal", "Honnavar", "Kumta", "Sirsi", "Siddapur", "Yellapur", "Mundgod", "Haliyal", "Joida", "Dandeli"],
+    "Vijayapura": ["Vijayapura", "Indi", "Sindgi", "Babaleshwar", "Basavana Bagewadi", "Chadchan", "Devar Hippargi", "Kolhar", "Muddebihal", "Nidgundi", "Talikoti", "Tikota"],
+    "Yadgir": ["Yadgir", "Shahapur", "Shorapur", "Gurmitkal", "Hunasagi", "Wadgera"],
+    "Vijayanagara": ["Hospet", "Hagaribommanahalli", "Harapanahalli", "Hoovina Hadagali", "Kottur", "Kudligi"]
+  };
+
+  /* ── INITIAL STATE CONFIGURATION ── */
+  let currentStep = 1;
+  const totalSteps = 3;
+  let localVideoStream = null;
+  let capturedPhotoData = null;
+
+  // Populate districts on startup
+  window.addEventListener('DOMContentLoaded', () => {
+    populateDistricts();
+    setupAadhaarFormatting();
+    setupPhoneValidation();
+    // Auto-detect language from active classes if needed
+    const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+    setLang(activeLang);
+  });
+
+  /* ── LANGUAGE CONTROLS ── */
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-kn').classList.toggle('active', lang === 'kn');
+    
+    // Toggle selector options visibility/disability depending on active class
+    const selects = document.querySelectorAll('select.form-control');
+    selects.forEach(select => {
+      Array.from(select.options).forEach(opt => {
+        if (opt.classList.contains('en') && lang === 'kn') opt.disabled = true;
+        else if (opt.classList.contains('kn') && lang === 'en') opt.disabled = true;
+        else opt.disabled = false;
+      });
+    });
+  }
+
+  /* ── DYNAMIC DISTRICT/TALUK SELECTORS ── */
+  function populateDistricts() {
+    const districtSelect = document.getElementById('reg-district');
+    // Clear existings except first placeholder
+    districtSelect.innerHTML = '';
+    
+    const enPlaceholder = document.createElement('option');
+    enPlaceholder.value = '';
+    enPlaceholder.className = 'en';
+    enPlaceholder.textContent = 'Select District';
+    enPlaceholder.disabled = true;
+    enPlaceholder.selected = true;
+    
+    const knPlaceholder = document.createElement('option');
+    knPlaceholder.value = '';
+    knPlaceholder.className = 'kn';
+    knPlaceholder.textContent = 'ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+    knPlaceholder.disabled = true;
+    knPlaceholder.selected = true;
+
+    districtSelect.appendChild(enPlaceholder);
+    districtSelect.appendChild(knPlaceholder);
+
+    const sortedDistricts = Object.keys(districtTalukData).sort();
+    sortedDistricts.forEach(dist => {
+      const opt = document.createElement('option');
+      opt.value = dist;
+      opt.textContent = dist;
+      districtSelect.appendChild(opt);
+    });
+  }
+
+  function handleStateChange() {
+    const stateVal = document.getElementById('reg-state').value;
+    const districtSelect = document.getElementById('reg-district');
+    const districtText = document.getElementById('reg-district-text');
+    const talukSelect = document.getElementById('reg-taluk');
+    const talukText = document.getElementById('reg-taluk-text');
+
+    if (stateVal === 'Karnataka') {
+      districtSelect.style.display = 'block';
+      districtSelect.required = true;
+      districtText.style.display = 'none';
+      districtText.required = false;
+      
+      talukSelect.style.display = 'block';
+      talukSelect.required = true;
+      talukText.style.display = 'none';
+      talukText.required = false;
+
+      populateDistricts();
+    } else {
+      districtSelect.style.display = 'none';
+      districtSelect.required = false;
+      districtText.style.display = 'block';
+      districtText.required = true;
+
+      talukSelect.style.display = 'none';
+      talukSelect.required = false;
+      talukText.style.display = 'block';
+      talukText.required = true;
+    }
+  }
+
+  function handleDistrictChange() {
+    const districtSelect = document.getElementById('reg-district');
+    const talukSelect = document.getElementById('reg-taluk');
+    const selectedDistrict = districtSelect.value;
+
+    talukSelect.innerHTML = '';
+    
+    const enPlaceholder = document.createElement('option');
+    enPlaceholder.value = '';
+    enPlaceholder.className = 'en';
+    enPlaceholder.textContent = 'Select Taluk';
+    enPlaceholder.disabled = true;
+    enPlaceholder.selected = true;
+    
+    const knPlaceholder = document.createElement('option');
+    knPlaceholder.value = '';
+    knPlaceholder.className = 'kn';
+    knPlaceholder.textContent = 'ತಾಲ್ಲೂಕನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+    knPlaceholder.disabled = true;
+    knPlaceholder.selected = true;
+
+    talukSelect.appendChild(enPlaceholder);
+    talukSelect.appendChild(knPlaceholder);
+
+    // Filter selector based on lang active
+    const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+    setLang(activeLang);
+
+    if (districtTalukData[selectedDistrict]) {
+      const sortedTaluks = districtTalukData[selectedDistrict].sort();
+      sortedTaluks.forEach(taluk => {
+        const opt = document.createElement('option');
+        opt.value = taluk;
+        opt.textContent = taluk;
+        talukSelect.appendChild(opt);
+      });
+    }
+  }
+
+  /* ── INPUT VALIDATION & FORMATTING ── */
+  function setupAadhaarFormatting() {
+    const aadhaarInput = document.getElementById('reg-aadhaar');
+    aadhaarInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, ''); // Digits only
+      // Group by 4 digits
+      let formatted = '';
+      for (let i = 0; i < value.length && i < 12; i++) {
+        if (i > 0 && i % 4 === 0) {
+          formatted += ' ';
+        }
+        formatted += value[i];
+      }
+      e.target.value = formatted;
+      validateAadhaarField(formatted);
+    });
+  }
+
+  function validateAadhaarField(val) {
+    const regex = /^\d{4}\s\d{4}\s\d{4}$/;
+    const isValid = regex.test(val);
+    toggleValidationUI('aadhaar', isValid);
+    return isValid;
+  }
+
+  function setupPhoneValidation() {
+    const phoneInput = document.getElementById('reg-phone');
+    phoneInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, ''); // Digits only
+      if (value.length > 10) value = value.substring(0, 10);
+      e.target.value = value;
+      validatePhoneField(value);
+    });
+  }
+
+  function validatePhoneField(val) {
+    const regex = /^[6-9]\d{9}$/;
+    const isValid = regex.test(val);
+    toggleValidationUI('phone', isValid);
+    return isValid;
+  }
+
+  function toggleValidationUI(fieldId, isValid) {
+    const group = document.getElementById('group-' + fieldId);
+    const errorEl = document.getElementById('error-' + fieldId);
+    if (!group) return;
+
+    if (isValid) {
+      group.classList.remove('has-error');
+      group.classList.add('has-success');
+      if (errorEl) errorEl.style.display = 'none';
+    } else {
+      group.classList.add('has-error');
+      group.classList.remove('has-success');
+    }
+  }
+
+  /* ── NAVIGATION WIZARD ── */
+  function navigateStep(direction) {
+    if (direction === 1 && !validateCurrentStep()) {
+      return; // Stop if step is invalid
+    }
+
+    currentStep += direction;
+    if (currentStep < 1) currentStep = 1;
+    if (currentStep > totalSteps) currentStep = totalSteps;
+
+    // Update steps active view
+    for (let s = 1; s <= totalSteps; s++) {
+      const stepDiv = document.getElementById('step-' + s);
+      const dot = document.getElementById('dot-' + s);
+      
+      if (s === currentStep) {
+        stepDiv.classList.add('active');
+        dot.classList.add('active');
+        dot.classList.remove('completed');
+      } else {
+        stepDiv.classList.remove('active');
+        dot.classList.remove('active');
+        if (s < currentStep) {
+          dot.classList.add('completed');
+        } else {
+          dot.classList.remove('completed');
+        }
+      }
+    }
+
+    // Update progress bar fill width
+    const fillPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    document.getElementById('progress-fill').style.width = fillPercent + '%';
+
+    // Toggle navigation button elements
+    document.getElementById('btn-back').style.display = currentStep > 1 ? 'flex' : 'none';
+    document.getElementById('btn-next').style.display = currentStep < totalSteps ? 'flex' : 'none';
+    document.getElementById('btn-submit').style.display = currentStep === totalSteps ? 'flex' : 'none';
+
+    // Stop camera if navigating away from Step 3
+    if (currentStep !== 3) {
+      closeCamera();
+    }
+  }
+
+  function validateCurrentStep() {
+    let isValid = true;
+
+    if (currentStep === 1) {
+      // Name validation
+      const nameVal = document.getElementById('reg-name').value.trim();
+      const isNameOk = nameVal.length > 0;
+      toggleValidationUI('name', isNameOk);
+      if (!isNameOk) {
+        document.getElementById('error-name').style.display = 'block';
+        isValid = false;
+      }
+
+      // Phone validation
+      const phoneVal = document.getElementById('reg-phone').value;
+      const isPhoneOk = validatePhoneField(phoneVal);
+      if (!isPhoneOk) {
+        document.getElementById('error-phone').style.display = 'block';
+        isValid = false;
+      }
+
+      // Aadhaar validation
+      const aadhaarVal = document.getElementById('reg-aadhaar').value;
+      const isAadhaarOk = validateAadhaarField(aadhaarVal);
+      if (!isAadhaarOk) {
+        document.getElementById('error-aadhaar').style.display = 'block';
+        isValid = false;
+      }
+
+      // Qualification validation
+      const qualVal = document.getElementById('reg-qualification').value;
+      const isQualOk = qualVal !== "";
+      toggleValidationUI('qualification', isQualOk);
+      if (!isQualOk) {
+        document.getElementById('error-qualification').style.display = 'block';
+        isValid = false;
+      }
+    } 
+    else if (currentStep === 2) {
+      const stateVal = document.getElementById('reg-state').value;
+      
+      if (stateVal === 'Karnataka') {
+        const distVal = document.getElementById('reg-district').value;
+        const isDistOk = distVal !== "";
+        toggleValidationUI('district', isDistOk);
+        if (!isDistOk) {
+          document.getElementById('error-district').style.display = 'block';
+          isValid = false;
+        }
+
+        const talukVal = document.getElementById('reg-taluk').value;
+        const isTalukOk = talukVal !== "";
+        toggleValidationUI('taluk', isTalukOk);
+        if (!isTalukOk) {
+          document.getElementById('error-taluk').style.display = 'block';
+          isValid = false;
+        }
+      } else {
+        const distTextVal = document.getElementById('reg-district-text').value.trim();
+        const isDistOk = distTextVal.length > 0;
+        toggleValidationUI('district', isDistOk);
+        if (!isDistOk) {
+          document.getElementById('error-district').style.display = 'block';
+          isValid = false;
+        }
+
+        const talukTextVal = document.getElementById('reg-taluk-text').value.trim();
+        const isTalukOk = talukTextVal.length > 0;
+        toggleValidationUI('taluk', isTalukOk);
+        if (!isTalukOk) {
+          document.getElementById('error-taluk').style.display = 'block';
+          isValid = false;
+        }
+      }
+
+      // Village validation
+      const villageVal = document.getElementById('reg-village').value.trim();
+      const isVillageOk = villageVal.length > 0;
+      toggleValidationUI('village', isVillageOk);
+      if (!isVillageOk) {
+        document.getElementById('error-village').style.display = 'block';
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  /* ── CAMERA / IMAGE CAPTURE API ── */
+  function triggerFileInput() {
+    closeCamera();
+    document.getElementById('file-input').click();
+  }
+
+  function handleFileInput(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      capturedPhotoData = event.target.result;
+      updatePhotoPreview(capturedPhotoData);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function openCamera() {
+    const cameraWrap = document.getElementById('camera-wrap');
+    const video = document.getElementById('video-stream');
+    cameraWrap.style.display = 'flex';
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+        .then(stream => {
+          localVideoStream = stream;
+          video.srcObject = stream;
+        })
+        .catch(err => {
+          console.error("Camera access error: ", err);
+          alert("Unable to access camera. Please select the Upload Image option instead.");
+          closeCamera();
+        });
+    } else {
+      alert("Camera API is not supported in this browser. Please use the Upload Image option.");
+      closeCamera();
+    }
+  }
+
+  function closeCamera() {
+    const cameraWrap = document.getElementById('camera-wrap');
+    cameraWrap.style.display = 'none';
+
+    if (localVideoStream) {
+      localVideoStream.getTracks().forEach(track => track.stop());
+      localVideoStream = null;
+    }
+  }
+
+  function captureSnapshot() {
+    const video = document.getElementById('video-stream');
+    if (!localVideoStream) return;
+
+    // Create virtual canvas to draw frame
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    
+    // Draw mirrored if using front camera usually, but standard draw is fine
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Save image dataurl
+    capturedPhotoData = canvas.toDataURL('image/jpeg');
+    updatePhotoPreview(capturedPhotoData);
+    
+    closeCamera();
+  }
+
+  function updatePhotoPreview(dataUrl) {
+    const placeholder = document.getElementById('preview-placeholder');
+    const img = document.getElementById('img-preview');
+    const group = document.getElementById('group-photo');
+
+    img.src = dataUrl;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+    group.classList.remove('has-error');
+    group.classList.add('has-success');
+    document.getElementById('error-photo').style.display = 'none';
+  }
+
+  /* ── FORM SUBMISSION & SUCCESS MODAL ── */
+  function submitForm() {
+    // Validate photo
+    if (!capturedPhotoData) {
+      const group = document.getElementById('group-photo');
+      group.classList.add('has-error');
+      document.getElementById('error-photo').style.display = 'block';
+      return;
+    }
+
+    // Capture values
+    const name = document.getElementById('reg-name').value;
+    const stateVal = document.getElementById('reg-state').value;
+    let district = "";
+    let taluk = "";
+
+    if (stateVal === 'Karnataka') {
+      district = document.getElementById('reg-district').value;
+      taluk = document.getElementById('reg-taluk').value;
+    } else {
+      district = document.getElementById('reg-district-text').value;
+      taluk = document.getElementById('reg-taluk-text').value;
+    }
+
+    // Generate random YEP Member ID
+    const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
+    const statePrefix = stateVal === 'Karnataka' ? 'KA' : 'IN';
+    const yepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
+
+    // Populate membership card data
+    document.getElementById('card-photo').src = capturedPhotoData;
+    document.getElementById('card-name-val').textContent = name;
+    document.getElementById('card-id-val').textContent = yepId;
+    document.getElementById('card-location-val').textContent = `${district} · ${taluk}`;
+
+    // Create dynamic WhatsApp share link
+    const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+    let shareText = "";
+    if (activeLang === 'kn') {
+      shareText = `ನಾನು ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ (YEP) ಬದಲಾವಣೆಯ ಸದಸ್ಯನಾಗಿದ್ದೇನೆ! ನನ್ನ ಸದಸ್ಯತ್ವ ಐಡಿ: ${yepId}. ನೀವೂ ಇಂದೇ ಸೇರಿ ಬದಲಾವಣೆ ತನ್ನಿ: https://yepkarnataka.com/join.html`;
+    } else {
+      shareText = `I just joined the YoungSTAR Empowerment Party (YEP) for Change! My Member ID is ${yepId}. Join the movement today: https://yepkarnataka.com/join.html`;
+    }
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    document.getElementById('whatsapp-share-link').href = whatsappUrl;
+
+    // Show modal
+    const successModal = document.getElementById('success-modal');
+    successModal.classList.add('active');
+  }
+</script>
+</body>
+</html>
