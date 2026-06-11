@@ -726,11 +726,10 @@
 
         <div class="form-group" id="group-qualification">
           <label for="reg-qualification">
-            <span class="en">Educational Qualification</span>
-            <span class="kn">ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ</span>
-            <span class="required">*</span>
+            <span class="en">Educational Qualification (Optional)</span>
+            <span class="kn">ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ (ಐಚ್ಛಿಕ)</span>
           </label>
-          <select id="reg-qualification" class="form-control" required>
+          <select id="reg-qualification" class="form-control">
             <option value="" disabled selected class="en">Select Qualification</option>
             <option value="" disabled selected class="kn">ಅರ್ಹತೆ ಆಯ್ಕೆಮಾಡಿ</option>
             
@@ -955,37 +954,37 @@
 <script>
   /* ── KARNATAKA DISTRICTS & TALUKS DATA ── */
   const districtTalukData = {
-    "Bagalkote": ["Bagalkote", "Badami", "Bilagi", "Hunagunda", "Jamkhandi", "Mudhola", "Ilkal", "Rabkavi Banhatti", "Guledgudda"],
-    "Ballari": ["Ballari", "Kurugodu", "Kampli", "Sanduru", "Siraguppa"],
-    "Belagavi": ["Belagavi", "Athani", "Bailhongal", "Chikkodi", "Gokak", "Hukkeri", "Khanapur", "Ramdurg", "Raybag", "Saudatti", "Kittur", "Nippani", "Kagwad", "Mudalgi"],
-    "Bengaluru Rural": ["Devanahalli", "Doddaballapura", "Hosakote", "Nelamangala"],
-    "Bengaluru Urban": ["Bengaluru North", "Bengaluru South", "Bengaluru East", "Yelahanka", "Anekal"],
-    "Bidar": ["Bidar", "Bhalki", "Humnabad", "Aurad", "Basavakalyan", "Chitgoppa", "Hulsoor", "Kamalnagar"],
-    "Chamarajanagar": ["Chamarajanagar", "Gundlupet", "Kollegal", "Yelandur", "Hanur"],
-    "Chikballapur": ["Chikballapur", "Bagepalli", "Chintamani", "Gauribidanur", "Sidlaghatta", "Gudibanda"],
-    "Chikkamagaluru": ["Chikkamagaluru", "Kadur", "Koppa", "Mudigere", "Narasimharajapura", "Sringeri", "Tarikere", "Ajjampura"],
-    "Chitradurga": ["Chitradurga", "Challakere", "Hiriyur", "Holalkere", "Hosadurga", "Molakalmuru"],
-    "Dakshina Kannada": ["Mangaluru", "Bantwal", "Puttur", "Sullia", "Belthangady", "Moodabidri", "Kadaba"],
-    "Davanagere": ["Davanagere", "Harihar", "Channagiri", "Honnali", "Jagalur", "Nyamathi"],
-    "Dharwad": ["Dharwad", "Hubballi (Rural)", "Hubballi (Urban)", "Kundgol", "Navalgund", "Kalghatgi", "Alnavar", "Annigeri"],
-    "Gadag": ["Gadag", "Ron", "Shirahatti", "Nargund", "Mundargi", "Gajendragad", "Lakshmeshwar"],
-    "Hassan": ["Hassan", "Alur", "Belur", "Channarayapatna", "Holenarasipura", "Sakleshpur", "Arkalgud", "Arsikere"],
-    "Haveri": ["Haveri", "Byadgi", "Hangal", "Hirekerur", "Ranibennur", "Savanur", "Shiggaon", "Rattihalli"],
-    "Kalaburagi": ["Kalaburagi", "Aland", "Afzalpur", "Chincholi", "Chitapur", "Sedam", "Jewargi", "Kamalapur", "Kalagi", "Shahabad", "Yedrami"],
-    "Kodagu": ["Madikeri", "Somwarpet", "Virajpet"],
-    "Kolar": ["Kolar", "Bangarapet", "Malur", "Mulbagal", "Srinivaspur", "Kolar Gold Fields (KGF)"],
-    "Koppal": ["Koppal", "Gangavathi", "Kushtagi", "Yelburga", "Kanakagiri", "Karatagi", "Kuknoor"],
-    "Mandya": ["Mandya", "Maddur", "Malavalli", "Srirangapatna", "Pandavapura", "Krishnarajapet", "Nagamangala"],
-    "Mysuru": ["Mysuru", "Hunsur", "Krishnarajanagara", "Nanjangud", "Heggadadevanakote", "T. Narasipura", "Periyapatna", "Saragur", "Saligrama"],
-    "Raichur": ["Raichur", "Devadurga", "Lingsugur", "Manvi", "Sindhanur", "Maski", "Sirwar"],
-    "Ramanagara": ["Ramanagara", "Channapatna", "Kanakapura", "Magadi"],
-    "Shivamogga": ["Shivamogga", "Bhadravathi", "Hosanagara", "Sagar", "Shikaripura", "Soraba", "Thirthahalli"],
-    "Tumakuru": ["Tumakuru", "Chiknayakanhalli", "Gubbi", "Koratagere", "Kunigal", "Madhugiri", "Pavagada", "Sira", "Tiptur", "Turuvekere"],
-    "Udupi": ["Udupi", "Karkala", "Kundapura", "Byndoor", "Brahmavar", "Kaup", "Hebri"],
-    "Uttara Kannada": ["Karwar", "Ankola", "Bhatkal", "Honnavar", "Kumta", "Sirsi", "Siddapur", "Yellapur", "Mundgod", "Haliyal", "Joida", "Dandeli"],
-    "Vijayapura": ["Vijayapura", "Indi", "Sindgi", "Babaleshwar", "Basavana Bagewadi", "Chadchan", "Devar Hippargi", "Kolhar", "Muddebihal", "Nidgundi", "Talikoti", "Tikota"],
-    "Yadgir": ["Yadgir", "Shahapur", "Shorapur", "Gurmitkal", "Hunasagi", "Wadgera"],
-    "Vijayanagara": ["Hospet", "Hagaribommanahalli", "Harapanahalli", "Hoovina Hadagali", "Kottur", "Kudligi"]
+    "Bagalkote / ಬಾಗಲಕೋಟೆ": ["Bagalkote / ಬಾಗಲಕೋಟೆ", "Badami / ಬಾದಾಮಿ", "Bilagi / ಬಿಳಗಿ", "Hunagunda / ಹುನಗುಂದ", "Jamkhandi / ಜಮಖಂಡಿ", "Mudhola / ಮುಧೋಳ", "Ilkal / ಇಳಕಲ್", "Rabkavi Banhatti / ರಬಕವಿ ಬನಹಟ್ಟಿ", "Guledgudda / ಗುಳೇದಗುಡ್ಡ"],
+    "Ballari / ಬಳ್ಳಾರಿ": ["Ballari / ಬಳ್ಳಾರಿ", "Kurugodu / ಕುರುಗೋಡು", "Kampli / ಕಂಪ್ಲಿ", "Sanduru / ಸಂಡೂರು", "Siraguppa / ಸಿರಗುಪ್ಪ"],
+    "Belagavi / ಬೆಳಗಾವಿ": ["Belagavi / ಬೆಳಗಾವಿ", "Athani / ಅಥಣಿ", "Bailhongal / ಬೈಲಹೊಂಗಲ", "Chikkodi / ಚಿಕ್ಕೋಡಿ", "Gokak / ಗೋಕಾಕ್", "Hukkeri / ಹುಕ್ಕೇರಿ", "Khanapur / ಖಾನಾಪುರ", "Ramdurg / ರಾಮದುರ್ಗ", "Raybag / ರಾಯಬಾಗ", "Saudatti / ಸವದತ್ತಿ", "Kittur / ಕಿತ್ತೂರು", "Nippani / ನಿಪ್ಪಾಣಿ", "Kagwad / ಕಾಗವಾಡ", "Mudalgi / ಮೂಡಲಗಿ"],
+    "Bengaluru Rural / ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ": ["Devanahalli / ದೇವನಹಳ್ಳಿ", "Doddaballapura / ದೊಡ್ಡಬಳ್ಳಾಪುರ", "Hosakote / ಹೊಸಕೋಟೆ", "Nelamangala / ನೆಲಮಂಗಲ"],
+    "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ": ["Bengaluru North / ಬೆಂಗಳೂರು ಉತ್ತರ", "Bengaluru South / ಬೆಂಗಳೂರು ದಕ್ಷಿಣ", "Bengaluru East / ಬೆಂಗಳೂರು ಪೂರ್ವ", "Yelahanka / ಯಲಹಂಕ", "Anekal / ಆನೇಕಲ್"],
+    "Bidar / ಬೀದರ್": ["Bidar / ಬೀದರ್", "Bhalki / ಭಾಲ್ಕಿ", "Humnabad / ಹುಮ್ನಾಬಾದ್", "Aurad / ಔರಾದ್", "Basavakalyan / ಬಸವಕಲ್ಯಾಣ", "Chitgoppa / ಚಿಟಗುಪ್ಪ", "Hulsoor / ಹುಲಸೂರು", "Kamalnagar / ಕಮಲನಗರ"],
+    "Chamarajanagar / ಚಾಮರಾಜನಗರ": ["Chamarajanagar / ಚಾಮರಾಜನಗರ", "Gundlupet / ಗುಂಡ್ಲುಪೇಟೆ", "Kollegal / ಕೊಳ್ಳೇಗಾಲ", "Yelandur / ಯಳಂದೂರು", "Hanur / ಹಣೂರು"],
+    "Chikballapur / ಚಿಕ್ಕಬಳ್ಳಾಪುರ": ["Chikballapur / ಚಿಕ್ಕಬಳ್ಳಾಪುರ", "Bagepalli / ಬಾಗೇಪಲ್ಲಿ", "Chintamani / ಚಿಂತಾಮಣಿ", "Gauribidanur / ಗೌರಿಬಿದನೂರು", "Sidlaghatta / ಶಿಡ್ಲಘಟ್ಟ", "Gudibanda / ಗುಡಿಬಂಡೆ"],
+    "Chikkamagaluru / ಚಿಕ್ಕಮಗಳೂರು": ["Chikkamagaluru / ಚಿಕ್ಕಮಗಳೂರು", "Kadur / ಕಡೂರು", "Koppa / ಕೊಪ್ಪ", "Mudigere / ಮೂಡಿಗೆರೆ", "Narasimharajapura / ನರಸಿಂಹರಾಜಪುರ", "Sringeri / ಶೃಂಗೇರಿ", "Tarikere / ತರೀಕೆರೆ", "Ajjampura / ಅಜ್ಜಂಪುರ"],
+    "Chitradurga / ಚಿತ್ರದುರ್ಗ": ["Chitradurga / ಚಿತ್ರದುರ್ಗ", "Challakere / ಚಳ್ಳಕೆರೆ", "Hiriyur / ಹಿರಿಯೂರು", "Holalkere / ಹೊಳಲ್ಕೆರೆ", "Hosadurga / ಹೊಸದುರ್ಗ", "Molakalmuru / ಮೊಳಕಾಲ್ಮೂರು"],
+    "Dakshina Kannada / ದಕ್ಷಿಣ ಕನ್ನಡ": ["Mangaluru / ಮಂಗಳೂರು", "Bantwal / ಬಂಟ್ವಾಳ", "Puttur / ಪುತ್ತೂರು", "Sullia / ಸುಳ್ಯ", "Belthangady / ಬೆಳ್ತಂಗಡಿ", "Moodabidri / ಮೂಡಬಿದ್ರಿ", "Kadaba / ಕಡಬ"],
+    "Davanagere / ದಾವಣಗೆರೆ": ["Davanagere / ದಾವಣಗೆರೆ", "Harihar / ಹರಿಹರ", "Channagiri / ಚನ್ನಗಿರಿ", "Honnali / ಹೊನ್ನಾಳಿ", "Jagalur / ಜಗಳೂರು", "Nyamathi / ನ್ಯಾಮತಿ"],
+    "Dharwad / ಧಾರವಾಡ": ["Dharwad / ಧಾರವಾಡ", "Hubballi (Rural) / ಹುಬ್ಬಳ್ಳಿ (ಗ್ರಾಮೀಣ)", "Hubballi (Urban) / ಹುಬ್ಬಳ್ಳಿ (ನಗರ)", "Kundgol / ಕುಂದಗೋಳ", "Navalgund / ನವಲಗುಂದ", "Kalghatgi / ಕಲಘಟಗಿ", "Alnavar / ಅಳ್ನಾವರ", "Annigeri / ಅಣ್ಣಿಗೇರಿ"],
+    "Gadag / ಗದಗ": ["Gadag / ಗದಗ", "Ron / ರೋಣ", "Shirahatti / ಶಿರಹಟ್ಟಿ", "Nargund / ನರಗುಂದ", "Mundargi / ಮುಂಡರಗಿ", "Gajendragad / ಗಜೇಂದ್ರಗಡ", "Lakshmeshwar / ಲಕ್ಷ್ಮೇಶ್ವರ"],
+    "Hassan / ಹಾಸನ": ["Hassan / ಹಾಸನ", "Alur / ಆಲೂರು", "Belur / ಬೇಲೂರು", "Channarayapatna / ಚನ್ನರಾಯಪಟ್ಟಣ", "Holenarasipura / ಹೊಳೆನರಸೀಪುರ", "Sakleshpur / ಸಕಲೇಶಪುರ", "Arkalgud / ಅರಕಲಗೂಡು", "Arsikere / ಅರಸೀಕೆರೆ"],
+    "Haveri / ಹಾವೇರಿ": ["Haveri / ಹಾವೇರಿ", "Byadgi / ಬ್ಯಾಡಗಿ", "Hangal / ಹಾನಗಲ್", "Hirekerur / ಹಿರೇಕೆರೂರು", "Ranibennur / ರಾಣಿಬೆನ್ನೂರು", "Savanur / ಸವಣೂರು", "Shiggaon / ಶಿಗ್ಗಾಂವಿ", "Rattihalli / ರಟ್ಟಿಹಳ್ಳಿ"],
+    "Kalaburagi / ಕಲಬುರಗಿ": ["Kalaburagi / ಕಲಬುರಗಿ", "Aland / ಆಳಂದ", "Afzalpur / ಅಫಜಲಪುರ", "Chincholi / ಚಿಂಚೋಳಿ", "Chitapur / ಚಿತ್ತಾಪುರ", "Sedam / ಸೇಡಂ", "Jewargi / ಜೇವರ್ಗಿ", "Kamalapur / ಕಮಲಾಪುರ", "Kalagi / ಕಾಳಗಿ", "Shahabad / ಶಹಾಬಾದ್", "Yedrami / ಯಡ್ರಾಮಿ"],
+    "Kodagu / ಕೊಡಗು": ["Madikeri / ಮಡಿಕೇರಿ", "Somwarpet / ಸೋಮವಾರಪೇಟೆ", "Virajpet / ವಿರಾಜಪೇಟೆ"],
+    "Kolar / ಕೋಲಾರ": ["Kolar / ಕೋಲಾರ", "Bangarapet / ಬಂಗಾರಪೇಟೆ", "Malur / ಮಾಲೂರು", "Mulbagal / ಮುಳಬಾಗಿಲು", "Srinivaspur / ಶ್ರೀನಿವಾಸಪುರ", "Kolar Gold Fields (KGF) / ಕೆ.ಜಿ.ಎಫ್"],
+    "Koppal / ಕೊಪ್ಪಳ": ["Koppal / ಕೊಪ್ಪಳ", "Gangavathi / ಗಂಗಾವತಿ", "Kushtagi / ಕುಷ್ಟಗಿ", "Yelburga / ಯಲಬುರ್ಗಾ", "Kanakagiri / ಕನಕಗಿರಿ", "Karatagi / ಕಾರಟಗಿ", "Kuknoor / ಕುಕನೂರು"],
+    "Mandya / ಮಂಡ್ಯ": ["Mandya / ಮಂಡ್ಯ", "Maddur / ಮದ್ದೂರು", "Malavalli / ಮಳವಳ್ಳಿ", "Srirangapatna / ಶ್ರೀರಂಗಪಟ್ಟಣ", "Pandavapura / ಪಾಂಡವಪುರ", "Krishnarajapet / ಕೃಷ್ಣರಾಜಪೇಟೆ", "Nagamangala / ನಾಗಮಂಗಲ"],
+    "Mysuru / ಮೈಸೂರು": ["Mysuru / ಮೈಸೂರು", "Hunsur / ಹುಣಸೂರು", "Krishnarajanagara / ಕೃಷ್ಣರಾಜನಗರ", "Nanjangud / ನಂಜನಗೂಡು", "Heggadadevanakote / ಹೆಚ್.ಡಿ. ಕೋಟೆ", "T. Narasipura / ಟಿ. ನರಸೀಪುರ", "Periyapatna / ಪಿರಿಯಾಪಟ್ಟಣ", "Saragur / ಸರಗೂರು", "Saligrama / ಸಾಲಿಗ್ರಾಮ"],
+    "Raichur / ರಾಯಚೂರು": ["Raichur / ರಾಯಚೂರು", "Devadurga / ದೇವದುರ್ಗ", "Lingsugur / ಲಿಂಗಸಗೂರು", "Manvi / ಮಾನ್ವಿ", "Sindhanur / ಸಿಂಧನೂರು", "Maski / ಮಸ್ಕಿ", "Sirwar / ಸಿರವಾರ"],
+    "Ramanagara / ರಾಮನಗರ": ["Ramanagara / ರಾಮನಗರ", "Channapatna / ಚನ್ನಪಟ್ಟಣ", "Kanakapura / ಕನಕಪುರ", "Magadi / ಮಾಗಡಿ"],
+    "Shivamogga / ಶಿವಮೊಗ್ಗ": ["Shivamogga / ಶಿವಮೊಗ್ಗ", "Bhadravathi / ಭದ್ರಾವತಿ", "Hosanagara / ಹೊಸನಗರ", "Sagar / ಸಾಗರ", "Shikaripura / ಶಿಕಾರಿಪುರ", "Soraba / ಸೊರಬ", "Thirthahalli / ತೀರ್ಥಹಳ್ಳಿ"],
+    "Tumakuru / ತುಮಕೂರು": ["Tumakuru / ತುಮಕೂರು", "Chiknayakanhalli / ಚಿಕ್ಕನಾಯಕನಹಳ್ಳಿ", "Gubbi / ಗುಬ್ಬಿ", "Koratagere / ಕೊರಟಗೆರೆ", "Kunigal / ಕುಣಿಗಲ್", "Madhugiri / ಮಧುಗಿರಿ", "Pavagada / ಪಾವಗಡ", "Sira / ಶಿರಾ", "Tiptur / ತಿಪಟೂರು", "Turuvekere / ತುರುವೇಕೆರೆ"],
+    "Udupi / ಉಡುಪಿ": ["Udupi / ಉಡುಪಿ", "Karkala / ಕಾರ್ಕಳ", "Kundapura / ಕುಂದಾಪುರ", "Byndoor / ಬೈಂದೂರು", "Brahmavar / ಬ್ರಹ್ಮಾವರ", "Kaup / ಕಾಪು", "Hebri / ಹೆಬ್ರಿ"],
+    "Uttara Kannada / ಉತ್ತರ ಕನ್ನಡ": ["Karwar / ಕಾರವಾರ", "Ankola / ಅಂಕೋಲಾ", "Bhatkal / ಭಟ್ಕಳ", "Honnavar / ಹೊನ್ನಾವರ", "Kumta / ಕುಮಟಾ", "Sirsi / ಶಿರಸಿ", "Siddapur / ಸಿದ್ದಾಪುರ", "Yellapur / ಯಲ್ಲಾಪುರ", "Mundgod / ಮುಂಡಗೋಡ", "Haliyal / ಹಳಿಯಾಳ", "Joida / ಜೊಯಿಡಾ", "Dandeli / ದಾಂಡೇಲಿ"],
+    "Vijayapura / ವಿಜಯಪುರ": ["Vijayapura / ವಿಜಯಪುರ", "Indi / ಇಂಡಿ", "Sindgi / ಸಿಂದಗಿ", "Babaleshwar / ಬಬಲೇಶ್ವರ", "Basavana Bagewadi / ಬಸವನ ಬಾಗೇವಾಡಿ", "Chadchan / ಚಡಚಣ", "Devar Hippargi / ದೇವರ ಹಿಪ್ಪರಗಿ", "Kolhar / ಕೊಲ್ಹಾರ", "Muddebihal / ಮುದ್ದೇಬಿಹಾಳ", "Nidgundi / ನಿಡಗುಂದಿ", "Talikoti / ತಾಳಿಕೋಟೆ", "Tikota / ತಿಕೋಟಾ"],
+    "Yadgir / ಯಾದಗಿರಿ": ["Yadgir / ಯಾದಗಿರಿ", "Shahapur / ಶಹಾಪುರ", "Shorapur / ಸುರಪುರ", "Gurmitkal / ಗುರುಮಿಠಕಲ್", "Hunasagi / ಹುಣಸಗಿ", "Wadgera / ವಡಗೇರಾ"],
+    "Vijayanagara / ವಿಜಯನಗರ": ["Hospet / ಹೊಸಪೇಟೆ", "Hagaribommanahalli / ಹಗರಿಬೊಮ್ಮನಹಳ್ಳಿ", "Harapanahalli / ಹರಪನಹಳ್ಳಿ", "Hoovina Hadagali / ಹೂವಿನ ಹಡಗಲಿ", "Kottur / ಕೊಟ್ಟೂರು", "Kudligi / ಕೂಡ್ಲಿಗಿ"]
   };
 
   /* ── INITIAL STATE CONFIGURATION ── */
@@ -1255,14 +1254,7 @@
         isValid = false;
       }
 
-      // Qualification validation
-      const qualVal = document.getElementById('reg-qualification').value;
-      const isQualOk = qualVal !== "";
-      toggleValidationUI('qualification', isQualOk);
-      if (!isQualOk) {
-        document.getElementById('error-qualification').style.display = 'block';
-        isValid = false;
-      }
+      // Qualification is optional, no validation checks required
     } 
     else if (currentStep === 2) {
       const stateVal = document.getElementById('reg-state').value;
