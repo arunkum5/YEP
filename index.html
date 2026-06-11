@@ -117,6 +117,7 @@
     white-space: nowrap;
   }
   .nav-cta:hover { background: var(--deep-saffron); }
+  .nav-mobile-join { display: none; }
 
   /* ── HERO ── */
   .hero {
@@ -559,6 +560,25 @@
     nav { padding: 8px 3% !important; gap: 10px !important; }
     .nav-logo img { width: 38px; height: 38px; }
     .nav-brand { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 2px !important; }
+    .nav-mobile-join {
+      display: inline-flex !important;
+      align-items: center;
+      gap: 5px;
+      background: var(--saffron);
+      color: #fff !important;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 5px 13px;
+      border-radius: 20px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(255,107,0,0.35);
+      transition: all 0.2s ease;
+    }
     .brand-divider { display: none !important; }
     .brand-tagline { display: none !important; }
     .brand-col-en { display: block !important; }
@@ -726,6 +746,10 @@
       </div>
     </div>
   </div>
+  <a href="join.html" class="nav-mobile-join">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 110 10A5 5 0 0112 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>
+    Join
+  </a>
   <div class="nav-right">
     <ul class="nav-links">
       <li><a href="#manifesto"><span class="en">Manifesto</span><span class="kn">ಪ್ರಣಾಳಿಕೆ</span></a></li>
