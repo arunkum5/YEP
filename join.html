@@ -970,22 +970,12 @@
     // Clear existings except first placeholder
     districtSelect.innerHTML = '';
     
-    const enPlaceholder = document.createElement('option');
-    enPlaceholder.value = '';
-    enPlaceholder.className = 'en';
-    enPlaceholder.textContent = 'Select District';
-    enPlaceholder.disabled = true;
-    enPlaceholder.selected = true;
-    
-    const knPlaceholder = document.createElement('option');
-    knPlaceholder.value = '';
-    knPlaceholder.className = 'kn';
-    knPlaceholder.textContent = 'ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ';
-    knPlaceholder.disabled = true;
-    knPlaceholder.selected = true;
-
-    districtSelect.appendChild(enPlaceholder);
-    districtSelect.appendChild(knPlaceholder);
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Select District / ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    districtSelect.appendChild(placeholder);
 
     const sortedDistricts = Object.keys(districtTalukData).sort();
     sortedDistricts.forEach(dist => {
@@ -1035,22 +1025,12 @@
 
     talukSelect.innerHTML = '';
     
-    const enPlaceholder = document.createElement('option');
-    enPlaceholder.value = '';
-    enPlaceholder.className = 'en';
-    enPlaceholder.textContent = 'Select Taluk';
-    enPlaceholder.disabled = true;
-    enPlaceholder.selected = true;
-    
-    const knPlaceholder = document.createElement('option');
-    knPlaceholder.value = '';
-    knPlaceholder.className = 'kn';
-    knPlaceholder.textContent = 'ತಾಲ್ಲೂಕನ್ನು ಆಯ್ಕೆಮಾಡಿ';
-    knPlaceholder.disabled = true;
-    knPlaceholder.selected = true;
-
-    talukSelect.appendChild(enPlaceholder);
-    talukSelect.appendChild(knPlaceholder);
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Select Taluk / ತಾಲ್ಲೂಕನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    talukSelect.appendChild(placeholder);
 
     // Filter selector based on lang active
     const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
