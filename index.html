@@ -324,8 +324,13 @@
   .footer-col h4 { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
   .footer-col a { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.4); text-decoration: none; margin-bottom: 8px; transition: color 0.2s; }
   .footer-col a:hover { color: var(--white); }
-  .footer-bottom { text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.25); padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); max-width: 1000px; margin: 0 auto; }
+  .footer-bottom { font-size: 0.78rem; color: rgba(255,255,255,0.25); padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); max-width: 1000px; margin: 0 auto; }
   .footer-bottom .yep { color: var(--saffron); font-weight: 600; }
+  .footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-left { text-align: left; }
+  .footer-right { text-align: right; color: rgba(255,255,255,0.4); }
+  .footer-right a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+  .footer-right a:hover { color: var(--gold); }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
@@ -340,6 +345,9 @@
     .contact-chips { justify-content: center; }
     .stats-grid { grid-template-columns: repeat(2,1fr); }
     .footer-inner { grid-template-columns: 1fr 1fr; }
+    .footer-bottom-inner { flex-direction: column; text-align: center; }
+    .footer-left { text-align: center; }
+    .footer-right { text-align: center; }
   }
   @media (max-width: 600px) {
     .pillars-grid { grid-template-columns: 1fr; }
@@ -733,8 +741,17 @@
   </div>
   <div class="footer-bottom">
     <div class="tricolor-bar" style="margin-bottom:20px;"></div>
-    © 2026 <span class="youngstar-gradient">YoungSTAR</span> <span class="yep">Empowerment Party</span> · Karnataka · All Rights Reserved<br>
-    <small style="margin-top:6px;display:block;color:var(--gold);font-size:0.85rem;font-weight:500;opacity:0.9;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</small>
+    <div class="footer-bottom-inner">
+      <div class="footer-left">
+        © 2026 <span class="youngstar-gradient">YoungSTAR</span> <span class="yep">Empowerment Party</span> · Karnataka · All Rights Reserved<br>
+        <small style="margin-top:6px;display:block;color:var(--gold);font-size:0.85rem;font-weight:500;opacity:0.9;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</small>
+      </div>
+      <div class="footer-right">
+        by <a href="https://www.trustwork.co.in" target="_blank">www.trustwork.co.in</a> | 
+        <a href="tel:+919353010107">+91 93530 10107</a> | 
+        <a href="mailto:support@trustwork.co.in">support@trustwork.co.in</a>
+      </div>
+    </div>
   </div>
 </footer>
 
