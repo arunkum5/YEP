@@ -158,6 +158,34 @@
   }
   .btn-outline:hover { background: var(--gold); color: var(--charcoal); }
 
+  .hero-image-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .hero-image-wrap::before {
+    content: '';
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(255, 107, 0, 0.12) 0%, rgba(19, 136, 8, 0.08) 50%, transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .hero-seal-img {
+    max-width: 440px;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
+    animation: float-seal 6s ease-in-out infinite;
+  }
+  @keyframes float-seal {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
 
   /* ── TRICOLOR ── */
   @keyframes tricolor-glow {
@@ -338,7 +366,8 @@
     .hero-text .eyebrow { justify-content: center; }
     .hero-sub { margin: 20px auto 36px; }
     .hero-actions { justify-content: center; }
-    .hero-leader { order: -1; }
+    .hero-image-wrap { order: -1; max-width: 300px; margin: 0 auto; }
+    .hero-image-wrap::before { width: 200px; height: 200px; }
     .pillars-grid { grid-template-columns: 1fr 1fr; }
     .leader-inner { grid-template-columns: 1fr; text-align: center; }
     .leader-photo-wrap { width: 220px; margin: 0 auto; }
@@ -540,7 +569,9 @@
         <a href="#manifesto" class="btn-outline"><span class="en">Our Vision →</span><span class="kn">ನಮ್ಮ ದೃಷ್ಟಿ →</span></a>
       </div>
     </div>
-
+    <div class="hero-image-wrap">
+      <img src="yep_leader_seal.png" alt="YoungSTAR Party Emblem" class="hero-seal-img">
+    </div>
   </div>
 </section>
 
