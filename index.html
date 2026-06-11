@@ -84,9 +84,30 @@
     font-family: 'Rajdhani', sans-serif;
     font-size: 1rem; font-weight: 600;
     color: #ccc; text-decoration: none; letter-spacing: 0.5px;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
   }
-  .nav-links a:hover { color: var(--gold); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: var(--gold);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+  .nav-links a:hover {
+    color: var(--gold);
+    transform: scale(1.08);
+  }
+  .nav-links a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
   .nav-cta {
     background: var(--saffron); color: white;
     font-family: 'Rajdhani', sans-serif; font-weight: 700;
@@ -167,6 +188,35 @@
     animation: float-seal 6s ease-in-out infinite;
     perspective: 1000px;
     gap: 16px;
+  }
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(19, 136, 8, 0.15);
+    border: 1px solid rgba(19, 136, 8, 0.4);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 1.5px;
+    box-shadow: 0 0 12px rgba(19, 136, 8, 0.2);
+    margin-bottom: 4px;
+    z-index: 5;
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #39FF14; /* Neon green */
+    border-radius: 50%;
+    box-shadow: 0 0 8px #39FF14;
+    animation: pulse-dot 1.5s infinite alternate ease-in-out;
+  }
+  @keyframes pulse-dot {
+    0% { transform: scale(0.85); opacity: 0.6; box-shadow: 0 0 4px #39FF14; }
+    100% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 12px #39FF14, 0 0 20px #39FF14; }
   }
   .hero-image-wrap::before {
     content: '';
@@ -630,6 +680,11 @@
       </div>
     </div>
     <div class="hero-image-wrap">
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        <span class="en">LIVE MOVEMENT</span>
+        <span class="kn">ಲೈವ್ ಚಳವಳಿ</span>
+      </div>
       <div class="hero-image-caption">
         <span class="en">Together for a corruption free, Peaceful &amp; progressive Karnataka</span>
         <span class="kn">ಭ್ರಷ್ಟಾಚಾರ ಮುಕ್ತ, ಶಾಂತಿಯುತ ಮತ್ತು ಪ್ರಗತಿಪರ ಕರ್ನಾಟಕಕ್ಕಾಗಿ ಒಟ್ಟಾಗಿ</span>
