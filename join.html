@@ -821,6 +821,10 @@
 
       <!-- NAV CONTROLS -->
       <div class="nav-buttons">
+        <a href="index.html" class="btn-nav back" id="btn-home" style="text-decoration: none;">
+          ← <span class="en">Back to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
+        </a>
+        
         <button type="button" class="btn-nav back" id="btn-back" onclick="navigateStep(-1)" style="display: none;">
           ← <span class="en">Back</span><span class="kn">ಹಿಂದಕ್ಕೆ</span>
         </button>
@@ -1140,6 +1144,7 @@
 
     // Toggle navigation button elements
     document.getElementById('btn-back').style.display = currentStep > 1 ? 'flex' : 'none';
+    document.getElementById('btn-home').style.display = currentStep === 1 ? 'flex' : 'none';
     document.getElementById('btn-next').style.display = currentStep < totalSteps ? 'flex' : 'none';
     document.getElementById('btn-submit').style.display = currentStep === totalSteps ? 'flex' : 'none';
 
