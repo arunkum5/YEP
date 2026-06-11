@@ -200,6 +200,34 @@
     0% { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
     100% { filter: drop-shadow(0 2px 8px rgba(244,196,48,0.3)) drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
   }
+  .hero-image-subcaption {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 6px 18px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(244, 196, 48, 0.3);
+    box-shadow: 0 0 10px rgba(244, 196, 48, 0.1), inset 0 0 10px rgba(244, 196, 48, 0.05);
+    animation: live-glow 2s infinite alternate ease-in-out;
+    margin-top: 5px;
+    max-width: 90%;
+  }
+  @keyframes live-glow {
+    0% {
+      border-color: rgba(244, 196, 48, 0.3);
+      box-shadow: 0 0 8px rgba(244, 196, 48, 0.15), inset 0 0 4px rgba(244, 196, 48, 0.05);
+      text-shadow: 0 0 2px rgba(255,255,255,0.2);
+    }
+    100% {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(244, 196, 48, 0.5), 0 0 10px rgba(255, 107, 0, 0.3), inset 0 0 8px rgba(244, 196, 48, 0.25);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px var(--gold);
+    }
+  }
   .hero-seal-img {
     max-width: 440px;
     width: 100%;
@@ -607,6 +635,9 @@
         <span class="kn">ಭ್ರಷ್ಟಾಚಾರ ಮುಕ್ತ, ಶಾಂತಿಯುತ ಮತ್ತು ಪ್ರಗತಿಪರ ಕರ್ನಾಟಕಕ್ಕಾಗಿ ಒಟ್ಟಾಗಿ</span>
       </div>
       <img src="yep_leader_seal.png" alt="YoungSTAR Party Emblem" class="hero-seal-img">
+      <div class="hero-image-subcaption">
+        K N Jagadish Kumar - Advocate - High Court of Delhi
+      </div>
     </div>
   </div>
 </section>
