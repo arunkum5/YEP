@@ -539,12 +539,26 @@
     .pillars-grid { grid-template-columns: 1fr 1fr; }
     .leader-inner { grid-template-columns: 1fr; text-align: center; }
     .leader-photo-wrap { width: 220px; height: 220px; margin: 0 auto; }
+    .leader-info .role { justify-content: center; }
+    .leader-info .profession { justify-content: center; }
     .contact-chips { justify-content: center; }
     .stats-grid { grid-template-columns: repeat(2,1fr); }
     .footer-inner { grid-template-columns: 1fr 1fr; }
     .footer-bottom-inner { flex-direction: column; text-align: center; }
     .footer-left { text-align: center; }
     .footer-right { text-align: center; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 8px 3% !important; gap: 10px !important; }
+    .nav-logo img { width: 38px; height: 38px; }
+    .brand-divider { display: none !important; }
+    .brand-tagline { display: none !important; }
+    body.lang-en .brand-col-kn { display: none !important; }
+    body.lang-kn .brand-col-en { display: none !important; }
+    .brand-heading { font-size: 1.25rem !important; }
+    .nav-cta { padding: 6px 12px; font-size: 0.8rem; }
+    .lang-toggle { padding: 2px; }
+    .lang-btn { padding: 4px 10px; font-size: 0.75rem; }
   }
   @media (max-width: 600px) {
     .pillars-grid { grid-template-columns: 1fr; }
@@ -687,12 +701,12 @@
   <div class="nav-logo">
     <img src="yep_logo.svg" alt="YEP Logo">
     <div class="nav-brand" style="display:flex; align-items:center; line-height: 1.1;">
-      <div class="brand-col">
+      <div class="brand-col brand-col-en">
         <span class="brand-heading" style="font-size: 1.55rem; font-weight: 700; transition: all 0.3s ease;"><span class="youngstar-gradient">YoungSTAR</span> PARTY</span>
         <span class="brand-tagline" style="font-size: 0.97rem; background: linear-gradient(to bottom, var(--gold) 50%, var(--saffron) 50%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; margin-top: 8px; filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.45)); transition: all 0.3s ease;">Youth Power – Our Strength – Our Future</span>
       </div>
-      <span style="margin: 0 16px; opacity: 0.4; font-size: 1.8rem; font-weight: 300;">|</span>
-      <div class="brand-col">
+      <span class="brand-divider" style="margin: 0 16px; opacity: 0.4; font-size: 1.8rem; font-weight: 300;">|</span>
+      <div class="brand-col brand-col-kn">
         <span class="brand-heading" style="font-family: 'Tiro Kannada', serif; font-size: 1.55rem; font-weight: 700; transition: all 0.3s ease;"><span class="youngstar-gradient">ಯಂಗ್‌ಸ್ಟಾರ್</span> ಪಕ್ಷ</span>
         <span class="brand-tagline" style="font-size: 0.97rem; background: linear-gradient(to bottom, var(--gold) 50%, var(--saffron) 50%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; font-family: 'Tiro Kannada', serif; letter-spacing: 0.5px; margin-top: 8px; filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.45)); transition: all 0.3s ease;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</span>
       </div>
