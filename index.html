@@ -100,7 +100,12 @@
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1C1C2E 0%, #2b0c0c 50%, #1f1a04 100%);
+    background: linear-gradient(to bottom,
+        #2a1e00 0%,
+        #3a2800 30%,
+        #2e0f00 60%,
+        #1f0500 100%
+      );
     position: relative; display: flex; align-items: center;
     overflow: hidden; padding-top: 80px;
   }
@@ -111,6 +116,7 @@
     width: 100%; padding: 0 5%;
     display: grid; grid-template-columns: 1fr 1fr;
     gap: 60px; align-items: center;
+    margin-top: -140px;
   }
   .hero-text .eyebrow {
     font-family: 'Rajdhani', sans-serif;
@@ -215,20 +221,48 @@
   .section-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem,4vw,3rem); font-weight: 700; color: var(--white); line-height: 1.1; }
   .section-title .gold { color: var(--gold); }
   .section-divider { width: 60px; height: 3px; background: linear-gradient(90deg,var(--saffron),var(--gold)); margin: 20px auto 0; }
-  .pillars-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+  .pillars-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
   .pillar-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-top: 3px solid var(--saffron); padding: 36px 28px; border-radius: 4px; transition: all 0.3s;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-top: 3px solid var(--saffron); padding: 36px 28px; border-radius: 8px; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2); position: relative; overflow: hidden;
   }
-  .pillar-card:nth-child(2) { border-top-color: var(--gold); }
-  .pillar-card:nth-child(3) { border-top-color: var(--green); }
-  .pillar-card:nth-child(4) { border-top-color: var(--gold); }
-  .pillar-card:nth-child(5) { border-top-color: var(--saffron); }
-  .pillar-card:nth-child(6) { border-top-color: var(--green); }
-  .pillar-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-4px); }
-  .pillar-icon { font-size: 2.4rem; margin-bottom: 16px; display: block; }
-  .pillar-title { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 10px; }
-  .pillar-desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+  .pillar-card:nth-child(3n+2) { border-top-color: var(--gold); }
+  .pillar-card:nth-child(3n+3) { border-top-color: var(--green); }
+  
+  .pillar-card:hover {
+    background: rgba(255, 107, 0, 0.04); border-color: rgba(255, 107, 0, 0.25);
+    transform: translateY(-8px); box-shadow: 0 12px 30px rgba(255, 107, 0, 0.15);
+  }
+  .pillar-card:nth-child(3n+2):hover {
+    background: rgba(244, 196, 48, 0.04); border-color: rgba(244, 196, 48, 0.25);
+    box-shadow: 0 12px 30px rgba(244, 196, 48, 0.15);
+  }
+  .pillar-card:nth-child(3n+3):hover {
+    background: rgba(19, 136, 8, 0.04); border-color: rgba(19, 136, 8, 0.25);
+    box-shadow: 0 12px 30px rgba(19, 136, 8, 0.15);
+  }
+
+  .pillar-icon { font-size: 2.6rem; margin-bottom: 20px; display: inline-block; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .pillar-card:hover .pillar-icon { transform: scale(1.15) rotate(5deg); }
+
+  .pillar-title {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;
+    background: linear-gradient(135deg, #FF8A3D 30%, #F4C430 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+  }
+  .pillar-card:nth-child(3n+2) .pillar-title {
+    background: linear-gradient(135deg, #F4C430 30%, #FFE082 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .pillar-card:nth-child(3n+3) .pillar-title {
+    background: linear-gradient(135deg, #39E02B 30%, #AEEA00 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .pillar-desc { font-size: 0.88rem; line-height: 1.7; color: rgba(255, 220, 200, 0.75); }
+  .pillar-card:nth-child(3n+2) .pillar-desc { color: rgba(255, 245, 210, 0.75); }
+  .pillar-card:nth-child(3n+3) .pillar-desc { color: rgba(210, 245, 210, 0.75); }
 
   /* ── LEADER ── */
   .leader-section {
@@ -316,6 +350,111 @@
     .logo-hero { animation: none; }
     * { transition: none !important; }
   }
+
+  /* ── BRAND HOVER EFFECTS ── */
+  .brand-col {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  .brand-col:hover {
+    transform: translateY(-2px);
+  }
+  .brand-col:hover .brand-heading {
+    text-shadow: 0 0 10px rgba(244, 196, 48, 0.5);
+  }
+  .brand-col:hover .brand-tagline {
+    filter: drop-shadow(0 0 8px rgba(255, 107, 0, 0.8)) !important;
+  }
+
+  /* ── YoungSTAR CROSS GRADIENT ── */
+  .youngstar-gradient {
+    background: linear-gradient(135deg, var(--gold) 15%, var(--saffron) 60%, #D32F2F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    filter: drop-shadow(0 2px 8px rgba(244, 196, 48, 0.2));
+  }
+
+  /* ── TYPEWRITER CURSOR ── */
+  .typewriter-cursor {
+    display: inline-block;
+    color: var(--gold);
+    margin-left: 6px;
+    font-weight: 300;
+    animation: typewriter-blink 0.8s infinite;
+  }
+  @keyframes typewriter-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── FLOATING ACTION BUTTON ── */
+  .floating-join-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4), 0 0 0 0 rgba(255, 107, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: fab-pulse 2s infinite;
+  }
+  .floating-join-btn:hover {
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 8px 30px rgba(255, 107, 0, 0.6);
+  }
+  .floating-join-btn .btn-icon {
+    font-size: 1.8rem;
+    color: white;
+    transition: transform 0.3s;
+    line-height: 1;
+  }
+  .floating-join-btn:hover .btn-icon {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  .floating-join-btn .btn-ripple {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    border: 2px solid var(--saffron);
+    opacity: 0;
+    animation: ripple-pulse 2s infinite;
+    pointer-events: none;
+  }
+
+  @keyframes fab-pulse {
+    0% { box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4), 0 0 0 0 rgba(255, 107, 0, 0.4); }
+    70% { box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4), 0 0 0 15px rgba(255, 107, 0, 0); }
+    100% { box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4), 0 0 0 0 rgba(255, 107, 0, 0); }
+  }
+
+  @keyframes ripple-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    .floating-join-btn {
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+    }
+    .floating-join-btn .btn-icon {
+      font-size: 1.5rem;
+    }
+  }
 </style>
 </head>
 <body class="lang-en">
@@ -327,14 +466,14 @@
   <div class="nav-logo">
     <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="YEP Logo">
     <div class="nav-brand" style="display:flex; align-items:center; line-height: 1.1;">
-      <div style="display:flex; flex-direction:column;">
-        <span>Young<span style="color:var(--saffron)">STAR</span> PARTY</span>
-        <span style="font-size: 0.75rem; color: var(--saffron); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; margin-top: 4px;">Youth Power – Our Future</span>
+      <div class="brand-col">
+        <span class="brand-heading" style="font-size: 1.55rem; font-weight: 700; transition: all 0.3s ease;"><span class="youngstar-gradient">YoungSTAR</span> PARTY</span>
+        <span class="brand-tagline" style="font-size: 0.97rem; background: linear-gradient(to bottom, var(--gold) 50%, var(--saffron) 50%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; margin-top: 8px; filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.45)); transition: all 0.3s ease;">Youth Power – Our Strength – Our Future</span>
       </div>
-      <span style="margin: 0 12px; opacity: 0.4; font-size: 1.4rem; font-weight: 300;">|</span>
-      <div style="display:flex; flex-direction:column;">
-        <span style="font-family: 'Tiro Kannada', serif;">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
-        <span style="font-size: 0.75rem; color: var(--saffron); font-family: 'Tiro Kannada', serif; letter-spacing: 0.5px; margin-top: 4px;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</span>
+      <span style="margin: 0 16px; opacity: 0.4; font-size: 1.8rem; font-weight: 300;">|</span>
+      <div class="brand-col">
+        <span class="brand-heading" style="font-family: 'Tiro Kannada', serif; font-size: 1.55rem; font-weight: 700; transition: all 0.3s ease;"><span class="youngstar-gradient">ಯಂಗ್‌ಸ್ಟಾರ್</span> ಪಕ್ಷ</span>
+        <span class="brand-tagline" style="font-size: 0.97rem; background: linear-gradient(to bottom, var(--gold) 50%, var(--saffron) 50%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; font-family: 'Tiro Kannada', serif; letter-spacing: 0.5px; margin-top: 8px; filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.45)); transition: all 0.3s ease;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</span>
       </div>
     </div>
   </div>
@@ -351,8 +490,8 @@
       <button class="lang-btn" id="btn-kn" onclick="setLang('kn')">ಕನ್ನಡ</button>
     </div>
     <a href="#join" class="nav-cta">
-      <span class="en">Join the Movement</span>
-      <span class="kn">ಚಳವಳಿಗೆ ಸೇರಿ</span>
+      <span class="en">Join for Change</span>
+      <span class="kn">ಬದಲಾವಣೆಗಾಗಿ ಜೊತೆಯಾಗಿ</span>
     </a>
   </div>
 </nav>
@@ -365,9 +504,24 @@
         <span class="en">Karnataka's Voice · Youth's Future</span>
         <span class="kn">ಕರ್ನಾಟಕದ ಧ್ವನಿ · ಯುವಜನರ ಭವಿಷ್ಯ</span>
       </div>
-      <h1>
-        <span class="en"><span class="accent-orange">Young</span><span class="accent">STAR</span><br>Empowerment<br>Party</span>
-        <span class="kn" style="font-size:clamp(2.2rem,5vw,4rem);line-height:1.2"><span class="accent-orange">ಯಂಗ್‌ಸ್ಟಾರ್</span> ಪಕ್ಷ</span>
+      <!-- Hidden SEO H1 tag -->
+      <h1 style="display:none;">
+        <span class="en">YoungSTAR Empowerment Party</span>
+        <span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
+      </h1>
+      <!-- Visible Typewriter H1 heading -->
+      <h1 style="min-height: 180px; display: flex; flex-direction: column;">
+        <!-- English Typewriter Lines -->
+        <span class="en" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+          <span class="youngstar-gradient" id="type-en-1" style="min-height: 1.1em;"></span>
+          <span id="type-en-2" style="min-height: 1.1em;"></span>
+          <span id="type-en-3" style="min-height: 1.1em;"></span>
+        </span>
+        <!-- Kannada Typewriter Lines -->
+        <span class="kn" style="font-size:clamp(2.2rem,5vw,4rem); line-height:1.2; display: flex; flex-direction: row; align-items: flex-start; gap: 0.28em; flex-wrap: wrap;">
+          <span class="youngstar-gradient" id="type-kn-1" style="min-height: 1.1em;"></span>
+          <span id="type-kn-2" style="min-height: 1.1em;"></span>
+        </span>
       </h1>
       <p class="hero-sub">
         <span class="en">A movement born from the streets of Karnataka — giving the youth a seat at the table, a platform for justice, and a future worth fighting for.</span>
@@ -422,11 +576,29 @@
   <div class="pillars-grid">
 
     <div class="pillar-card">
-      <span class="pillar-icon">🎓</span>
-      <div class="pillar-title"><span class="en">Quality Education</span><span class="kn">ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ</span></div>
+      <span class="pillar-icon">🛡️</span>
+      <div class="pillar-title"><span class="en">Corruption-Free Karnataka</span><span class="kn">ಭ್ರಷ್ಟಾಚಾರ ಮುಕ್ತ ಕರ್ನಾಟಕ</span></div>
       <p class="pillar-desc">
-        <span class="en">Equal access to quality education for every young Kannadiga — from rural villages to urban centres. No child left behind.</span>
-        <span class="kn">ಗ್ರಾಮೀಣ ಹಳ್ಳಿಗಳಿಂದ ನಗರ ಕೇಂದ್ರಗಳವರೆಗೆ ಪ್ರತಿ ಕನ್ನಡಿಗ ಮಗುವಿಗೂ ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ ಸಿಗಬೇಕು. ಒಬ್ಬ ಮಗುವೂ ಹಿಂದೆ ಬೀಳಬಾರದು.</span>
+        <span class="en">Zero tolerance for bribery. We will implement fully digitized administration, transparent bidding, and strong public grievance redressal.</span>
+        <span class="kn">ಲಂಚಮುಕ್ತ ಆಡಳಿತಕ್ಕೆ ಶೂನ್ಯ ಸಹನೆ. ಸಂಪೂರ್ಣ ಡಿಜಿಟಲೀಕೃತ ಆಡಳಿತ, ಪಾರದರ್ಶಕ ಗುತ್ತಿಗೆ ಪ್ರಕ್ರಿಯೆ ಮತ್ತು ಬಲಿಷ್ಠ ಸಾರ್ವಜನಿಕ ಕುಂದುಕೊರತೆ ನಿವಾರಣಾ ವ್ಯವಸ್ಥೆ.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🎓</span>
+      <div class="pillar-title"><span class="en">Free & Quality Education</span><span class="kn">ಉಚಿತ ಮತ್ತು ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Completely free, modern, and high-quality education for every child in Karnataka — ensuring zero cost from primary school to higher education.</span>
+        <span class="kn">ಕರ್ನಾಟಕದ ಪ್ರತಿ ಮಗುವಿಗೆ ಸಂಪೂರ್ಣ ಉಚಿತ, ಆಧುನಿಕ ಮತ್ತು ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ — ಪ್ರಾಥಮಿಕ ಶಾಲೆಯಿಂದ ಉನ್ನತ ಶಿಕ್ಷಣದವರೆಗೆ ಶೂನ್ಯ ವೆಚ್ಚವನ್ನು ಖಚಿತಪಡಿಸುವುದು.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🏥</span>
+      <div class="pillar-title"><span class="en">Free Healthcare for All</span><span class="kn">ಎಲ್ಲರಿಗೂ ಉಚಿತ ಆರೋಗ್ಯ ಸೇವೆ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Universal free healthcare access, state-of-the-art public hospitals, free essential medicines, and strong rural health infrastructure.</span>
+        <span class="kn">ಸಾರ್ವತ್ರಿಕ ಉಚಿತ ಆರೋಗ್ಯ ಸೇವೆ, ಸುಸಜ್ಜಿತ ಸರ್ಕಾರಿ ಆಸ್ಪತ್ರೆಗಳು, ಉಚಿತ ಅಗತ್ಯ ಔಷಧಿಗಳು ಮತ್ತು ಬಲಿಷ್ಠ ಗ್ರಾಮೀಣ ಆರೋಗ್ಯ ಮೂಲಸೌಕರ್ಯದ ಖಾತರಿ.</span>
       </p>
     </div>
 
@@ -436,6 +608,15 @@
       <p class="pillar-desc">
         <span class="en">Skill development, startup ecosystems, and job creation policies that give Karnataka's youth a real economic future.</span>
         <span class="kn">ಕೌಶಲ್ಯ ಅಭಿವೃದ್ಧಿ, ಸ್ಟಾರ್ಟ್‌ಅಪ್ ವ್ಯವಸ್ಥೆ ಮತ್ತು ಉದ್ಯೋಗ ಸೃಷ್ಟಿ ನೀತಿಗಳ ಮೂಲಕ ಕರ್ನಾಟಕ ಯುವಜನರಿಗೆ ಆರ್ಥಿಕ ಭವಿಷ್ಯ ನಿರ್ಮಿಸೋಣ.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🌾</span>
+      <div class="pillar-title"><span class="en">Farmers' Welfare</span><span class="kn">ರೈತರ ಕಲ್ಯಾಣ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Smart agricultural initiatives, fair crop pricing support, modern cold storage networks, and direct-to-consumer digital marketplaces.</span>
+        <span class="kn">ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಉಪಕ್ರಮಗಳು, ಬೆಳೆಗಳಿಗೆ ಯೋಗ್ಯ ಬೆಲೆ ಬೆಂಬಲ, ಆಧುನಿಕ ಕೋಲ್ಡ್ ಸ್ಟೋರೇಜ್ ಜಾಲ ಮತ್ತು ನೇರ ಮಾರುಕಟ್ಟೆ ಸೌಲಭ್ಯ.</span>
       </p>
     </div>
 
@@ -454,15 +635,6 @@
       <p class="pillar-desc">
         <span class="en">Protecting Karnataka's rivers, forests, and farmlands for tomorrow's children — balancing growth with ecological wisdom.</span>
         <span class="kn">ನಾಳಿನ ಮಕ್ಕಳಿಗಾಗಿ ಕರ್ನಾಟಕದ ನದಿಗಳು, ಕಾಡುಗಳು ಮತ್ತು ಕೃಷಿ ಭೂಮಿಯನ್ನು ಕಾಪಾಡೋಣ — ಬೆಳವಣಿಗೆ ಮತ್ತು ಪರಿಸರ ಜ್ಞಾನದ ಸಮತೋಲನದೊಂದಿಗೆ.</span>
-      </p>
-    </div>
-
-    <div class="pillar-card">
-      <span class="pillar-icon">🏥</span>
-      <div class="pillar-title"><span class="en">Healthcare Access</span><span class="kn">ಆರೋಗ್ಯ ಸೇವೆ</span></div>
-      <p class="pillar-desc">
-        <span class="en">Affordable, accessible healthcare for all — strengthening public hospitals, mental health support, and rural health infrastructure.</span>
-        <span class="kn">ಎಲ್ಲರಿಗೂ ಕೈಗೆಟಕುವ ಆರೋಗ್ಯ ಸೇವೆ — ಸರ್ಕಾರಿ ಆಸ್ಪತ್ರೆಗಳ ಬಲವರ್ಧನೆ, ಮಾನಸಿಕ ಆರೋಗ್ಯ ಬೆಂಬಲ ಮತ್ತು ಗ್ರಾಮೀಣ ಆರೋಗ್ಯ ಮೂಲಸೌಕರ್ಯ.</span>
       </p>
     </div>
 
@@ -491,8 +663,8 @@
       </div>
       <h2>K N Jagadish Kumar</h2>
       <div class="profession">
-        📋 <span class="en">Advocate — Karnataka High Court</span>
-        <span class="kn">ವಕೀಲ — ಕರ್ನಾಟಕ ಹೈಕೋರ್ಟ್</span>
+        📋 <span class="en">Advocate — New Delhi</span>
+        <span class="kn">ವಕೀಲ — ನವದೆಹಲಿ</span>
       </div>
       <div class="voice">
         "<span class="en">By Choice — Voice of Karnataka</span><span class="kn">ಆಯ್ಕೆಯಿಂದ — ಕರ್ನಾಟಕದ ಧ್ವನಿ</span>"
@@ -517,8 +689,8 @@
   <div class="join-inner">
     <div class="section-eyebrow" style="color:var(--gold);letter-spacing:4px;font-family:'Tiro Kannada',serif;font-size:0.9rem;font-weight:600;margin-bottom:12px;">ಒಗ್ಗಟ್ಟಿನಿಂದ ಪ್ರಗತಿಯಾಗೋಣ</div>
     <h2>
-      <span class="en">Be Part of the<br><span>YEP Movement</span></span>
-      <span class="kn"><span>YEP</span> ಚಳವಳಿಯ<br>ಭಾಗವಾಗಿ</span>
+      <span class="en">Be Part of the<br><span>YEP for Change</span></span>
+      <span class="kn">ಬದಲಾವಣೆಗಾಗಿ YEP<br>ಜೊತೆ ಕೈಜೋಡಿಸಿ</span>
     </h2>
     <div class="join-tagline">
       <span class="en" style="font-family:'Tiro Kannada',serif">ದೇಶ ಕಟ್ಟೋಣ · Let's Build Karnataka Together</span>
@@ -563,8 +735,8 @@
   </div>
   <div class="footer-bottom">
     <div class="tricolor-bar" style="margin-bottom:20px;"></div>
-    © 2026 <span class="yep">YoungSTAR Empowerment Party</span> · Karnataka · All Rights Reserved<br>
-    <small style="margin-top:6px;display:block;opacity:0.5;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</small>
+    © 2026 <span class="youngstar-gradient">YoungSTAR</span> <span class="yep">Empowerment Party</span> · Karnataka · All Rights Reserved<br>
+    <small style="margin-top:6px;display:block;color:var(--gold);font-size:0.85rem;font-weight:500;opacity:0.9;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</small>
   </div>
 </footer>
 
@@ -574,6 +746,7 @@
     document.body.className = 'lang-' + lang;
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     document.getElementById('btn-kn').classList.toggle('active', lang === 'kn');
+    runTypewriter(lang);
   }
 
   /* ── SCROLL PROGRESS BAR ── */
@@ -620,6 +793,86 @@
   }, { threshold: 0.2 });
 
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── TYPEWRITER ANIMATION LOGIC ── */
+  const typeText = {
+    en: [
+      { id: 'type-en-1', text: 'YoungSTAR' },
+      { id: 'type-en-2', text: 'Empowerment' },
+      { id: 'type-en-3', text: 'Party' }
+    ],
+    kn: [
+      { id: 'type-kn-1', text: 'ಯಂಗ್‌ಸ್ಟಾರ್' },
+      { id: 'type-kn-2', text: 'ಪಕ್ಷ' }
+    ]
+  };
+
+  let activeTypeTimeout = null;
+  const cursorEl = document.createElement('span');
+  cursorEl.className = 'typewriter-cursor';
+  cursorEl.textContent = '|';
+
+  function runTypewriter(lang) {
+    if (activeTypeTimeout) {
+      clearTimeout(activeTypeTimeout);
+    }
+
+    // Reset all elements
+    for (const l in typeText) {
+      typeText[l].forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) el.innerHTML = '';
+      });
+    }
+
+    const lines = typeText[lang];
+    let currentLineIdx = 0;
+    let currentCharIdx = 0;
+
+    function typeNextChar() {
+      if (currentLineIdx >= lines.length) {
+        const lastEl = document.getElementById(lines[lines.length - 1].id);
+        if (lastEl) {
+          lastEl.appendChild(cursorEl);
+        }
+        return;
+      }
+
+      const currentItem = lines[currentLineIdx];
+      const el = document.getElementById(currentItem.id);
+      if (!el) return;
+
+      if (!el.contains(cursorEl)) {
+        el.appendChild(cursorEl);
+      }
+
+      const text = currentItem.text;
+      if (currentCharIdx < text.length) {
+        cursorEl.before(text.charAt(currentCharIdx));
+        currentCharIdx++;
+        activeTypeTimeout = setTimeout(typeNextChar, 70);
+      } else {
+        el.removeChild(cursorEl);
+        currentLineIdx++;
+        currentCharIdx = 0;
+        activeTypeTimeout = setTimeout(typeNextChar, 180);
+      }
+    }
+
+    typeNextChar();
+  }
+
+  // Trigger typewriter on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+    runTypewriter(activeLang);
+  });
 </script>
+
+<!-- FLOATING ACTION BUTTON -->
+<a href="#join" class="floating-join-btn" aria-label="Join for Change">
+  <span class="btn-ripple"></span>
+  <span class="btn-icon">✊</span>
+</a>
 </body>
 </html>
