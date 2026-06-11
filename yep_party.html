@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YoungStar Empowerment Party – YEP Karnataka</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --deep-saffron: #E05500;
+    --white: #FFFFFF;
+    --green: #138808;
+    --dark-green: #0A5C06;
+    --navy: #1A237E;
+    --gold: #F4C430;
+    --dark-gold: #C9A227;
+    --charcoal: #1C1C2E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 40px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 5px 14px; border-radius: 40px;
+    border: none; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+
+  /* lang-aware text: show/hide based on body class */
+  body.lang-en  .kn { display: none !important; }
+  body.lang-kn  .en { display: none !important; }
+  /* Kannada font for .kn elements */
+  .kn { font-family: 'Tiro Kannada', serif !important; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(28,28,46,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--saffron);
+    padding: 12px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .nav-logo img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); }
+  .nav-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--gold); letter-spacing: 1px;
+  }
+  .nav-brand span { color: var(--saffron); }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: #ccc; text-decoration: none; letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--saffron); color: white;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 0.9rem; letter-spacing: 1px;
+    padding: 8px 18px; border: none; border-radius: 4px;
+    cursor: pointer; text-decoration: none; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--deep-saffron); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A0A1A 0%, #1A237E 50%, #0A5C06 100%);
+    position: relative; display: flex; align-items: center;
+    overflow: hidden; padding-top: 80px;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-map-bg {
+    position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+    width: 500px; height: 600px; opacity: 0.07; background: var(--gold);
+    clip-path: polygon(40% 0%,65% 2%,80% 8%,90% 18%,95% 30%,100% 45%,95% 58%,85% 68%,75% 72%,70% 85%,60% 92%,50% 100%,38% 95%,28% 85%,20% 75%,10% 65%,5% 50%,8% 35%,15% 22%,25% 10%);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    width: 100%; padding: 0 5%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+  .hero-text .eyebrow {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before {
+    content: ''; display: block; width: 32px; height: 2px; background: var(--saffron);
+  }
+  .hero-text h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 700; line-height: 1.05; color: var(--white);
+  }
+  .hero-text h1 .accent { color: var(--gold); }
+  .hero-text h1 .accent-orange { color: var(--saffron); }
+  .hero-sub {
+    font-size: 1rem; color: rgba(255,255,255,0.6);
+    line-height: 1.7; max-width: 460px; margin: 20px 0 36px;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--saffron); color: white;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 14px 32px; border: none; border-radius: 4px;
+    cursor: pointer; text-decoration: none; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--deep-saffron); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,107,0,0.4); }
+  .btn-outline {
+    background: transparent; color: var(--gold);
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 14px 32px; border: 2px solid var(--gold); border-radius: 4px;
+    cursor: pointer; text-decoration: none; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-outline:hover { background: var(--gold); color: var(--charcoal); }
+  .hero-leader { display: flex; flex-direction: column; align-items: center; }
+  .logo-hero {
+    width: 120px; height: 120px; border-radius: 50%;
+    border: 3px solid var(--gold); margin-bottom: 24px;
+    box-shadow: 0 0 40px rgba(244,196,48,0.3);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%,100% { box-shadow: 0 0 30px rgba(244,196,48,0.3); }
+    50% { box-shadow: 0 0 60px rgba(244,196,48,0.6); }
+  }
+
+  /* ── TRICOLOR ── */
+  .tricolor-bar { height: 5px; background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%); }
+
+  /* ── STATS ── */
+  .stats-section { background: #0F0F1E; padding: 60px 5%; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; max-width: 900px; margin: 0 auto; text-align: center; }
+  .stat-item .number { font-family: 'Rajdhani', sans-serif; font-size: 2.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .stat-item .label { font-size: 0.8rem; color: rgba(255,255,255,0.5); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+
+  /* ── MANIFESTO ── */
+  .section { padding: 100px 5%; }
+  .section-header { text-align: center; margin-bottom: 64px; }
+  .section-eyebrow { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--saffron); margin-bottom: 12px; }
+  .section-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem,4vw,3rem); font-weight: 700; color: var(--white); line-height: 1.1; }
+  .section-title .gold { color: var(--gold); }
+  .section-divider { width: 60px; height: 3px; background: linear-gradient(90deg,var(--saffron),var(--gold)); margin: 20px auto 0; }
+  .pillars-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+  .pillar-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-top: 3px solid var(--saffron); padding: 36px 28px; border-radius: 4px; transition: all 0.3s;
+  }
+  .pillar-card:nth-child(2) { border-top-color: var(--gold); }
+  .pillar-card:nth-child(3) { border-top-color: var(--green); }
+  .pillar-card:nth-child(4) { border-top-color: var(--gold); }
+  .pillar-card:nth-child(5) { border-top-color: var(--saffron); }
+  .pillar-card:nth-child(6) { border-top-color: var(--green); }
+  .pillar-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-4px); }
+  .pillar-icon { font-size: 2.4rem; margin-bottom: 16px; display: block; }
+  .pillar-title { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+  .pillar-desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+  /* ── LEADER ── */
+  .leader-section {
+    background: linear-gradient(135deg,#0A0A1A,#0A1A2E); padding: 100px 5%;
+    border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .leader-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 64px; align-items: center; }
+  .leader-photo-wrap { position: relative; }
+  .leader-photo-wrap img { width: 100%; border-radius: 6px; border: 2px solid var(--gold); display: block; }
+  .leader-photo-wrap::after {
+    content: ''; position: absolute; bottom: -12px; right: -12px;
+    width: 100%; height: 100%; border: 2px solid var(--saffron); border-radius: 6px; z-index: -1;
+  }
+  .leader-info .role { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--saffron); margin-bottom: 10px; }
+  .leader-info h2 { font-family: 'Rajdhani', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 8px; }
+  .leader-info .profession { font-size: 1rem; color: var(--gold); margin-bottom: 6px; }
+  .leader-info .voice { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.7); font-style: italic; margin-bottom: 24px; }
+  .leader-info p { font-size: 0.92rem; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 28px; }
+  .contact-chips { display: flex; gap: 12px; flex-wrap: wrap; }
+  .contact-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 16px; border-radius: 40px; font-size: 0.88rem; color: rgba(255,255,255,0.8);
+    text-decoration: none; transition: all 0.2s;
+  }
+  .contact-chip:hover { background: var(--saffron); border-color: var(--saffron); color: white; }
+
+  /* ── JOIN ── */
+  .join-section {
+    background: linear-gradient(135deg,var(--navy),#0A2A14);
+    padding: 100px 5%; text-align: center; position: relative; overflow: hidden;
+  }
+  .join-section::before {
+    content: 'YEP'; position: absolute;
+    font-family: 'Rajdhani', sans-serif; font-size: 20rem; font-weight: 900;
+    color: rgba(255,255,255,0.02); top: 50%; left: 50%;
+    transform: translate(-50%,-50%); pointer-events: none; letter-spacing: -10px;
+  }
+  .join-inner { position: relative; z-index: 1; }
+  .join-section h2 { font-family: 'Rajdhani', sans-serif; font-size: clamp(2rem,5vw,3.5rem); font-weight: 700; color: var(--white); margin-bottom: 16px; }
+  .join-section h2 span { color: var(--gold); }
+  .join-tagline { font-size: 1.2rem; color: rgba(255,255,255,0.6); margin-bottom: 24px; }
+  .join-sub { font-size: 1rem; color: rgba(255,255,255,0.5); max-width: 520px; margin: 0 auto 40px; line-height: 1.7; }
+  .join-form { display: flex; gap: 12px; max-width: 480px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .join-form input {
+    flex: 1; min-width: 200px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15); color: white;
+    font-family: 'Inter', sans-serif; font-size: 0.95rem;
+    padding: 14px 18px; border-radius: 4px; outline: none; transition: border-color 0.2s;
+  }
+  .join-form input::placeholder { color: rgba(255,255,255,0.35); }
+  .join-form input:focus { border-color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer { background: #080810; padding: 48px 5% 32px; border-top: 2px solid var(--saffron); }
+  .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; max-width: 1000px; margin: 0 auto 40px; }
+  .footer-brand img { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 14px; }
+  .footer-brand p { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 280px; }
+  .footer-col h4 { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.4); text-decoration: none; margin-bottom: 8px; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.25); padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); max-width: 1000px; margin: 0 auto; }
+  .footer-bottom .yep { color: var(--saffron); font-weight: 600; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+    .hero-text .eyebrow { justify-content: center; }
+    .hero-sub { margin: 20px auto 36px; }
+    .hero-actions { justify-content: center; }
+    .hero-leader { order: -1; }
+    .pillars-grid { grid-template-columns: 1fr 1fr; }
+    .leader-inner { grid-template-columns: 1fr; text-align: center; }
+    .leader-photo-wrap { width: 220px; margin: 0 auto; }
+    .contact-chips { justify-content: center; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .pillars-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo-hero { animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body class="lang-en">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="YEP Logo">
+    <div class="nav-brand">
+      <span class="en">YOUNG<span style="color:var(--saffron)">STAR</span> PARTY</span>
+      <span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#manifesto"><span class="en">Manifesto</span><span class="kn">ಪ್ರಣಾಳಿಕೆ</span></a></li>
+      <li><a href="#leader"><span class="en">Leadership</span><span class="kn">ನಾಯಕತ್ವ</span></a></li>
+      <li><a href="#join"><span class="en">Join YEP</span><span class="kn">ಸೇರಿ</span></a></li>
+      <li><a href="#contact"><span class="en">Contact</span><span class="kn">ಸಂಪರ್ಕ</span></a></li>
+    </ul>
+    <!-- LANGUAGE TOGGLE -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-kn" onclick="setLang('kn')">ಕನ್ನಡ</button>
+    </div>
+    <a href="#join" class="nav-cta">
+      <span class="en">Join the Movement</span>
+      <span class="kn">ಚಳವಳಿಗೆ ಸೇರಿ</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-map-bg"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="eyebrow">
+        <span class="en">Karnataka's Voice · Youth's Future</span>
+        <span class="kn">ಕರ್ನಾಟಕದ ಧ್ವನಿ · ಯುವಜನರ ಭವಿಷ್ಯ</span>
+      </div>
+      <h1>
+        <span class="en"><span class="accent-orange">Young</span><span class="accent">Star</span><br>Empowerment<br>Party</span>
+        <span class="kn" style="font-size:clamp(2.2rem,5vw,4rem);line-height:1.2"><span class="accent-orange">ಯಂಗ್</span><span class="accent">ಸ್ಟಾರ್</span><br>ಸಬಲೀಕರಣ<br>ಪಕ್ಷ</span>
+      </h1>
+      <p class="hero-sub">
+        <span class="en">A movement born from the streets of Karnataka — giving the youth a seat at the table, a platform for justice, and a future worth fighting for.</span>
+        <span class="kn">ಕರ್ನಾಟಕದ ಬೀದಿಗಳಿಂದ ಜನ್ಮ ತಳೆದ ಚಳವಳಿ — ಯುವಜನರಿಗೆ ರಾಜಕೀಯ ಅಧಿಕಾರ, ನ್ಯಾಯಕ್ಕಾಗಿ ವೇದಿಕೆ, ಮತ್ತು ಹೋರಾಡಲು ಯೋಗ್ಯ ಭವಿಷ್ಯ ನೀಡುತ್ತದೆ.</span>
+      </p>
+      <div class="hero-actions">
+        <a href="#join" class="btn-primary">✊ <span class="en">Join YEP Today</span><span class="kn">ಇಂದೇ ಸೇರಿ</span></a>
+        <a href="#manifesto" class="btn-outline"><span class="en">Our Vision →</span><span class="kn">ನಮ್ಮ ದೃಷ್ಟಿ →</span></a>
+      </div>
+    </div>
+    <div class="hero-leader">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="YEP Logo" class="logo-hero">
+      <div style="text-align:center;margin-top:8px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);">
+          <span class="en">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</span>
+          <span class="kn">Youth Power – Our Future</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tricolor-bar"></div>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="number">30+</div>
+      <div class="label"><span class="en">Districts Active</span><span class="kn">ಸಕ್ರಿಯ ಜಿಲ್ಲೆಗಳು</span></div>
+    </div>
+    <div class="stat-item">
+      <div class="number">10K+</div>
+      <div class="label"><span class="en">Youth Members</span><span class="kn">ಯುವ ಸದಸ್ಯರು</span></div>
+    </div>
+    <div class="stat-item">
+      <div class="number">224</div>
+      <div class="label"><span class="en">Constituencies</span><span class="kn">ಕ್ಷೇತ್ರಗಳು</span></div>
+    </div>
+    <div class="stat-item">
+      <div class="number">1</div>
+      <div class="label"><span class="en">Mission: Karnataka</span><span class="kn">ಗುರಿ: ಕರ್ನಾಟಕ</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO PILLARS -->
+<section class="section" id="manifesto">
+  <div class="section-header">
+    <div class="section-eyebrow">
+      <span class="en">ನಮ್ಮ ಧ್ಯೇಯ · Our Mission</span>
+      <span class="kn">ನಮ್ಮ ಧ್ಯೇಯ · ನಮ್ಮ ಆಶಯ</span>
+    </div>
+    <h2 class="section-title">
+      <span class="en">Building Karnataka<br>for the <span class="gold">Next Generation</span></span>
+      <span class="kn">ಮುಂದಿನ ಪೀಳಿಗೆಗಾಗಿ<br><span class="gold">ಕರ್ನಾಟಕ ನಿರ್ಮಾಣ</span></span>
+    </h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="pillars-grid">
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🎓</span>
+      <div class="pillar-title"><span class="en">Quality Education</span><span class="kn">ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Equal access to quality education for every young Kannadiga — from rural villages to urban centres. No child left behind.</span>
+        <span class="kn">ಗ್ರಾಮೀಣ ಹಳ್ಳಿಗಳಿಂದ ನಗರ ಕೇಂದ್ರಗಳವರೆಗೆ ಪ್ರತಿ ಕನ್ನಡಿಗ ಮಗುವಿಗೂ ಗುಣಮಟ್ಟದ ಶಿಕ್ಷಣ ಸಿಗಬೇಕು. ಒಬ್ಬ ಮಗುವೂ ಹಿಂದೆ ಬೀಳಬಾರದು.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">💼</span>
+      <div class="pillar-title"><span class="en">Youth Employment</span><span class="kn">ಯುವ ಉದ್ಯೋಗ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Skill development, startup ecosystems, and job creation policies that give Karnataka's youth a real economic future.</span>
+        <span class="kn">ಕೌಶಲ್ಯ ಅಭಿವೃದ್ಧಿ, ಸ್ಟಾರ್ಟ್‌ಅಪ್ ವ್ಯವಸ್ಥೆ ಮತ್ತು ಉದ್ಯೋಗ ಸೃಷ್ಟಿ ನೀತಿಗಳ ಮೂಲಕ ಕರ್ನಾಟಕ ಯುವಜನರಿಗೆ ಆರ್ಥಿಕ ಭವಿಷ್ಯ ನಿರ್ಮಿಸೋಣ.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">⚖️</span>
+      <div class="pillar-title"><span class="en">Justice & Rights</span><span class="kn">ನ್ಯಾಯ ಮತ್ತು ಹಕ್ಕು</span></div>
+      <p class="pillar-desc">
+        <span class="en">Led by an advocate, YEP stands for constitutional rights, transparency, and zero tolerance for corruption at every level.</span>
+        <span class="kn">ವಕೀಲರ ನೇತೃತ್ವದಲ್ಲಿ, YEP ಸಾಂವಿಧಾನಿಕ ಹಕ್ಕುಗಳಿಗಾಗಿ, ಪಾರದರ್ಶಕತೆಗಾಗಿ ಮತ್ತು ಎಲ್ಲ ಹಂತದ ಭ್ರಷ್ಟಾಚಾರಕ್ಕೆ ಶೂನ್ಯ ಸಹನೆಗಾಗಿ ನಿಲ್ಲುತ್ತದೆ.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🌿</span>
+      <div class="pillar-title"><span class="en">Sustainable Future</span><span class="kn">ಪರಿಸರ ರಕ್ಷಣೆ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Protecting Karnataka's rivers, forests, and farmlands for tomorrow's children — balancing growth with ecological wisdom.</span>
+        <span class="kn">ನಾಳಿನ ಮಕ್ಕಳಿಗಾಗಿ ಕರ್ನಾಟಕದ ನದಿಗಳು, ಕಾಡುಗಳು ಮತ್ತು ಕೃಷಿ ಭೂಮಿಯನ್ನು ಕಾಪಾಡೋಣ — ಬೆಳವಣಿಗೆ ಮತ್ತು ಪರಿಸರ ಜ್ಞಾನದ ಸಮತೋಲನದೊಂದಿಗೆ.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🏥</span>
+      <div class="pillar-title"><span class="en">Healthcare Access</span><span class="kn">ಆರೋಗ್ಯ ಸೇವೆ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Affordable, accessible healthcare for all — strengthening public hospitals, mental health support, and rural health infrastructure.</span>
+        <span class="kn">ಎಲ್ಲರಿಗೂ ಕೈಗೆಟಕುವ ಆರೋಗ್ಯ ಸೇವೆ — ಸರ್ಕಾರಿ ಆಸ್ಪತ್ರೆಗಳ ಬಲವರ್ಧನೆ, ಮಾನಸಿಕ ಆರೋಗ್ಯ ಬೆಂಬಲ ಮತ್ತು ಗ್ರಾಮೀಣ ಆರೋಗ್ಯ ಮೂಲಸೌಕರ್ಯ.</span>
+      </p>
+    </div>
+
+    <div class="pillar-card">
+      <span class="pillar-icon">🗣️</span>
+      <div class="pillar-title"><span class="en">Kannada Identity</span><span class="kn">ಕನ್ನಡ ಅಭಿಮಾನ</span></div>
+      <p class="pillar-desc">
+        <span class="en">Proud promotion of Kannada language, culture, and heritage — while embracing the diversity that makes Karnataka great.</span>
+        <span class="kn">ಕನ್ನಡ ಭಾಷೆ, ಸಂಸ್ಕೃತಿ ಮತ್ತು ಪರಂಪರೆಯ ಹೆಮ್ಮೆಯ ಪ್ರಚಾರ — ಕರ್ನಾಟಕವನ್ನು ಶ್ರೇಷ್ಠವಾಗಿಸುವ ವೈವಿಧ್ಯತೆಯನ್ನು ಅಪ್ಪಿಕೊಳ್ಳುತ್ತಾ.</span>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- LEADER -->
+<section class="leader-section" id="leader">
+  <div class="leader-inner">
+    <div class="leader-photo-wrap">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="K N Jagadish Kumar">
+    </div>
+    <div class="leader-info">
+      <div class="role">
+        <span class="en">Party Founder &amp; Leader</span>
+        <span class="kn">ಪಕ್ಷದ ಸ್ಥಾಪಕ ಮತ್ತು ನಾಯಕ</span>
+      </div>
+      <h2>K N Jagadish Kumar</h2>
+      <div class="profession">
+        📋 <span class="en">Advocate — Karnataka High Court</span>
+        <span class="kn">ವಕೀಲ — ಕರ್ನಾಟಕ ಹೈಕೋರ್ಟ್</span>
+      </div>
+      <div class="voice">
+        "<span class="en">By Choice — Voice of Karnataka</span><span class="kn">ಆಯ್ಕೆಯಿಂದ — ಕರ್ನಾಟಕದ ಧ್ವನಿ</span>"
+      </div>
+      <p>
+        <span class="en">A practicing advocate committed to constitutional values, K N Jagadish Kumar founded the YoungStar Empowerment Party to channel Karnataka's most powerful resource — its youth — into meaningful political change. His legal expertise and grassroots understanding of Karnataka's people form the backbone of YEP's mission.</span>
+        <span class="kn">ಸಾಂವಿಧಾನಿಕ ಮೌಲ್ಯಗಳಿಗೆ ಬದ್ಧರಾದ ಅಭ್ಯಾಸ ವಕೀಲರಾದ ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ ಅವರು ಕರ್ನಾಟಕದ ಅತ್ಯಂತ ಶಕ್ತಿಶಾಲಿ ಸಂಪನ್ಮೂಲ — ಅದರ ಯುವಜನರನ್ನು — ಅರ್ಥಪೂರ್ಣ ರಾಜಕೀಯ ಬದಲಾವಣೆಗೆ ಚಾನೆಲ್ ಮಾಡಲು ಯಂಗ್‌ಸ್ಟಾರ್ ಎಂಪವರ್‌ಮೆಂಟ್ ಪಾರ್ಟಿ ಸ್ಥಾಪಿಸಿದರು.</span>
+      </p>
+      <div class="contact-chips" id="contact">
+        <a href="tel:+919845500932" class="contact-chip"><span class="chip-icon">📞</span> +91 98455 00932</a>
+        <a href="https://wa.me/919845500932" target="_blank" class="contact-chip">
+          <span class="chip-icon">💬</span>
+          <span class="en">WhatsApp</span><span class="kn">ವಾಟ್ಸ್ಆ್ಯಪ್</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join-section" id="join">
+  <div class="join-inner">
+    <div class="section-eyebrow" style="color:var(--gold);letter-spacing:4px;font-family:'Tiro Kannada',serif;font-size:0.9rem;font-weight:600;margin-bottom:12px;">ಒಗ್ಗಟ್ಟಿನಿಂದ ಪ್ರಗತಿಯೇಗೋಣ</div>
+    <h2>
+      <span class="en">Be Part of the<br><span>YEP Movement</span></span>
+      <span class="kn"><span>YEP</span> ಚಳವಳಿಯ<br>ಭಾಗವಾಗಿ</span>
+    </h2>
+    <div class="join-tagline">
+      <span class="en" style="font-family:'Tiro Kannada',serif">ದೇಶ ಕಟ್ಟೋಣ · Let's Build Karnataka Together</span>
+      <span class="kn">ದೇಶ ಕಟ್ಟೋಣ · ಒಟ್ಟಾಗಿ ಕರ್ನಾಟಕ ಕಟ್ಟೋಣ</span>
+    </div>
+    <p class="join-sub">
+      <span class="en">Every revolution begins with one person saying "enough." Join thousands of young Kannadigas who are choosing to act, not wait.</span>
+      <span class="kn">ಪ್ರತಿ ಕ್ರಾಂತಿಯು ಒಬ್ಬ ವ್ಯಕ್ತಿ "ಸಾಕು" ಎಂದು ಹೇಳುವಾಗ ಆರಂಭವಾಗುತ್ತದೆ. ಕಾಯದೆ ಕಾರ್ಯ ಮಾಡಲು ಆಯ್ಕೆ ಮಾಡಿಕೊಂಡ ಸಾವಿರಾರು ಯುವ ಕನ್ನಡಿಗರೊಂದಿಗೆ ಸೇರಿ.</span>
+    </p>
+    <div class="join-form">
+      <input type="text" placeholder="Your Name / ನಿಮ್ಮ ಹೆಸರು">
+      <input type="tel" placeholder="Mobile / ಮೊಬೈಲ್">
+      <a href="https://wa.me/919845500932?text=I%20want%20to%20join%20YEP%20-%20YoungStar%20Empowerment%20Party" target="_blank" class="btn-primary" style="width:100%;justify-content:center;">
+        ✊ <span class="en">Join via WhatsApp</span><span class="kn">ವಾಟ್ಸ್ಆ್ಯಪ್ ಮೂಲಕ ಸೇರಿ</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-06-11_at_7_24_05_PM_1_.jpeg" alt="YEP Logo">
+      <p>
+        <span class="en">YoungStar Empowerment Party (YEP) — the voice of Karnataka's youth. Registered under the Election Commission of India.</span>
+        <span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಎಂಪವರ್‌ಮೆಂಟ್ ಪಾರ್ಟಿ (YEP) — ಕರ್ನಾಟಕ ಯುವಜನರ ಧ್ವನಿ. ಭಾರತ ಚುನಾವಣಾ ಆಯೋಗದಡಿ ನೋಂದಾಯಿತ.</span>
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4><span class="en">Navigate</span><span class="kn">ನ್ಯಾವಿಗೇಟ್</span></h4>
+      <a href="#manifesto"><span class="en">Manifesto</span><span class="kn">ಪ್ರಣಾಳಿಕೆ</span></a>
+      <a href="#leader"><span class="en">Leadership</span><span class="kn">ನಾಯಕತ್ವ</span></a>
+      <a href="#join"><span class="en">Join Us</span><span class="kn">ಸೇರಿ</span></a>
+      <a href="#contact"><span class="en">Contact</span><span class="kn">ಸಂಪರ್ಕ</span></a>
+    </div>
+    <div class="footer-col">
+      <h4><span class="en">Contact</span><span class="kn">ಸಂಪರ್ಕ</span></h4>
+      <a href="tel:+919845500932">📞 +91 98455 00932</a>
+      <a href="https://wa.me/919845500932" target="_blank">💬 WhatsApp</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="tricolor-bar" style="margin-bottom:20px;"></div>
+    © 2026 <span class="yep">YoungStar Empowerment Party</span> · Karnataka · All Rights Reserved<br>
+    <small style="margin-top:6px;display:block;opacity:0.5;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</small>
+  </div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-kn').classList.toggle('active', lang === 'kn');
+  }
+</script>
+</body>
+</html>
