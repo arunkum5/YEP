@@ -1,0 +1,2602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YEP Karnataka – Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --saffron-glow: rgba(255, 107, 0, 0.15);
+    --deep-saffron: #E05500;
+    --white: #FFFFFF;
+    --green: #138808;
+    --green-glow: rgba(19, 136, 8, 0.15);
+    --dark-green: #0A5C06;
+    --navy: #1A237E;
+    --gold: #F4C430;
+    --gold-glow: rgba(244, 196, 48, 0.15);
+    --charcoal: #12121E;
+    --dark-charcoal: #08080F;
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.07);
+    --glass-hover: rgba(255, 255, 255, 0.06);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --text-muted: rgba(255, 255, 255, 0.35);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark-charcoal);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--dark-charcoal); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+  /* ── LOGIN SECTION ── */
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #1C1C30 0%, #08080F 100%);
+    position: relative;
+  }
+  .login-container::before {
+    content: ''; position: absolute; top: 20%; left: 20%; width: 300px; height: 300px;
+    background: var(--saffron-glow); filter: blur(120px); border-radius: 50%; pointer-events: none;
+  }
+  .login-container::after {
+    content: ''; position: absolute; bottom: 20%; right: 20%; width: 300px; height: 300px;
+    background: var(--green-glow); filter: blur(120px); border-radius: 50%; pointer-events: none;
+  }
+  .login-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-top: 4px solid var(--saffron);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    backdrop-filter: blur(20px);
+    z-index: 10;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .login-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .login-logo img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+  }
+  .login-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.9rem; font-weight: 700; text-align: center;
+    margin-bottom: 8px; background: linear-gradient(135deg, var(--white), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .login-subtitle { font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-bottom: 24px; }
+  
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem;
+    font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .form-control {
+    width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+    border-radius: 6px; padding: 12px 14px; color: white; font-size: 0.95rem; outline: none; transition: all 0.25s ease;
+  }
+  .form-control:focus { border-color: var(--gold); background: rgba(255,255,255,0.08); box-shadow: 0 0 10px rgba(244,196,48,0.15); }
+  select.form-control { cursor: pointer; }
+  select.form-control option { background: var(--charcoal); color: white; }
+  
+  .btn-submit {
+    width: 100%; background: var(--saffron); color: white; border: none; border-radius: 6px;
+    padding: 12px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 15px var(--saffron-glow);
+  }
+  .btn-submit:hover { background: var(--deep-saffron); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3); }
+  .error-message { color: #ff5252; font-size: 0.82rem; margin-top: 12px; text-align: center; display: none; padding: 8px; background: rgba(255,82,82,0.1); border-radius: 4px; border: 1.5px solid rgba(255,82,82,0.2); }
+
+  /* ── MAIN DASHBOARD LAYOUT ── */
+  .app-layout {
+    display: none; /* Toggled by JS */
+    min-height: 100vh;
+    flex-direction: row;
+    position: relative;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    background: var(--charcoal);
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .sidebar-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sidebar-header img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    object-fit: cover;
+  }
+  .sidebar-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .sidebar-brand span { color: var(--gold); }
+  
+  .sidebar-nav {
+    flex: 1;
+    padding: 24px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .nav-item {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+  .nav-item:hover {
+    color: var(--white);
+    background: var(--glass-hover);
+  }
+  .nav-item.active {
+    color: var(--gold);
+    background: rgba(244, 196, 48, 0.06);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding-left: 13px;
+  }
+  .nav-icon {
+    font-size: 1.15rem;
+  }
+  .sidebar-footer {
+    padding: 20px 14px;
+    border-top: 1px solid var(--glass-border);
+  }
+  .btn-signout {
+    width: 100%;
+    background: transparent;
+    color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-signout:hover {
+    background: #ff5252;
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 82, 82, 0.2);
+  }
+
+  /* MAIN CONTENT AREA */
+  .main-content {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--dark-charcoal);
+  }
+
+  /* TOP HEADER */
+  .top-header {
+    background: rgba(18, 18, 30, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+  .header-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--white);
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .status-indicator {
+    padding: 6px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.03);
+  }
+  .status-indicator.live {
+    background: rgba(57, 255, 20, 0.08);
+    color: #39FF14;
+    border: 1px solid rgba(57, 255, 20, 0.25);
+  }
+  .status-indicator.db-connected {
+    background: rgba(19, 136, 8, 0.1);
+    color: #4CAF50;
+    border: 1px solid rgba(19, 136, 8, 0.3);
+  }
+  .indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .btn-mobile-nav {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* CONTENT WRAPPER */
+  .content-wrapper {
+    flex: 1;
+    padding: 40px;
+    max-width: 1300px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .panel-section {
+    display: none; /* Toggled by switchTab */
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── OVERVIEW TAB ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .metric-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 24px;
+    border-top: 4px solid var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card.pending { border-top-color: var(--saffron); }
+  .metric-card.approved { border-top-color: var(--green); }
+  .metric-val { font-family: 'Rajdhani', sans-serif; font-size: 2.6rem; font-weight: 700; color: white; line-height: 1; }
+  .metric-card.pending .metric-val { color: var(--saffron); text-shadow: 0 0 20px rgba(255, 107, 0, 0.2); }
+  .metric-card.approved .metric-val { color: var(--green); text-shadow: 0 0 20px rgba(19, 136, 8, 0.2); }
+  .metric-card .metric-val { text-shadow: 0 0 20px rgba(244, 196, 48, 0.2); }
+  .metric-label { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-top: 8px; }
+
+  /* Charts Container */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 28px;
+    margin-bottom: 40px;
+  }
+  .chart-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+  .chart-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chart-container-inner {
+    position: relative;
+    width: 100%;
+    min-height: 220px;
+    border-color: rgba(255,255,255,0.12);
+  }
+  .log-item.clickable {
+    cursor: pointer;
+  }
+  .log-item.clickable:hover {
+    border-color: var(--gold);
+    box-shadow: 0 4px 12px rgba(244,196,48,0.05);
+  }
+  
+  /* Daily log specific items */
+  .daily-log-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+  .daily-log-date {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--white);
+    min-width: 100px;
+  }
+  .daily-log-bar-outer {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-right: 12px;
+    max-width: 180px;
+  }
+  .daily-log-bar-inner {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 3px;
+  }
+  .daily-log-count {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--gold);
+    background: rgba(244,196,48,0.1);
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(244,196,48,0.25);
+  }
+
+  /* Activity log specific items */
+  .activity-log-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .activity-avatar-thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--glass-border);
+    object-fit: cover;
+  }
+  .activity-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .activity-name-row {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .activity-subtext {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .activity-log-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .activity-date-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* District list styling */
+  .district-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+  .district-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .district-label-wrap {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .district-name { color: var(--text-primary); }
+  .district-count { color: var(--gold); }
+  .district-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .district-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--saffron) 0%, var(--gold) 50%, var(--green) 100%);
+    border-radius: 4px;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* SVG line chart styles */
+  .chart-svg {
+    width: 100%;
+    height: 100%;
+  }
+  .chart-grid-line {
+    stroke: rgba(255,255,255,0.04);
+    stroke-width: 1;
+  }
+  .chart-axis-text {
+    fill: var(--text-muted);
+    font-size: 10px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── MEMBERS TAB ── */
+  .controls-panel {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .search-input-wrap { flex: 1; min-width: 250px; position: relative; }
+  .filter-select-wrap { min-width: 160px; }
+  
+  .action-buttons-wrap {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+  }
+  .btn-panel-action {
+    padding: 12px 18px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-panel-action.export {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    border: 1px solid var(--glass-border);
+  }
+  .btn-panel-action.export:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .btn-panel-action.generator {
+    background: rgba(244, 196, 48, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(244, 196, 48, 0.25);
+  }
+  .btn-panel-action.generator:hover {
+    background: var(--gold);
+    color: var(--charcoal);
+    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.25);
+  }
+
+  /* Table design */
+  .table-container {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    overflow-x: auto;
+    margin-bottom: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+  th {
+    background: rgba(255,255,255,0.03); font-family: 'Rajdhani', sans-serif;
+    font-weight: 700; color: var(--gold); letter-spacing: 0.5px;
+    padding: 16px; border-bottom: 1px solid var(--glass-border);
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.01); }
+
+  /* Custom Checkboxes */
+  .checkbox-cell { width: 44px; text-align: center; }
+  .custom-checkbox {
+    width: 18px; height: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .custom-checkbox:hover { border-color: var(--gold); }
+  .custom-checkbox.checked {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .custom-checkbox.checked::after {
+    content: '✓';
+    color: var(--charcoal);
+    font-size: 0.75rem;
+    font-weight: 900;
+  }
+
+  /* Aadhaar Masking */
+  .aadhaar-cell {
+    font-family: monospace;
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(255,255,255,0.25);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+  .aadhaar-cell:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  /* Thumbnails */
+  .avatar-thumb {
+    width: 44px; height: 44px; border-radius: 6px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    object-fit: cover; cursor: pointer; transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .avatar-thumb:hover { transform: scale(1.15) rotate(2deg); border-color: var(--gold); box-shadow: 0 4px 12px rgba(244,196,48,0.2); }
+
+  /* Action Buttons */
+  .btn-action {
+    padding: 6px 12px; font-family: 'Rajdhani', sans-serif; font-size: 0.82rem;
+    font-weight: 700; letter-spacing: 0.5px; border-radius: 4px; border: none;
+    cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn-action.approve { background: var(--green); color: white; }
+  .btn-action.approve:hover { background: var(--dark-green); box-shadow: 0 4px 10px var(--green-glow); }
+  .btn-action.delete { background: rgba(255,82,82,0.1); border: 1.5px solid rgba(255,82,82,0.25); color: #ff5252; margin-left: 6px; }
+  .btn-action.delete:hover { background: #ff5252; color: white; border-color: #ff5252; box-shadow: 0 4px 10px rgba(255,82,82,0.2); }
+  .btn-action.details { background: rgba(255,255,255,0.06); border: 1.5px solid var(--glass-border); color: white; }
+  .btn-action.details:hover { background: white; color: var(--charcoal); }
+  
+  /* Status Badges */
+  .badge {
+    display: inline-block; padding: 4px 10px; font-size: 0.72rem; font-weight: 700;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge.pending { background: rgba(255, 107, 0, 0.1); color: var(--saffron); border: 1px solid rgba(255, 107, 0, 0.25); }
+  .badge.approved { background: rgba(19, 136, 8, 0.1); color: var(--green); border: 1px solid rgba(19, 136, 8, 0.25); }
+
+  /* Pagination */
+  .pagination { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: rgba(255,255,255,0.01); border-top: 1px solid rgba(255,255,255,0.03); border-radius: 0 0 12px 12px; }
+  .pagination-info { font-size: 0.8rem; color: var(--text-secondary); }
+  .pagination-btns { display: flex; gap: 10px; }
+  .btn-page {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
+    color: white; font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-page:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+  .btn-page:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Bottom Floating Bulk Actions Bar */
+  .bulk-actions-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translate(-50%, 100px);
+    background: rgba(18, 18, 30, 0.95);
+    border: 1.5px solid var(--gold);
+    border-radius: 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    padding: 12px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(12px);
+  }
+  .bulk-actions-bar.active {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+  .bulk-count {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--white);
+    white-space: nowrap;
+  }
+  .bulk-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.15);
+  }
+  .bulk-btns {
+    display: flex;
+    gap: 12px;
+  }
+  .btn-bulk {
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .btn-bulk.approve {
+    background: var(--green);
+    color: white;
+  }
+  .btn-bulk.approve:hover {
+    background: var(--dark-green);
+    box-shadow: 0 4px 12px var(--green-glow);
+  }
+  .btn-bulk.delete {
+    background: rgba(255, 82, 82, 0.1);
+    color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.25);
+  }
+  .btn-bulk.delete:hover {
+    background: #ff5252;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 82, 82, 0.2);
+  }
+  .btn-bulk.cancel {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  .btn-bulk.cancel:hover {
+    color: white;
+  }
+
+  /* ── DATABASE SETTINGS TAB ── */
+  .settings-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .settings-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+  .settings-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 12px;
+  }
+  .db-status-detail {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .db-status-info h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 4px; }
+  .db-status-info p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
+  .db-env-table {
+    width: 100%;
+    margin-bottom: 28px;
+    font-size: 0.85rem;
+  }
+  .db-env-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .db-env-label { font-weight: 600; color: var(--text-secondary); width: 140px; }
+  .db-env-val { font-family: monospace; color: var(--gold); }
+  
+  .sql-editor-card {
+    background: #06060A;
+    border: 1.5px solid var(--glass-border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 14px;
+  }
+  .sql-header {
+    background: rgba(255,255,255,0.03);
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sql-title { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+  .btn-copy-sql {
+    background: var(--gold);
+    color: var(--charcoal);
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-copy-sql:hover { background: var(--white); }
+  .sql-code {
+    padding: 16px 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.82rem;
+    color: #A9B2C3;
+    line-height: 1.5;
+    overflow-x: auto;
+    max-height: 300px;
+    white-space: pre;
+    text-align: left;
+  }
+
+  /* ── MEMBER DETAILS MODAL ── */
+  .details-modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(8, 8, 16, 0.85); backdrop-filter: blur(12px);
+    display: none; align-items: center; justify-content: center; z-index: 2000;
+    padding: 24px; overflow-y: auto;
+  }
+  .details-modal-overlay.active { display: flex; animation: fadeInModal 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .details-modal-content {
+    background: linear-gradient(135deg, #1C1C30 0%, #0A0A10 100%);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+  }
+  @media(max-width: 768px) {
+    .details-modal-content { grid-template-columns: 1fr; }
+  }
+  .btn-close-details {
+    position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.4); border: 1.5px solid var(--glass-border);
+    color: white; font-size: 1.1rem; cursor: pointer; width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s;
+  }
+  .btn-close-details:hover { border-color: var(--gold); color: var(--gold); transform: rotate(90deg); }
+
+  /* Left half details */
+  .details-left {
+    padding: 40px 30px;
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    background: rgba(0,0,0,0.15);
+  }
+  .details-photo-frame {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+  .details-photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .details-name-wrap { text-align: center; }
+  .details-name { font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; color: white; line-height: 1.2; }
+  .details-qualification { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+  .details-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .btn-modal-action {
+    width: 100%;
+    padding: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-transform: uppercase;
+  }
+  .btn-modal-action.approve { background: var(--green); color: white; }
+  .btn-modal-action.approve:hover { background: var(--dark-green); }
+  .btn-modal-action.delete { background: rgba(255,82,82,0.15); color: #ff5252; border: 1.5px solid rgba(255,82,82,0.3); }
+  .btn-modal-action.delete:hover { background: #ff5252; color: white; }
+
+  /* Right half - Live ID Card preview */
+  .details-right {
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+  .details-section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: -10px;
+    align-self: flex-start;
+  }
+
+  /* Membership Card mockup style */
+  .membership-card {
+    background: linear-gradient(135deg, rgba(28,28,46,0.95), rgba(10,10,16,0.98));
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    cursor: default;
+  }
+  /* Tri-color stripe on card edge */
+  .membership-card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+    background: linear-gradient(to bottom, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+  }
+  /* Pending Watermark overlay */
+  .membership-card.pending-watermark::after {
+    content: 'PENDING APPROVAL';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: rgba(255, 107, 0, 0.14);
+    white-space: nowrap;
+    pointer-events: none;
+    border: 4px dashed rgba(255, 107, 0, 0.14);
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    padding-left: 8px;
+  }
+  .card-logo { display: flex; align-items: center; gap: 8px; }
+  .card-logo img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; border: 1px solid var(--gold); }
+  .card-title-wrap { display: flex; flex-direction: column; line-height: 1.1; }
+  .card-title-main { font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--white); }
+  .card-title-sub { font-size: 0.6rem; color: var(--gold); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
+  .card-badge {
+    background: rgba(244,196,48,0.1); border: 1px solid var(--gold); color: var(--gold);
+    border-radius: 3px; padding: 2px 6px; font-size: 0.6rem; font-weight: 700;
+    font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .card-body { display: flex; gap: 16px; padding-left: 8px; }
+  .card-avatar { width: 90px; height: 90px; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.15); overflow: hidden; background: rgba(0,0,0,0.3); }
+  .card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .card-info { display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+  .card-field { margin-bottom: 4px; }
+  .card-field.name { font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; margin-bottom: 6px; }
+  .card-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-val { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .card-id-highlight { font-family: 'Rajdhani', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
+  .card-footer {
+    margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;
+    display: flex; justify-content: space-between; align-items: center; padding-left: 8px;
+  }
+  .card-seal { font-size: 0.5rem; color: rgba(255,255,255,0.35); line-height: 1.3; }
+  .card-seal span { color: var(--saffron); font-weight: 600; }
+
+  /* Details Grid */
+  .details-data-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    font-size: 0.82rem;
+  }
+  .details-data-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    padding: 10px 14px;
+    border-radius: 6px;
+  }
+  .details-data-label { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .details-data-val { color: var(--text-primary); font-weight: 600; }
+
+  /* ── PHOTO OVERLAY LIGHTBOX ── */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(4, 4, 8, 0.9); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; z-index: 3000;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-content { max-width: 90%; max-height: 90%; border-radius: 8px; border: 2px solid var(--gold); overflow: hidden; position: relative; }
+  .modal-content img { max-width: 100%; max-height: 80vh; display: block; object-fit: contain; }
+  .btn-close-modal {
+    position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); border: none;
+    color: white; font-size: 1.2rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 24px 40px; font-size: 0.75rem; color: var(--text-muted);
+    border-top: 1px solid var(--glass-border); background: var(--dark-charcoal); text-align: center;
+    margin-top: auto;
+  }
+  footer span.yep { color: var(--saffron); font-weight: 600; }
+
+  /* Responsive styling */
+  @media (max-width: 992px) {
+    .charts-grid, .overview-logs-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-260px); }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; }
+    .top-header { padding: 16px 20px; }
+    .btn-mobile-nav { display: block; }
+    .content-wrapper { padding: 24px 16px; }
+    .metrics-grid { grid-template-columns: 1fr; gap: 16px; }
+    .overview-logs-grid { gap: 16px; }
+    .controls-panel { flex-direction: column; align-items: stretch; }
+    .action-buttons-wrap { margin-left: 0; margin-top: 10px; width: 100%; justify-content: space-between; }
+    .btn-panel-action { flex: 1; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN VIEW (Shown by default) -->
+<div class="login-container" id="login-container">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="yep_leader_seal.png" alt="YEP Emblem">
+    </div>
+    <h2 class="login-title">Administrator Login</h2>
+    <p class="login-subtitle">YoungSTAR Empowerment Party Karnataka</p>
+    
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="admin-email">Email Address / ಇಮೇಲ್</label>
+        <input type="email" id="admin-email" class="form-control" placeholder="Enter admin email" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="admin-password">Password / ಪಾಸ್‌ವರ್ಡ್</label>
+        <input type="password" id="admin-password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-submit">Sign In Securely</button>
+      <div class="error-message" id="login-error">Invalid email or password. Please try again.</div>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APPLICATION LAYOUT -->
+<div class="app-layout" id="app-layout">
+  
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar" id="sidebar-panel">
+    <div class="sidebar-header">
+      <img src="yep_leader_seal.png" alt="YEP Logo">
+      <div class="sidebar-brand">
+        YoungSTAR <span>ADMIN</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="tab-overview" onclick="switchTab('overview')">
+        <span class="nav-icon">📊</span> Overview / ಪ್ರಣಾಳಿಕೆ
+      </button>
+      <button class="nav-item" id="tab-members" onclick="switchTab('members')">
+        <span class="nav-icon">👥</span> Database / ನೋಂದಣಿಗಳು
+      </button>
+      <button class="nav-item" id="tab-settings" onclick="switchTab('settings')">
+        <span class="nav-icon">⚙️</span> DB Settings / ಸೆಟ್ಟಿಂಗ್ಸ್
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-signout" onclick="handleSignOut()">
+        <span class="nav-icon">🚪</span> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WINDOW -->
+  <main class="main-content">
+    
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="header-title" id="page-title">Dashboard Overview</div>
+      <div class="header-meta">
+        <span class="status-indicator live" id="db-status-badge">
+          <span class="indicator-dot"></span>
+          <span id="db-status-text">Mock Mode</span>
+        </span>
+        <button class="btn-mobile-nav" onclick="toggleMobileSidebar()">☰</button>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+      
+      <!-- ── OVERVIEW PANEL ── -->
+      <section class="panel-section" id="panel-overview" style="display: block;">
+        <!-- Metrics Section -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-val" id="metric-total">0</div>
+            <div class="metric-label">Total Registrations / ಒಟ್ಟು ಸದಸ್ಯರು</div>
+          </div>
+          <div class="metric-card pending">
+            <div class="metric-val" id="metric-pending">0</div>
+            <div class="metric-label">Pending Approval / ಅನುಮೋದನೆ ಬಾಕಿ</div>
+          </div>
+          <div class="metric-card approved">
+            <div class="metric-val" id="metric-approved">0</div>
+            <div class="metric-label">Approved Members / ಅನುಮೋದಿತರು</div>
+          </div>
+        </div>
+
+        <!-- Custom Visual Analytics Grid -->
+        <div class="charts-grid">
+          <!-- Signup Velocity line chart -->
+          <div class="chart-card">
+            <div class="chart-title">📈 Signup Velocity (Last 7 Days)</div>
+            <div class="chart-container-inner" id="velocity-chart-container">
+              <!-- Inline Dynamic SVG will render here -->
+            </div>
+          </div>
+          <!-- District Distribution bar list -->
+          <div class="chart-card">
+            <div class="chart-title">📍 Top District Distribution</div>
+            <div class="chart-container-inner" style="align-items: flex-start;">
+              <div class="district-list" id="district-distribution-list">
+                <!-- District rows will render here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logs and Summaries Section -->
+        <div class="overview-logs-grid" style="margin-top: 28px;">
+          <!-- Date-wise signup counts -->
+          <div class="chart-card">
+            <div class="chart-title">📅 Daily Signup Summary / ದಿನಾಂಕವಾರು ಸದಸ್ಯತ್ವ</div>
+            <div class="log-list" id="daily-signup-summary-list" style="max-height: 280px; overflow-y: auto; padding-right: 8px;">
+              <!-- Date-wise rows will render here -->
+            </div>
+          </div>
+          
+          <!-- Recent activity log -->
+          <div class="chart-card">
+            <div class="chart-title">⚡ Recent Registrations / ಇತ್ತೀಚಿನ ನೋಂದಣಿಗಳು</div>
+            <div class="log-list" id="recent-activity-list" style="max-height: 280px; overflow-y: auto; padding-right: 8px;">
+              <!-- Recent signups will render here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MEMBERS PANEL ── -->
+      <section class="panel-section" id="panel-members">
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+          <div class="search-input-wrap">
+            <input type="text" id="search-box" class="form-control" placeholder="Search members by Name, Phone, Aadhaar, ID..." oninput="handleSearchChange()">
+          </div>
+          <div class="filter-select-wrap">
+            <select id="filter-status" class="form-control" onchange="handleFilterChange()">
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending Approval</option>
+              <option value="approved">Approved</option>
+            </select>
+          </div>
+          <div class="filter-select-wrap">
+            <select id="filter-district" class="form-control" onchange="handleFilterChange()">
+              <option value="all">All Districts</option>
+            </select>
+          </div>
+          <div class="action-buttons-wrap">
+            <button class="btn-panel-action generator" id="btn-mock-gen" onclick="generateMoreMockData()" title="Add 15 realistic registrations to cache">
+              ⚡ Generate Mock Data
+            </button>
+            <button class="btn-panel-action export" onclick="exportToCSV()" title="Export filtered records to spreadsheet">
+              📥 Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th class="checkbox-cell">
+                  <div class="custom-checkbox" id="header-select-all" onclick="toggleSelectAll(event)"></div>
+                </th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Contact / ID</th>
+                <th>Aadhaar</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="members-list-body">
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  Fetching registrations...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination">
+          <div class="pagination-info" id="pagination-status">Showing 0-0 of 0</div>
+          <div class="pagination-btns">
+            <button class="btn-page" id="btn-prev" onclick="changePage(-1)" disabled>Previous</button>
+            <button class="btn-page" id="btn-next" onclick="changePage(1)" disabled>Next</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SETTINGS PANEL ── -->
+      <section class="panel-section" id="panel-settings">
+        <div class="settings-wrapper">
+          <div class="settings-card">
+            <div class="settings-title">Supabase Database Integration</div>
+            
+            <div class="db-status-detail">
+              <span class="status-indicator live" id="settings-status-badge">
+                <span class="indicator-dot"></span>
+                <span id="settings-status-text">Mock Mode</span>
+              </span>
+              <div class="db-status-info">
+                <h4 id="db-status-title">Dashboard Running with Local Memory Cache</h4>
+                <p id="db-status-desc">Supabase key configuration is not active. Connect to a live database by defining URL and anon API key in <code>admin.html</code>.</p>
+              </div>
+            </div>
+
+            <table class="db-env-table">
+              <tr>
+                <td class="db-env-label">Supabase URL:</td>
+                <td class="db-env-val" id="settings-env-url">Not Configured</td>
+              </tr>
+              <tr>
+                <td class="db-env-label">Anon Public Key:</td>
+                <td class="db-env-val" id="settings-env-key">Not Configured</td>
+              </tr>
+            </table>
+
+            <div class="settings-title" style="margin-top: 20px;">SQL Table Schema setup</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+              Create your database tables by pasting this code directly into your Supabase Dashboard SQL Editor:
+            </p>
+            
+            <div class="sql-editor-card">
+              <div class="sql-header">
+                <span class="sql-title">SQL Script</span>
+                <button class="btn-copy-sql" onclick="copySqlSchema(this)">Copy SQL Schema</button>
+              </div>
+              <pre class="sql-code" id="sql-schema-code">-- SQL Schema to create the 'members' table in Supabase
+-- Paste this in your Supabase SQL Editor and click 'Run'
+
+CREATE TABLE IF NOT EXISTS public.members (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    aadhaar TEXT NOT NULL,
+    qualification TEXT,
+    state TEXT NOT NULL DEFAULT 'Karnataka',
+    district TEXT NOT NULL,
+    taluk TEXT NOT NULL,
+    village TEXT,
+    photo_url TEXT,
+    approved BOOLEAN DEFAULT FALSE NOT NULL,
+    member_id TEXT
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.members ENABLE ROW LEVEL SECURITY;
+
+-- Create Policies
+-- 1. Allow anyone to insert (sign up)
+CREATE POLICY "Allow public inserts" 
+ON public.members FOR INSERT 
+WITH CHECK (true);
+
+-- 2. Allow authenticated administrators to read, update, delete
+CREATE POLICY "Allow admin full access" 
+ON public.members FOR ALL 
+TO authenticated 
+USING (true) 
+WITH CHECK (true);</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      © 2026 <span class="yep">YoungSTAR</span> Empowerment Party · ECI Registered · Admin Dashboard
+    </footer>
+
+  </main>
+</div>
+
+<!-- BOTTOM FLOATING BULK ACTIONS TOOLBAR -->
+<div class="bulk-actions-bar" id="bulk-bar">
+  <div class="bulk-count" id="bulk-selected-count">0 items selected</div>
+  <div class="bulk-divider"></div>
+  <div class="bulk-btns">
+    <button class="btn-bulk approve" onclick="handleBulkApprove()">✊ Approve</button>
+    <button class="btn-bulk delete" onclick="handleBulkDelete()">✕ Delete</button>
+    <button class="btn-bulk cancel" onclick="clearBulkSelection()">Cancel</button>
+  </div>
+</div>
+
+<!-- MEMBER DETAILS INTERACTIVE MODAL -->
+<div class="details-modal-overlay" id="details-modal">
+  <div class="details-modal-content" onclick="event.stopPropagation()">
+    <button class="btn-close-details" onclick="closeDetailsModal()">✕</button>
+    
+    <!-- Left Panel -->
+    <div class="details-left">
+      <div class="details-photo-frame">
+        <img id="detail-portrait" src="leader_profile.jpg" alt="Member face photo">
+      </div>
+      <div class="details-name-wrap">
+        <div class="details-name" id="detail-full-name">Abhishek Gowda</div>
+        <div class="details-qualification" id="detail-edu-qualification">Graduate Degree</div>
+      </div>
+      <div class="details-actions">
+        <button class="btn-modal-action approve" id="detail-btn-approve" onclick="handleApproveSingleInModal()">✊ Approve Member</button>
+        <button class="btn-modal-action delete" onclick="handleDeleteSingleInModal()">✕ Delete Registration</button>
+      </div>
+    </div>
+
+    <!-- Right Panel (Card Preview + Specific data fields) -->
+    <div class="details-right">
+      <div class="details-section-title">Digital ID Card Preview</div>
+      
+      <!-- Mockup Card -->
+      <div class="membership-card" id="detail-card-mock">
+        <div class="card-header">
+          <div class="card-logo">
+            <img src="yep_leader_seal.png" alt="YEP logo">
+            <div class="card-title-wrap">
+              <span class="card-title-main">YoungSTAR PARTY</span>
+              <span class="card-title-sub">YEP KARNATAKA</span>
+            </div>
+          </div>
+          <div class="card-badge">MEMBER</div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-avatar">
+            <img id="detail-card-avatar" src="leader_profile.jpg" alt="Card Photo">
+          </div>
+          <div class="card-info">
+            <div class="card-field name" id="detail-card-name-val">Abhishek Gowda</div>
+            
+            <div class="card-field">
+              <div class="card-label">Member ID</div>
+              <div class="card-val card-id-highlight" id="detail-card-id-val">YEP-KA-2026-89240</div>
+            </div>
+
+            <div class="card-field">
+              <div class="card-label">District &amp; Taluk</div>
+              <div class="card-val" id="detail-card-location-val">Bengaluru Urban · Yelahanka</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-seal">
+            YoungSTAR Empowerment Party<br>
+            <span>Youth Power – Our Strength – Our Future</span>
+          </div>
+          <div class="card-badge" id="detail-card-status-stamp" style="background:rgba(19, 136, 8, 0.1);border-color:var(--green);color:var(--green)">VERIFIED</div>
+        </div>
+      </div>
+
+      <!-- Specific detailed data table fields -->
+      <div class="details-data-grid">
+        <div class="details-data-item">
+          <div class="details-data-label">Mobile Phone</div>
+          <div class="details-data-val" id="detail-phone-val">9845012345</div>
+        </div>
+        <div class="details-data-item">
+          <div class="details-data-label">Aadhaar Card</div>
+          <div class="details-data-val" id="detail-aadhaar-val">5123 4567 8901</div>
+        </div>
+        <div class="details-data-item">
+          <div class="details-data-label">Village or City Area</div>
+          <div class="details-data-val" id="detail-village-val">Yelahanka</div>
+        </div>
+        <div class="details-data-item">
+          <div class="details-data-label">Application Date</div>
+          <div class="details-data-val" id="detail-date-val">2026-06-11</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE LIGHTBOX MODAL -->
+<div class="modal-overlay" id="lightbox-modal" onclick="closeLightbox()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="btn-close-modal" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="Expanded member portrait">
+  </div>
+</div>
+
+<!-- SUPABASE CLIENT SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // SUPABASE CONFIGURATION (Placeholders to be configured by user)
+  const SUPABASE_URL = 'https://your-supabase-url.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'your-anon-public-key';
+  
+  let supabaseClient = null;
+  let allMembers = []; // Client-side cache for filtering/search
+  let filteredMembers = [];
+  let currentPage = 1;
+  const itemsPerPage = 20;
+
+  // Selected registration rows
+  let selectedIds = [];
+  // Active detail member object
+  let activeDetailMember = null;
+  // Aadhaar masking toggle map
+  let unmaskedAadhaars = {};
+
+  // Initialize Supabase if credentials are provided
+  try {
+    const isMock = SUPABASE_URL.indexOf('your-supabase-url') !== -1;
+    updateEnvSettingsCard(isMock);
+
+    if (!isMock) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      
+      const badge = document.getElementById('db-status-badge');
+      badge.className = 'status-indicator db-connected';
+      document.getElementById('db-status-text').textContent = 'Live DB';
+      
+      const settingsBadge = document.getElementById('settings-status-badge');
+      settingsBadge.className = 'status-indicator db-connected';
+      document.getElementById('settings-status-text').textContent = 'Live DB';
+      document.getElementById('db-status-title').textContent = 'Connected to Supabase';
+      document.getElementById('db-status-desc').textContent = 'Connected and synchronizing active records directly with live cloud tables.';
+      
+      setupAuthListener();
+    } else {
+      console.warn("Supabase credentials placeholder active. Running with mockup data.");
+      // Fallback mockup setup for testing
+      setTimeout(() => {
+        loadMockupData();
+      }, 300);
+    }
+  } catch (e) {
+    console.error("Failed to initialize Supabase:", e);
+  }
+
+  function updateEnvSettingsCard(isMock) {
+    const urlEl = document.getElementById('settings-env-url');
+    const keyEl = document.getElementById('settings-env-key');
+    const genBtn = document.getElementById('btn-mock-gen');
+
+    if (!isMock) {
+      urlEl.textContent = SUPABASE_URL;
+      keyEl.textContent = SUPABASE_ANON_KEY.substring(0, 16) + '...';
+      if (genBtn) genBtn.style.display = 'none'; // Hide generator in Supabase mode
+    } else {
+      urlEl.textContent = "https://your-supabase-url.supabase.co";
+      keyEl.textContent = "your-anon-public-key (Placeholder Active)";
+      if (genBtn) genBtn.style.display = 'inline-flex';
+    }
+  }
+
+  /* ── AUTH LOGIC ── */
+  function setupAuthListener() {
+    if (!supabaseClient) return;
+    
+    // Check current session
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      toggleView(!!session);
+      if (session) {
+        fetchMembers();
+      }
+    });
+
+    // Listen to changes
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      toggleView(!!session);
+      if (session) {
+        fetchMembers();
+      }
+    });
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+    const errorEl = document.getElementById('login-error');
+    errorEl.style.display = 'none';
+
+    if (!supabaseClient) {
+      // If running mock mode
+      if (email === "admin@yep.com" && password === "admin123") {
+        toggleView(true);
+        loadMockupData();
+      } else {
+        errorEl.textContent = "Mock login details: use admin@yep.com / admin123";
+        errorEl.style.display = 'block';
+      }
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        errorEl.textContent = error.message;
+        errorEl.style.display = 'block';
+      }
+    } catch (err) {
+      errorEl.textContent = "Network error. Please try again.";
+      errorEl.style.display = 'block';
+    }
+  }
+
+  async function handleSignOut() {
+    if (supabaseClient) {
+      await supabaseClient.auth.signOut();
+    } else {
+      toggleView(false);
+    }
+  }
+
+  function toggleView(isAuthenticated) {
+    const loginContainer = document.getElementById('login-container');
+    const appLayout = document.getElementById('app-layout');
+
+    if (isAuthenticated) {
+      loginContainer.style.display = 'none';
+      appLayout.style.display = 'flex';
+      switchTab('overview');
+    } else {
+      loginContainer.style.display = 'flex';
+      appLayout.style.display = 'none';
+    }
+  }
+
+  /* ── TAB NAVIGATION ── */
+  function switchTab(tabId) {
+    // Hide all panel sections
+    document.querySelectorAll('.panel-section').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+
+    // Show selected panel
+    document.getElementById('panel-' + tabId).style.display = 'block';
+    document.getElementById('tab-' + tabId).classList.add('active');
+
+    // Close mobile menu
+    document.getElementById('sidebar-panel').classList.remove('active');
+
+    // Update page title
+    const titles = {
+      overview: 'Dashboard Overview',
+      members: 'Members Database',
+      settings: 'Database Settings'
+    };
+    document.getElementById('page-title').textContent = titles[tabId];
+
+    // Trigger re-render of graphs if opening overview tab
+    if (tabId === 'overview') {
+      renderVisualAnalytics();
+    }
+  }
+
+  function toggleMobileSidebar() {
+    document.getElementById('sidebar-panel').classList.toggle('active');
+  }
+
+  /* ── DATA FETCHING & RENDERING ── */
+  async function fetchMembers() {
+    if (!supabaseClient) return;
+    const tbody = document.getElementById('members-list-body');
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Loading members from database...</td></tr>`;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('members')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      allMembers = data || [];
+      populateDistrictFilter();
+      updateMetrics();
+      applyFilters();
+      renderVisualAnalytics();
+    } catch (err) {
+      console.error("Error reading database: ", err);
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #ff5252;">Failed to load data. Ensure RLS table permissions are active.</td></tr>`;
+    }
+  }
+
+  function populateDistrictFilter() {
+    const select = document.getElementById('filter-district');
+    select.innerHTML = '<option value="all">All Districts</option>';
+    
+    // Extract unique districts
+    const districts = [...new Set(allMembers.map(m => m.district).filter(Boolean))].sort();
+    districts.forEach(dist => {
+      const opt = document.createElement('option');
+      opt.value = dist;
+      opt.textContent = dist;
+      select.appendChild(opt);
+    });
+  }
+
+  function updateMetrics() {
+    document.getElementById('metric-total').textContent = allMembers.length;
+    document.getElementById('metric-pending').textContent = allMembers.filter(m => !m.approved).length;
+    document.getElementById('metric-approved').textContent = allMembers.filter(m => m.approved).length;
+  }
+
+  /* ── ANALYTICS CHARTS GENERATION ── */
+  function renderVisualAnalytics() {
+    renderSignupVelocityChart();
+    renderDistrictBarChart();
+    renderDailySignupSummary();
+    renderRecentActivityLog();
+  }
+
+  function renderSignupVelocityChart() {
+    const container = document.getElementById('velocity-chart-container');
+    container.innerHTML = '';
+
+    // Group items by last 7 days
+    const dailyCounts = {};
+    const dates = [];
+    const dateLabels = [];
+    
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      dailyCounts[key] = 0;
+      dates.push(key);
+      // Label in format: "DD MMM"
+      const label = d.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
+      dateLabels.push(label);
+    }
+
+    allMembers.forEach(m => {
+      if (m.created_at) {
+        const key = m.created_at.slice(0, 10);
+        if (dailyCounts[key] !== undefined) {
+          dailyCounts[key]++;
+        }
+      }
+    });
+
+    const values = dates.map(k => dailyCounts[k]);
+    const maxVal = Math.max(...values, 5); // Minimum y-height scale of 5
+
+    // Build SVG
+    const width = 500;
+    const height = 180;
+    const padL = 40;
+    const padR = 20;
+    const padT = 20;
+    const padB = 30;
+
+    const chartW = width - padL - padR;
+    const chartH = height - padT - padB;
+
+    let points = [];
+    for (let i = 0; i < 7; i++) {
+      const x = padL + i * (chartW / 6);
+      const y = height - padB - (values[i] / maxVal) * chartH;
+      points.push({ x, y, value: values[i] });
+    }
+
+    // Path string
+    let pathD = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      pathD += ` L ${points[i].x} ${points[i].y}`;
+    }
+
+    // Area string
+    const areaD = `${pathD} L ${points[points.length-1].x} ${height - padB} L ${points[0].x} ${height - padB} Z`;
+
+    let svgHtml = `
+      <svg class="chart-svg" viewBox="0 0 ${width} ${height}">
+        <defs>
+          <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.3"></stop>
+            <stop offset="100%" stop-color="var(--gold)" stop-opacity="0.0"></stop>
+          </linearGradient>
+        </defs>
+
+        <!-- Horizontal Grid Lines -->
+        <line class="chart-grid-line" x1="${padL}" y1="${padT}" x2="${width - padR}" y2="${padT}" />
+        <line class="chart-grid-line" x1="${padL}" y1="${padT + chartH * 0.5}" x2="${width - padR}" y2="${padT + chartH * 0.5}" />
+        <line class="chart-grid-line" x1="${padL}" y1="${height - padB}" x2="${width - padR}" y2="${height - padB}" />
+
+        <!-- Area Fill -->
+        <path d="${areaD}" fill="url(#chart-grad)" />
+
+        <!-- Line Path -->
+        <path d="${pathD}" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" />
+
+        <!-- Data circles -->
+    `;
+
+    points.forEach((pt, i) => {
+      svgHtml += `
+        <circle cx="${pt.x}" cy="${pt.y}" r="4.5" fill="var(--charcoal)" stroke="var(--gold)" stroke-width="2.5" />
+        <text class="chart-axis-text" x="${pt.x}" y="${pt.y - 10}" text-anchor="middle" font-weight="600" fill="white">${pt.value}</text>
+      `;
+    });
+
+    // X axis labels
+    dateLabels.forEach((lbl, i) => {
+      const x = padL + i * (chartW / 6);
+      svgHtml += `
+        <text class="chart-axis-text" x="${x}" y="${height - 10}" text-anchor="middle">${lbl}</text>
+      `;
+    });
+
+    // Y axis labels (max and midpoint)
+    svgHtml += `
+      <text class="chart-axis-text" x="${padL - 10}" y="${padT + 4}" text-anchor="end">${maxVal}</text>
+      <text class="chart-axis-text" x="${padL - 10}" y="${padT + chartH * 0.5 + 4}" text-anchor="end">${Math.round(maxVal*0.5)}</text>
+      <text class="chart-axis-text" x="${padL - 10}" y="${height - padB + 4}" text-anchor="end">0</text>
+    `;
+
+    svgHtml += `</svg>`;
+    container.innerHTML = svgHtml;
+  }
+
+  function renderDistrictBarChart() {
+    const listContainer = document.getElementById('district-distribution-list');
+    listContainer.innerHTML = '';
+
+    if (allMembers.length === 0) {
+      listContainer.innerHTML = `<div style="text-align:center;width:100%;color:var(--text-muted);font-size:0.85rem;margin-top:20px;">No district records active.</div>`;
+      return;
+    }
+
+    // Group by district
+    const counts = {};
+    allMembers.forEach(m => {
+      const dist = m.district || 'Unassigned / ಇತರೆ';
+      counts[dist] = (counts[dist] || 0) + 1;
+    });
+
+    // Sort descending
+    const sortedDistricts = Object.keys(counts).map(dist => {
+      return { name: dist, count: counts[dist] };
+    }).sort((a, b) => b.count - a.count).slice(0, 4); // Top 4
+
+    const maxCount = Math.max(...sortedDistricts.map(d => d.count));
+
+    sortedDistricts.forEach(dist => {
+      // Split Kannada and English if they exist
+      const parts = dist.name.split(' / ');
+      const engName = parts[0];
+      const knName = parts[1] || '';
+
+      const percent = maxCount > 0 ? (dist.count / maxCount) * 100 : 0;
+
+      const rowHtml = `
+        <div class="district-row">
+          <div class="district-label-wrap">
+            <span class="district-name"><strong>${engName}</strong> <small style="color:var(--text-muted);margin-left:4px;">${knName}</small></span>
+            <span class="district-count">${dist.count} member${dist.count > 1 ? 's' : ''}</span>
+          </div>
+          <div class="district-bar-bg">
+            <div class="district-bar-fill" style="width: 0%;" data-percent="${percent}"></div>
+          </div>
+        </div>
+      `;
+      listContainer.insertAdjacentHTML('beforeend', rowHtml);
+    });
+
+    // Animate width expansion
+    setTimeout(() => {
+      listContainer.querySelectorAll('.district-bar-fill').forEach(bar => {
+        const p = bar.getAttribute('data-percent');
+        bar.style.width = p + '%';
+      });
+    }, 100);
+  }
+
+  function renderDailySignupSummary() {
+    const container = document.getElementById('daily-signup-summary-list');
+    container.innerHTML = '';
+
+    // Group items by registration date
+    const dailyCounts = {};
+    allMembers.forEach(m => {
+      if (m.created_at) {
+        const dateKey = m.created_at.split('T')[0];
+        dailyCounts[dateKey] = (dailyCounts[dateKey] || 0) + 1;
+      }
+    });
+
+    const sortedDates = Object.keys(dailyCounts).sort((a, b) => b.localeCompare(a));
+    const maxCount = Math.max(...Object.values(dailyCounts), 1);
+
+    if (sortedDates.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:20px;">No signups log active.</div>';
+      return;
+    }
+
+    sortedDates.forEach(dateStr => {
+      const count = dailyCounts[dateStr];
+      const percent = (count / maxCount) * 100;
+      
+      const d = new Date(dateStr);
+      const formattedDate = d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+      
+      const rowHtml = `
+        <div class="log-item">
+          <div class="daily-log-left">
+            <span class="daily-log-date">${formattedDate}</span>
+            <div class="daily-log-bar-outer">
+              <div class="daily-log-bar-inner" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+          <span class="daily-log-count">+${count} join${count > 1 ? 's' : ''}</span>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', rowHtml);
+    });
+  }
+
+  function renderRecentActivityLog() {
+    const container = document.getElementById('recent-activity-list');
+    container.innerHTML = '';
+
+    const sortedMembers = [...allMembers].sort((a, b) => {
+      const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+      const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+      return dateB - dateA;
+    });
+
+    const recentMembers = sortedMembers.slice(0, 5);
+
+    if (recentMembers.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:20px;">No recent signups.</div>';
+      return;
+    }
+
+    recentMembers.forEach(member => {
+      const statusClass = member.approved ? 'approved' : 'pending';
+      const statusText = member.approved ? 'Approved' : 'Pending';
+      
+      const distName = (member.district || 'N/A').split(' / ')[0];
+      const talukName = (member.taluk || 'N/A').split(' / ')[0];
+      
+      let timeString = 'Recent';
+      if (member.created_at) {
+        const createdDate = new Date(member.created_at);
+        timeString = createdDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
+      }
+
+      const rowHtml = `
+        <div class="log-item clickable" onclick="openDetailsModalFromLog(${member.id})" title="Click to view full member details">
+          <div class="activity-log-left">
+            <img class="activity-avatar-thumb" src="${member.photo_url || 'leader_profile.jpg'}" alt="Avatar">
+            <div class="activity-details">
+              <span class="activity-name-row">${member.name || 'Unnamed'}</span>
+              <span class="activity-subtext">${distName} · ${talukName}</span>
+            </div>
+          </div>
+          <div class="activity-log-right">
+            <span class="badge ${statusClass}">${statusText}</span>
+            <span class="activity-date-text">${timeString}</span>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', rowHtml);
+    });
+  }
+
+  function openDetailsModalFromLog(id) {
+    const member = allMembers.find(m => m.id === id);
+    if (member) {
+      openDetailsModal(member);
+    }
+  }
+
+  /* ── SEARCH, FILTER & PAGINATION ── */
+  function handleSearchChange() {
+    currentPage = 1;
+    applyFilters();
+  }
+
+  function handleFilterChange() {
+    currentPage = 1;
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const searchVal = document.getElementById('search-box').value.toLowerCase().trim();
+    const statusVal = document.getElementById('filter-status').value;
+    const districtVal = document.getElementById('filter-district').value;
+
+    filteredMembers = allMembers.filter(member => {
+      // 1. Search Query Match
+      const searchMatch = !searchVal || 
+        (member.name && member.name.toLowerCase().includes(searchVal)) ||
+        (member.phone && member.phone.includes(searchVal)) ||
+        (member.aadhaar && member.aadhaar.includes(searchVal)) ||
+        (member.member_id && member.member_id.toLowerCase().includes(searchVal));
+
+      // 2. Status Match
+      let statusMatch = true;
+      if (statusVal === 'pending') statusMatch = !member.approved;
+      else if (statusVal === 'approved') statusMatch = member.approved;
+
+      // 3. District Match
+      const districtMatch = districtVal === 'all' || member.district === districtVal;
+
+      return searchMatch && statusMatch && districtMatch;
+    });
+
+    // Reset row selections
+    selectedIds = [];
+    updateBulkActionsBar();
+
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('members-list-body');
+    tbody.innerHTML = '';
+    
+    // Reset select all checkbox status
+    const headerCheck = document.getElementById('header-select-all');
+    headerCheck.classList.remove('checked');
+
+    if (filteredMembers.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">No members found matching criteria.</td></tr>`;
+      updatePagination(0);
+      return;
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, filteredMembers.length);
+    const pageItems = filteredMembers.slice(startIndex, endIndex);
+
+    pageItems.forEach(member => {
+      const isRowChecked = selectedIds.includes(member.id);
+      const isUnmasked = !!unmaskedAadhaars[member.id];
+
+      const tr = document.createElement('tr');
+      if (isRowChecked) tr.style.background = 'rgba(244,196,48,0.02)';
+
+      // 1. Checkbox cell
+      const tdCheck = document.createElement('td');
+      tdCheck.className = 'checkbox-cell';
+      const chk = document.createElement('div');
+      chk.className = 'custom-checkbox' + (isRowChecked ? ' checked' : '');
+      chk.onclick = (e) => toggleRowSelection(e, member.id);
+      tdCheck.appendChild(chk);
+      tr.appendChild(tdCheck);
+
+      // 2. Photo column
+      const tdPhoto = document.createElement('td');
+      const img = document.createElement('img');
+      img.className = 'avatar-thumb';
+      img.src = member.photo_url || 'leader_profile.jpg';
+      img.alt = 'Portrait';
+      img.onclick = () => openLightbox(img.src);
+      tdPhoto.appendChild(img);
+      tr.appendChild(tdPhoto);
+
+      // 3. Name column
+      const tdName = document.createElement('td');
+      tdName.innerHTML = `<strong>${member.name || 'Unnamed'}</strong><br><small style="color: var(--text-secondary);">${member.qualification || 'None'}</small>`;
+      tr.appendChild(tdName);
+
+      // 4. Contact/ID column
+      const tdContact = document.createElement('td');
+      const yepId = member.member_id || '<span style="color:var(--text-muted)">Pending ID</span>';
+      tdContact.innerHTML = `📞 ${member.phone || 'N/A'}<br><small style="color:var(--gold); font-weight: 600;">${yepId}</small>`;
+      tr.appendChild(tdContact);
+
+      // 5. Aadhaar column (Masked by default)
+      const tdAadhaar = document.createElement('td');
+      const formattedAadhaar = member.aadhaar || 'N/A';
+      let displayAadhaar = formattedAadhaar;
+      
+      if (!isUnmasked && formattedAadhaar !== 'N/A') {
+        // Mask first two groups (e.g. "•••• •••• 1234")
+        displayAadhaar = `•••• •••• ${formattedAadhaar.slice(-4)}`;
+      }
+
+      const maskSpan = document.createElement('span');
+      maskSpan.className = 'aadhaar-cell';
+      maskSpan.textContent = displayAadhaar;
+      maskSpan.onclick = () => toggleAadhaarReveal(member.id);
+      tdAadhaar.appendChild(maskSpan);
+      tr.appendChild(tdAadhaar);
+
+      // 6. Location column
+      const tdLocation = document.createElement('td');
+      const distName = (member.district || 'N/A').split(' / ')[0];
+      const talukName = (member.taluk || 'N/A').split(' / ')[0];
+      tdLocation.innerHTML = `<strong>${distName}</strong><br><small style="color: var(--text-muted);">${talukName}</small>`;
+      tr.appendChild(tdLocation);
+
+      // 7. Status column
+      const tdStatus = document.createElement('td');
+      const statusBadge = document.createElement('span');
+      statusBadge.className = 'badge ' + (member.approved ? 'approved' : 'pending');
+      statusBadge.textContent = member.approved ? 'Approved' : 'Pending';
+      tdStatus.appendChild(statusBadge);
+      tr.appendChild(tdStatus);
+
+      // 8. Actions column
+      const tdActions = document.createElement('td');
+      tdActions.style.textAlign = 'right';
+      
+      const detailsBtn = document.createElement('button');
+      detailsBtn.className = 'btn-action details';
+      detailsBtn.textContent = '🔎 Details';
+      detailsBtn.onclick = () => openDetailsModal(member);
+      tdActions.appendChild(detailsBtn);
+
+      if (!member.approved) {
+        const approveBtn = document.createElement('button');
+        approveBtn.className = 'btn-action approve';
+        approveBtn.textContent = '✊ Approve';
+        approveBtn.onclick = (e) => { e.stopPropagation(); handleApproveMember(member.id); };
+        tdActions.appendChild(approveBtn);
+      }
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'btn-action delete';
+      deleteBtn.textContent = '✕';
+      deleteBtn.onclick = (e) => { e.stopPropagation(); handleDeleteMember(member.id); };
+      tdActions.appendChild(deleteBtn);
+      
+      tr.appendChild(tdActions);
+      tbody.appendChild(tr);
+    });
+
+    updatePagination(filteredMembers.length);
+  }
+
+  function updatePagination(totalItems) {
+    const startIndex = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+    const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+    
+    document.getElementById('pagination-status').textContent = `Showing ${startIndex}-${endIndex} of ${totalItems}`;
+    document.getElementById('btn-prev').disabled = currentPage === 1;
+    document.getElementById('btn-next').disabled = endIndex >= totalItems;
+  }
+
+  function changePage(direction) {
+    currentPage += direction;
+    renderTable();
+  }
+
+  /* ── ROW SELECTIONS & BULK ACTIONS ── */
+  function toggleRowSelection(e, id) {
+    e.stopPropagation();
+    const idx = selectedIds.indexOf(id);
+    if (idx === -1) {
+      selectedIds.push(id);
+    } else {
+      selectedIds.splice(idx, 1);
+    }
+    updateBulkActionsBar();
+    renderTable();
+  }
+
+  function toggleSelectAll(e) {
+    e.stopPropagation();
+    const headerCheck = document.getElementById('header-select-all');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, filteredMembers.length);
+    const currentPageItems = filteredMembers.slice(startIndex, endIndex);
+
+    // Check if all current page items are already selected
+    const currentPageIds = currentPageItems.map(m => m.id);
+    const allSelected = currentPageIds.every(id => selectedIds.includes(id));
+
+    if (allSelected) {
+      // Deselect all items of this page
+      selectedIds = selectedIds.filter(id => !currentPageIds.includes(id));
+      headerCheck.classList.remove('checked');
+    } else {
+      // Add all missing page items to selections
+      currentPageIds.forEach(id => {
+        if (!selectedIds.includes(id)) selectedIds.push(id);
+      });
+      headerCheck.classList.add('checked');
+    }
+    
+    updateBulkActionsBar();
+    renderTable();
+  }
+
+  function clearBulkSelection() {
+    selectedIds = [];
+    updateBulkActionsBar();
+    renderTable();
+  }
+
+  function updateBulkActionsBar() {
+    const bar = document.getElementById('bulk-bar');
+    const countEl = document.getElementById('bulk-selected-count');
+    
+    if (selectedIds.length > 0) {
+      countEl.textContent = `${selectedIds.length} registration${selectedIds.length > 1 ? 's' : ''} selected`;
+      bar.classList.add('active');
+    } else {
+      bar.classList.remove('active');
+    }
+  }
+
+  async function handleBulkApprove() {
+    if (!confirm(`Are you sure you want to approve ${selectedIds.length} selected members?`)) return;
+
+    if (!supabaseClient) {
+      // Mock bulk approval
+      allMembers.forEach(member => {
+        if (selectedIds.includes(member.id) && !member.approved) {
+          member.approved = true;
+          const randomId = Math.floor(10000 + Math.random() * 90000);
+          member.member_id = `YEP-KA-2026-${randomId}`;
+        }
+      });
+      alert(`Successfully approved ${selectedIds.length} members.`);
+      selectedIds = [];
+      updateBulkActionsBar();
+      updateMetrics();
+      applyFilters();
+      renderVisualAnalytics();
+      return;
+    }
+
+    try {
+      // Supabase batch updates
+      for (const id of selectedIds) {
+        const targetMember = allMembers.find(m => m.id === id);
+        if (targetMember && !targetMember.approved) {
+          const statePrefix = targetMember.state === 'Karnataka' ? 'KA' : 'IN';
+          const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
+          const generatedYepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
+
+          await supabaseClient
+            .from('members')
+            .update({ approved: true, member_id: generatedYepId })
+            .eq('id', id);
+        }
+      }
+      alert(`Approved selected members.`);
+      selectedIds = [];
+      updateBulkActionsBar();
+      fetchMembers();
+    } catch (err) {
+      alert("Error during bulk approval: " + err.message);
+    }
+  }
+
+  async function handleBulkDelete() {
+    if (!confirm(`WARNING: Are you sure you want to permanently delete the ${selectedIds.length} selected member applications? This action is irreversible.`)) return;
+
+    if (!supabaseClient) {
+      // Mock bulk delete
+      allMembers = allMembers.filter(m => !selectedIds.includes(m.id));
+      alert(`Deleted ${selectedIds.length} registrations.`);
+      selectedIds = [];
+      updateBulkActionsBar();
+      updateMetrics();
+      applyFilters();
+      renderVisualAnalytics();
+      return;
+    }
+
+    try {
+      // Supabase batch deletion
+      const { error } = await supabaseClient
+        .from('members')
+        .delete()
+        .in('id', selectedIds);
+
+      if (error) throw error;
+      
+      alert(`Deleted selected records.`);
+      selectedIds = [];
+      updateBulkActionsBar();
+      fetchMembers();
+    } catch (err) {
+      alert("Error during batch delete: " + err.message);
+    }
+  }
+
+  /* ── AADHAAR REVEAL ── */
+  function toggleAadhaarReveal(memberId) {
+    unmaskedAadhaars[memberId] = !unmaskedAadhaars[memberId];
+    renderTable();
+  }
+
+  /* ── ADMIN ACTIONS (SINGLE ITEMS) ── */
+  async function handleApproveMember(id) {
+    if (!confirm("Are you sure you want to approve this member? This will generate their ID Card.")) return;
+
+    if (!supabaseClient) {
+      // Mock approval
+      const member = allMembers.find(m => m.id === id);
+      if (member) {
+        member.approved = true;
+        const randomId = Math.floor(10000 + Math.random() * 90000);
+        member.member_id = `YEP-KA-2026-${randomId}`;
+        updateMetrics();
+        applyFilters();
+        renderVisualAnalytics();
+        
+        // Refresh modal if active
+        if (activeDetailMember && activeDetailMember.id === id) {
+          openDetailsModal(member);
+        }
+      }
+      return;
+    }
+
+    try {
+      const targetMember = allMembers.find(m => m.id === id);
+      const statePrefix = targetMember.state === 'Karnataka' ? 'KA' : 'IN';
+      const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
+      const generatedYepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
+
+      const { error } = await supabaseClient
+        .from('members')
+        .update({ approved: true, member_id: generatedYepId })
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      // Refresh modal
+      if (activeDetailMember && activeDetailMember.id === id) {
+        const updatedMember = {...targetMember, approved: true, member_id: generatedYepId};
+        openDetailsModal(updatedMember);
+      }
+
+      fetchMembers();
+    } catch (err) {
+      alert("Error approving member: " + err.message);
+    }
+  }
+
+  async function handleDeleteMember(id) {
+    if (!confirm("Are you sure you want to permanently delete this member registration?")) return;
+
+    if (!supabaseClient) {
+      // Mock delete
+      allMembers = allMembers.filter(m => m.id !== id);
+      updateMetrics();
+      applyFilters();
+      renderVisualAnalytics();
+      
+      if (activeDetailMember && activeDetailMember.id === id) {
+        closeDetailsModal();
+      }
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('members')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      if (activeDetailMember && activeDetailMember.id === id) {
+        closeDetailsModal();
+      }
+
+      fetchMembers();
+    } catch (err) {
+      alert("Error deleting member: " + err.message);
+    }
+  }
+
+  /* ── MEMBER DETAILS MODAL CONTROLS ── */
+  function openDetailsModal(member) {
+    activeDetailMember = member;
+
+    // Fill left pane
+    document.getElementById('detail-portrait').src = member.photo_url || 'leader_profile.jpg';
+    document.getElementById('detail-full-name').textContent = member.name || 'Unnamed';
+    document.getElementById('detail-edu-qualification').textContent = member.qualification || 'None';
+
+    // Show/hide approve button based on state
+    const approveBtn = document.getElementById('detail-btn-approve');
+    if (member.approved) {
+      approveBtn.style.display = 'none';
+    } else {
+      approveBtn.style.display = 'block';
+    }
+
+    // Fill card preview
+    const cardEl = document.getElementById('detail-card-mock');
+    const cardAvatar = document.getElementById('detail-card-avatar');
+    const cardName = document.getElementById('detail-card-name-val');
+    const cardId = document.getElementById('detail-card-id-val');
+    const cardLocation = document.getElementById('detail-card-location-val');
+    const cardStatusStamp = document.getElementById('detail-card-status-stamp');
+
+    cardAvatar.src = member.photo_url || 'leader_profile.jpg';
+    cardName.textContent = member.name || 'Unnamed';
+    
+    const distName = (member.district || 'N/A').split(' / ')[0];
+    const talukName = (member.taluk || 'N/A').split(' / ')[0];
+    cardLocation.textContent = `${distName} · ${talukName}`;
+
+    if (member.approved) {
+      cardEl.classList.remove('pending-watermark');
+      cardId.textContent = member.member_id;
+      cardStatusStamp.textContent = 'VERIFIED';
+      cardStatusStamp.style.background = 'rgba(19, 136, 8, 0.1)';
+      cardStatusStamp.style.borderColor = 'var(--green)';
+      cardStatusStamp.style.color = 'var(--green)';
+    } else {
+      cardEl.classList.add('pending-watermark');
+      cardId.innerHTML = '<span style="color:var(--text-muted)">PENDING APPROVAL</span>';
+      cardStatusStamp.textContent = 'PENDING';
+      cardStatusStamp.style.background = 'rgba(255, 107, 0, 0.1)';
+      cardStatusStamp.style.borderColor = 'var(--saffron)';
+      cardStatusStamp.style.color = 'var(--saffron)';
+    }
+
+    // Fill table fields
+    document.getElementById('detail-phone-val').textContent = member.phone || 'N/A';
+    document.getElementById('detail-aadhaar-val').textContent = member.aadhaar || 'N/A';
+    document.getElementById('detail-village-val').textContent = member.village || 'N/A';
+    
+    const dateStr = member.created_at ? member.created_at.split('T')[0] : 'N/A';
+    document.getElementById('detail-date-val').textContent = dateStr;
+
+    // Show modal overlay
+    document.getElementById('details-modal').classList.add('active');
+  }
+
+  function closeDetailsModal() {
+    document.getElementById('details-modal').classList.remove('active');
+    activeDetailMember = null;
+  }
+
+  function handleApproveSingleInModal() {
+    if (activeDetailMember) {
+      handleApproveMember(activeDetailMember.id);
+    }
+  }
+
+  function handleDeleteSingleInModal() {
+    if (activeDetailMember) {
+      handleDeleteMember(activeDetailMember.id);
+    }
+  }
+
+  /* ── CSV EXPORT ENGINE ── */
+  function exportToCSV() {
+    if (filteredMembers.length === 0) {
+      alert("No active rows to export.");
+      return;
+    }
+
+    const headers = ['Name', 'Phone', 'Aadhaar', 'Qualification', 'State', 'District', 'Taluk', 'Village', 'Member ID', 'Status', 'Signup Date'];
+    const rows = filteredMembers.map(m => [
+      m.name || '',
+      m.phone || '',
+      m.aadhaar || '',
+      m.qualification || '',
+      m.state || '',
+      m.district || '',
+      m.taluk || '',
+      m.village || '',
+      m.member_id || 'Pending',
+      m.approved ? 'Approved' : 'Pending',
+      m.created_at ? m.created_at.split('T')[0] : ''
+    ]);
+
+    // Construct CSV content
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += [headers.join(','), ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""')}"`).join(','))].join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `YEP_Members_Export_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  /* ── SQL COPY UTILITY ── */
+  function copySqlSchema(btn) {
+    const code = document.getElementById('sql-schema-code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.style.background = '#4CAF50';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = 'var(--gold)';
+        btn.style.color = 'var(--charcoal)';
+      }, 2000);
+    }).catch(err => {
+      console.error("Clipboard copy failed: ", err);
+      alert("Failed to copy. Please manually select and copy the code block.");
+    });
+  }
+
+  /* ── LIGHTBOX ── */
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-modal').classList.add('active');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox-modal').classList.remove('active');
+  }
+
+  /* ── MOCK DATA FOR DEMO/TESTING ── */
+  function loadMockupData() {
+    allMembers = [
+      {
+        id: 1,
+        name: "Abhishek Gowda",
+        phone: "9845012345",
+        aadhaar: "5123 4567 8901",
+        qualification: "Graduate Degree",
+        state: "Karnataka",
+        district: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ",
+        taluk: "Yelahanka / ಯಲಹಂಕ",
+        village: "Yelahanka New Town",
+        approved: true,
+        member_id: "YEP-KA-2026-89240",
+        photo_url: "leader_profile.jpg",
+        created_at: new Date(Date.now() - 24 * 3600000).toISOString() // 1 day ago
+      },
+      {
+        id: 2,
+        name: "Priyanka Naik",
+        phone: "7019234567",
+        aadhaar: "8823 4117 9081",
+        qualification: "Post Graduate",
+        state: "Karnataka",
+        district: "Udupi / ಉಡುಪಿ",
+        taluk: "Karkala / ಕಾರ್ಕಳ",
+        village: "Karkala Town",
+        approved: false,
+        member_id: null,
+        photo_url: "leader_profile.jpg",
+        created_at: new Date(Date.now() - 2 * 24 * 3600000).toISOString() // 2 days ago
+      },
+      {
+        id: 3,
+        name: "Kiran Kumar",
+        phone: "9123456780",
+        aadhaar: "3499 1288 3491",
+        qualification: "PUC",
+        state: "Karnataka",
+        district: "Mysuru / ಮೈಸೂರು",
+        taluk: "Nanjangud / ನಂಜನಗೂಡು",
+        village: "Chamaraja Layout",
+        approved: false,
+        member_id: null,
+        photo_url: "leader_profile.jpg",
+        created_at: new Date(Date.now() - 3 * 24 * 3600000).toISOString() // 3 days ago
+      }
+    ];
+    populateDistrictFilter();
+    updateMetrics();
+    applyFilters();
+    renderVisualAnalytics();
+  }
+
+  function generateMoreMockData() {
+    const mockNames = [
+      "Darshan Hegde", "Sneha Patil", "Sagar Kulkarni", "Aishwarya Murthy", 
+      "Puneeth Raj", "Deepa N", "Manjunath Swamy", "Vidya Bhat", 
+      "Sharath Gowda", "Meghana Rao", "Ramesh Kumar", "Tejaswini M",
+      "Yashas R", "Jyothi Lakshmi", "Harish S"
+    ];
+    
+    const mockQualifications = ["SSLC", "PUC", "Graduate", "Post Graduate", "Professional Degree"];
+    
+    const mockDistricts = [
+      { dist: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ", taluk: "Bengaluru North / ಬೆಂಗಳೂರು ಉತ್ತರ" },
+      { dist: "Belagavi / ಬೆಳಗಾವಿ", taluk: "Chikkodi / ಚಿಕ್ಕೋಡಿ" },
+      { dist: "Dakshina Kannada / ದಕ್ಷಿಣ ಕನ್ನಡ", taluk: "Mangaluru / ಮಂಗಳೂರು" },
+      { dist: "Tumakuru / ತುಮಕೂರು", taluk: "Gubbi / ಗುಬ್ಬಿ" },
+      { dist: "Shivamogga / ಶಿವಮೊಗ್ಗ", taluk: "Sagar / ಸಾಗರ" },
+      { dist: "Mysuru / ಮೈಸೂರು", taluk: "Hunsur / ಹುಣಸೂರು" },
+      { dist: "Kalaburagi / ಕಲಬುರಗಿ", taluk: "Aland / ಆಳಂದ" }
+    ];
+
+    const size = allMembers.length;
+    
+    for (let i = 0; i < 15; i++) {
+      const name = mockNames[Math.floor(Math.random() * mockNames.length)];
+      const qual = mockQualifications[Math.floor(Math.random() * mockQualifications.length)];
+      const loc = mockDistricts[Math.floor(Math.random() * mockDistricts.length)];
+      const randomPhone = "9" + Math.floor(100000000 + Math.random() * 900000000);
+      const randomAadhaar = Math.floor(1000 + Math.random() * 9000) + " " + Math.floor(1000 + Math.random() * 9000) + " " + Math.floor(1000 + Math.random() * 9000);
+      
+      const approvedState = Math.random() > 0.45;
+      let member_id = null;
+      if (approvedState) {
+        member_id = `YEP-KA-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+      }
+
+      // Distribute creation dates over past 6 days
+      const daysAgo = Math.floor(Math.random() * 7);
+      const created_at = new Date(Date.now() - daysAgo * 24 * 3600000).toISOString();
+
+      allMembers.push({
+        id: size + i + 1,
+        name: name + " " + String.fromCharCode(65 + Math.floor(Math.random() * 26)), // add initial
+        phone: randomPhone,
+        aadhaar: randomAadhaar,
+        qualification: qual,
+        state: "Karnataka",
+        district: loc.dist,
+        taluk: loc.taluk,
+        village: "Local Area",
+        approved: approvedState,
+        member_id: member_id,
+        photo_url: "leader_profile.jpg",
+        created_at: created_at
+      });
+    }
+
+    populateDistrictFilter();
+    updateMetrics();
+    applyFilters();
+    renderVisualAnalytics();
+
+    alert("Successfully generated 15 realistic mock registrations.");
+  }
+</script>
+</body>
+</html>
