@@ -530,6 +530,7 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
+    .hero { padding-top: 160px !important; }
     .hero-content { grid-template-columns: 1fr; text-align: center; gap: 40px; }
     .hero-text .eyebrow { justify-content: center; }
     .hero-sub { margin: 20px auto 36px; }
@@ -552,14 +553,15 @@
   @media (max-width: 768px) {
     nav { padding: 8px 3% !important; gap: 10px !important; }
     .nav-logo img { width: 38px; height: 38px; }
+    .nav-brand { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 2px !important; }
     .brand-divider { display: none !important; }
     .brand-tagline { display: none !important; }
-    body.lang-en .brand-col-kn { display: none !important; }
-    body.lang-kn .brand-col-en { display: none !important; }
-    .brand-heading { font-size: 1.25rem !important; }
+    .brand-col-en { display: block !important; }
+    .brand-col-kn { display: block !important; }
+    .brand-col-kn .brand-heading { font-family: 'Tiro Kannada', serif !important; font-size: 1.05rem !important; }
+    .brand-col-en .brand-heading { font-size: 1.15rem !important; }
     .nav-cta { display: none !important; }
-    .lang-toggle { padding: 2px; }
-    .lang-btn { padding: 4px 10px; font-size: 0.75rem; }
+    .lang-toggle { display: none !important; }
   }
   @media (max-width: 600px) {
     .pillars-grid { grid-template-columns: 1fr; }
