@@ -1845,7 +1845,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          filename: `${phone}_photo.jpg`,
+          filename: `${phone}_${Date.now()}_photo.jpg`,
           image: capturedPhotoData
         })
       });
