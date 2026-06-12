@@ -495,16 +495,16 @@
     gap: 10px;
   }
   .card-logo img {
-    width: 38px;
-    height: 38px;
+    width: 76px;
+    height: 76px;
     object-fit: cover;
     border-radius: 50%;
-    border: 1.5px solid var(--gold);
+    border: 2px solid var(--gold);
   }
   .card-title-wrap {
     display: flex;
     flex-direction: column;
-    line-height: 1.1;
+    line-height: 1.2;
   }
   .card-title-main {
     font-family: 'Rajdhani', sans-serif;
@@ -514,11 +514,21 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  .card-title-main-kn {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 1px;
+  }
   .card-title-sub {
     font-size: 0.65rem;
     color: var(--gold);
     font-family: 'Rajdhani', sans-serif;
     letter-spacing: 0.5px;
+    margin-top: 1px;
   }
   .card-badge {
     background: rgba(244,196,48,0.1);
@@ -1058,6 +1068,7 @@
         <img src="yep_leader_seal.png" alt="YEP logo">
         <div class="card-title-wrap">
           <span class="card-title-main">YoungSTAR PARTY</span>
+          <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
           <span class="card-title-sub">YEP KARNATAKA</span>
         </div>
       </div>
@@ -1077,6 +1088,11 @@
         </div>
 
         <div class="card-field">
+          <div class="card-label">Mobile Phone</div>
+          <div class="card-val" id="card-phone-val">N/A</div>
+        </div>
+
+        <div class="card-field">
           <div class="card-label">District &amp; Taluk</div>
           <div class="card-val" id="card-location-val">Bengaluru · South</div>
         </div>
@@ -1093,10 +1109,6 @@
   </div>
 
   <div class="modal-actions">
-    <!-- WhatsApp Share link -->
-    <a href="#" id="whatsapp-share-link" target="_blank" class="modal-btn share">
-      ✊ <span class="en">Share on WhatsApp</span><span class="kn">ವಾಟ್ಸ್ಆ್ಯಪ್‌ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ</span>
-    </a>
     <a href="index.html" class="modal-btn home">
       🏠 <span class="en">Return to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
     </a>
@@ -1676,18 +1688,8 @@
       document.getElementById('card-photo').src = photoUrl;
       document.getElementById('card-name-val').textContent = name;
       document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
+      document.getElementById('card-phone-val').textContent = phone;
       document.getElementById('card-location-val').textContent = `${district.split(' / ')[0]} · ${taluk.split(' / ')[0]}`;
-
-      // Create dynamic WhatsApp share link
-      const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
-      let shareText = "";
-      if (activeLang === 'kn') {
-        shareText = `ನಾನು ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ (YEP) ಬದಲಾವಣೆಯ ಸದಸ್ಯನಾಗಿದ್ದೇನೆ! ನನ್ನ ಸದಸ್ಯತ್ವ ಪ್ರಕ್ರಿಯೆ ಪ್ರಗತಿಯಲ್ಲಿದೆ. ನೀವೂ ಇಂದೇ ಸೇರಿ ಬದಲಾವಣೆ ತನ್ನಿ: https://yep.pages.dev/join.html`;
-      } else {
-        shareText = `I just registered to join the YoungSTAR Empowerment Party (YEP) for Change! Join the movement today: https://yep.pages.dev/join.html`;
-      }
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-      document.getElementById('whatsapp-share-link').href = whatsappUrl;
 
       // Show modal
       const successModal = document.getElementById('success-modal');

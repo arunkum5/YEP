@@ -981,10 +981,11 @@
     padding-left: 8px;
   }
   .card-logo { display: flex; align-items: center; gap: 8px; }
-  .card-logo img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; border: 1px solid var(--gold); }
-  .card-title-wrap { display: flex; flex-direction: column; line-height: 1.1; }
-  .card-title-main { font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--white); }
-  .card-title-sub { font-size: 0.6rem; color: var(--gold); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
+  .card-logo img { width: 76px; height: 76px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold); }
+  .card-title-wrap { display: flex; flex-direction: column; line-height: 1.2; }
+  .card-title-main { font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700; background: linear-gradient(135deg, var(--saffron), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .card-title-main-kn { font-family: 'Tiro Kannada', serif; font-size: 0.95rem; font-weight: 700; background: linear-gradient(135deg, var(--saffron), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 1px; }
+  .card-title-sub { font-size: 0.6rem; color: var(--gold); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; margin-top: 1px; }
   .card-badge {
     background: rgba(244,196,48,0.1); border: 1px solid var(--gold); color: var(--gold);
     border-radius: 3px; padding: 2px 6px; font-size: 0.6rem; font-weight: 700;
@@ -1415,6 +1416,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             <img src="yep_leader_seal.png" alt="YEP logo">
             <div class="card-title-wrap">
               <span class="card-title-main">YoungSTAR PARTY</span>
+              <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
               <span class="card-title-sub">YEP KARNATAKA</span>
             </div>
           </div>
@@ -1431,6 +1433,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             <div class="card-field">
               <div class="card-label">Member ID</div>
               <div class="card-val card-id-highlight" id="detail-card-id-val">YEP-KA-2026-89240</div>
+            </div>
+
+            <div class="card-field">
+              <div class="card-label">Mobile Phone</div>
+              <div class="card-val" id="detail-card-phone-val">N/A</div>
             </div>
 
             <div class="card-field">
@@ -2385,11 +2392,13 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const cardAvatar = document.getElementById('detail-card-avatar');
     const cardName = document.getElementById('detail-card-name-val');
     const cardId = document.getElementById('detail-card-id-val');
+    const cardPhone = document.getElementById('detail-card-phone-val');
     const cardLocation = document.getElementById('detail-card-location-val');
     const cardStatusStamp = document.getElementById('detail-card-status-stamp');
 
     cardAvatar.src = member.photo_url || 'leader_profile.jpg';
     cardName.textContent = member.name || 'Unnamed';
+    cardPhone.textContent = member.phone || 'N/A';
     
     const distName = (member.district || 'N/A').split(' / ')[0];
     const talukName = (member.taluk || 'N/A').split(' / ')[0];
