@@ -2706,10 +2706,12 @@
   let deferredPrompt;
   const pwaDesktopBtn = document.getElementById('pwa-desktop-btn');
   const pwaMobileBtn = document.getElementById('pwa-mobile-btn');
-  const pwaInstallBanner = document.getElementById('pwa-install-banner');
-  const pwaStandardPrompt = document.getElementById('pwa-standard-prompt');
-  const pwaIosPrompt = document.getElementById('pwa-ios-prompt');
-  const pwaInAppPrompt = document.getElementById('pwa-inapp-prompt');
+
+  // Dynamic getters for elements parsed below this script
+  const getPwaBanner = () => document.getElementById('pwa-install-banner');
+  const getPwaStandardPrompt = () => document.getElementById('pwa-standard-prompt');
+  const getPwaIosPrompt = () => document.getElementById('pwa-ios-prompt');
+  const getPwaInAppPrompt = () => document.getElementById('pwa-inapp-prompt');
 
   // Helper to check if user dismissed prompt recently (within 24 hours)
   function isPromptDismissed() {
@@ -2720,11 +2722,12 @@
   }
 
   function closePwaBanner() {
-    if (pwaInstallBanner) {
-      pwaInstallBanner.style.opacity = '0';
-      pwaInstallBanner.style.transform = 'translateY(20px) scale(0.95)';
+    const banner = getPwaBanner();
+    if (banner) {
+      banner.style.opacity = '0';
+      banner.style.transform = 'translateY(20px) scale(0.95)';
       setTimeout(() => {
-        pwaInstallBanner.style.display = 'none';
+        banner.style.display = 'none';
       }, 300);
     }
     localStorage.setItem('pwa-prompt-dismissed', Date.now().toString());
@@ -2766,34 +2769,39 @@
 
     // Show banner after 2 seconds
     setTimeout(() => {
-      if (!pwaInstallBanner) return;
+      const banner = getPwaBanner();
+      const standardPrompt = getPwaStandardPrompt();
+      const iosPrompt = getPwaIosPrompt();
+      const inappPrompt = getPwaInAppPrompt();
+
+      if (!banner) return;
 
       if (isInAppBrowser) {
-        pwaStandardPrompt.style.display = 'none';
-        pwaIosPrompt.style.display = 'none';
-        if (pwaInAppPrompt) pwaInAppPrompt.style.display = 'block';
-        showBannerElement();
+        if (standardPrompt) standardPrompt.style.display = 'none';
+        if (iosPrompt) iosPrompt.style.display = 'none';
+        if (inappPrompt) inappPrompt.style.display = 'block';
+        showBannerElement(banner);
       } else if (isIOS) {
-        pwaStandardPrompt.style.display = 'none';
-        if (pwaIosPrompt) pwaIosPrompt.style.display = 'block';
-        if (pwaInAppPrompt) pwaInAppPrompt.style.display = 'none';
-        showBannerElement();
+        if (standardPrompt) standardPrompt.style.display = 'none';
+        if (iosPrompt) iosPrompt.style.display = 'block';
+        if (inappPrompt) inappPrompt.style.display = 'none';
+        showBannerElement(banner);
       } else {
-        pwaIosPrompt.style.display = 'none';
-        if (pwaInAppPrompt) pwaInAppPrompt.style.display = 'none';
-        if (pwaStandardPrompt) pwaStandardPrompt.style.display = 'block';
-        showBannerElement();
+        if (iosPrompt) iosPrompt.style.display = 'none';
+        if (inappPrompt) inappPrompt.style.display = 'none';
+        if (standardPrompt) standardPrompt.style.display = 'block';
+        showBannerElement(banner);
       }
     }, 2000);
   }
 
-  function showBannerElement() {
-    pwaInstallBanner.style.display = 'block';
-    pwaInstallBanner.style.opacity = '0';
-    pwaInstallBanner.style.transform = 'translateY(40px) scale(0.95)';
-    void pwaInstallBanner.offsetWidth;
-    pwaInstallBanner.style.opacity = '1';
-    pwaInstallBanner.style.transform = 'translateY(0) scale(1)';
+  function showBannerElement(banner) {
+    banner.style.display = 'block';
+    banner.style.opacity = '0';
+    banner.style.transform = 'translateY(40px) scale(0.95)';
+    void banner.offsetWidth;
+    banner.style.opacity = '1';
+    banner.style.transform = 'translateY(0) scale(1)';
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -2815,7 +2823,8 @@
       deferredPrompt = null;
       if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
       if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
-      if (pwaInstallBanner) pwaInstallBanner.style.display = 'none';
+      const banner = getPwaBanner();
+      if (banner) banner.style.display = 'none';
     });
   }
 
@@ -2826,7 +2835,8 @@
     console.log('YEP App successfully installed!');
     if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
     if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
-    if (pwaInstallBanner) pwaInstallBanner.style.display = 'none';
+    const banner = getPwaBanner();
+    if (banner) banner.style.display = 'none';
   });
 
   // Run initializations
