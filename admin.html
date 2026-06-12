@@ -1446,6 +1446,9 @@
     <header class="top-header">
       <div class="header-title" id="page-title">Dashboard Overview</div>
       <div class="header-meta">
+        <span id="admin-welcome-text" style="font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); max-width: 280px;">
+          👤 <span id="admin-display-name" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Admin</span>
+        </span>
         <span class="status-indicator live" id="db-status-badge">
           <span class="indicator-dot"></span>
           <span id="db-status-text">Mock Mode</span>
@@ -1986,6 +1989,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       const isCustomAdmin = mockAdmins.some(a => a.email === email && a.password === password);
       
       if (isDefaultAdmin || isCustomAdmin) {
+        localStorage.setItem('activeMockAdminEmail', email); // Store active email for display
         toggleView(true);
         loadMockupData();
       } else {
@@ -2022,6 +2026,26 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     if (isAuthenticated) {
       loginContainer.style.display = 'none';
       appLayout.style.display = 'flex';
+      
+      // Update welcome text dynamically
+      let email = 'admin@yep.com'; // Fallback / Mock default
+      if (supabaseClient) {
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
+          if (session && session.user) {
+            email = session.user.email;
+            const namePart = email.split('@')[0];
+            const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+            document.getElementById('admin-display-name').textContent = `${formattedName} (${email})`;
+          }
+        });
+      } else {
+        // Mock mode
+        const lastMockUser = localStorage.getItem('activeMockAdminEmail') || 'admin@yep.com';
+        const namePart = lastMockUser.split('@')[0];
+        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+        document.getElementById('admin-display-name').textContent = `${formattedName} (${lastMockUser})`;
+      }
+
       switchTab('overview');
     } else {
       loginContainer.style.display = 'flex';
