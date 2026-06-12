@@ -1913,6 +1913,18 @@
       const successModal = document.getElementById('success-modal');
       successModal.classList.add('active');
     } catch (dbErr) {
+      // Clean up the uploaded photo from R2 since the database insert failed
+      if (photoUrl) {
+        const filename = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
+        try {
+          await fetch(`/api/upload?filename=${encodeURIComponent(filename)}`, {
+            method: 'DELETE'
+          });
+        } catch (cleanupErr) {
+          console.error("Failed to clean up photo from R2 on insert failure:", cleanupErr);
+        }
+      }
+
       let friendlyMsg = dbErr.message || "Something went wrong.";
       // Postgres unique_violation error code is 23505
       if (dbErr.code === "23505") {
