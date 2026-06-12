@@ -2225,6 +2225,57 @@
   <span class="btn-icon">✊</span>
 </a>
 
+<!-- Custom PWA Install Banner — placed here so DOM elements exist when script runs -->
+<div id="pwa-install-banner" class="pwa-banner" style="display:none;opacity:0;transform:translateY(-40px) scale(0.95);">
+  <div class="pwa-banner-content">
+    <button class="pwa-banner-close" onclick="closePwaBanner()" aria-label="Close">✕</button>
+
+    <!-- Android / Chrome / Desktop -->
+    <div id="pwa-standard-prompt" style="display:none;">
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-logo"><img src="yep_leader_seal.png" alt="YEP"></div>
+        <div class="pwa-banner-title-area">
+          <h3><span class="en">Install YEP App</span><span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span></h3>
+          <p style="margin-top:4px;">
+            <span class="en">Install to access your ID card offline and load faster.</span>
+            <span class="kn">ಆಫ್‌ಲೈನ್ ಐಡಿ ಕಾರ್ಡ್ ಮತ್ತು ತ್ವರಿತ ಲೋಡಿಂಗ್‌ಗಾಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.</span>
+          </p>
+        </div>
+      </div>
+      <div class="pwa-banner-actions" style="margin-top:16px;">
+        <button onclick="triggerPwaInstallBanner()" class="pwa-btn-install">📲 <span class="en">Install Now</span><span class="kn">ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span></button>
+        <button onclick="closePwaBanner()" class="pwa-btn-later"><span class="en">Later</span><span class="kn">ನಂತರ</span></button>
+      </div>
+    </div>
+
+    <!-- iOS / Safari -->
+    <div id="pwa-ios-prompt" style="display:none;">
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-logo"><img src="yep_leader_seal.png" alt="YEP"></div>
+        <div class="pwa-banner-title-area">
+          <h3><span class="en">Add YEP to Home Screen</span><span class="kn">ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ</span></h3>
+          <p style="margin-top:4px;"><span class="en">Install on iPhone for offline access.</span><span class="kn">ಆಫ್‌ಲೈನ್ ಪ್ರವೇಶಕ್ಕಾಗಿ ಐಫೋನ್‌ನಲ್ಲಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.</span></p>
+        </div>
+      </div>
+      <div class="ios-instruction-banner" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.1);padding-top:12px;">
+        <div class="ios-instruction-step"><span>1.</span><div><span class="en">Tap the Share button <span class="ios-icon-share">📤</span> at the bottom of Safari.</span><span class="kn">ಸಫಾರಿ ಕೆಳಗೆ ಶೇರ್ ಬಟನ್ <span class="ios-icon-share">📤</span> ಒತ್ತಿರಿ.</span></div></div>
+        <div class="ios-instruction-step" style="margin-top:8px;"><span>2.</span><div><span class="en">Select <b>'Add to Home Screen'</b>.</span><span class="kn"><b>'ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span></div></div>
+      </div>
+    </div>
+
+    <!-- In-App Browser (WhatsApp / FB etc.) -->
+    <div id="pwa-inapp-prompt" style="display:none;">
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-logo"><img src="yep_leader_seal.png" alt="YEP"></div>
+        <div class="pwa-banner-title-area">
+          <h3><span class="en">Open in Browser to Install</span><span class="kn">ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಓಪನ್ ಮಾಡಿ</span></h3>
+          <p style="margin-top:4px;"><span class="en">Tap menu (<b>...</b>) → <b>'Open in Chrome/Safari'</b> to install.</span><span class="kn">ಮೆನು ಒತ್ತಿ → <b>'Chrome/Safari ನಲ್ಲಿ ತೆರೆಯಿರಿ'</b>.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SUPABASE CLIENT SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -2763,8 +2814,10 @@
 
   // Detect environment
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isAndroid = /Android/.test(navigator.userAgent);
   const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-  const isInAppBrowser = /FBAN|FBAV|Instagram|Twitter|Pinterest|LinkedIn|Line|FB_IAB|Webview|IAB|Messenger|WhatsApp/i.test(navigator.userAgent) || (navigator.standalone === undefined && navigator.userAgent.indexOf('Safari') === -1 && !isIOS);
+  // Only flag actual social app webviews — NOT Chrome/Firefox/Samsung browser on Android
+  const isInAppBrowser = /FBAN|FBAV|Instagram|Twitter|Pinterest|LinkedIn|Line|FB_IAB|Webview|IAB|Messenger|WhatsApp/i.test(navigator.userAgent);
 
   function initializePwaBanner() {
     const isTestMode = window.location.search.includes('test=pwa');
@@ -2850,9 +2903,7 @@
     initializePwaBanner();
   } else {
     window.addEventListener('DOMContentLoaded', initializePwaBanner);
-  }
-
-  // Service Worker Registration
+  }\n\n  // Service Worker Registration
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
@@ -2861,113 +2912,6 @@
     });
   }
 </script>
-
-<!-- Custom PWA Install Dialog/Banner -->
-<div id="pwa-install-banner" class="pwa-banner" style="display: none; opacity: 0; transform: translateY(-40px) scale(0.95);">
-  <div class="pwa-banner-content">
-    <button class="pwa-banner-close" onclick="closePwaBanner()" aria-label="Close">✕</button>
-    
-    <!-- Android / Chrome / Desktop Version -->
-    <div id="pwa-standard-prompt" style="display: none;">
-      <div class="pwa-banner-header">
-        <div class="pwa-banner-logo">
-          <img src="yep_leader_seal.png" alt="YEP Logo">
-        </div>
-        <div class="pwa-banner-title-area">
-          <h3>
-            <span class="en">Install YEP App</span>
-            <span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span>
-          </h3>
-          <p style="margin-top: 4px;">
-            <span class="en">Install YEP App to access your ID card offline and enjoy faster loading.</span>
-            <span class="kn">ಆಫ್‌ಲೈನ್ ಪ್ರವೇಶ ಮತ್ತು ತ್ವರಿತ ಐಡಿ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್‌ಗಾಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.</span>
-          </p>
-        </div>
-      </div>
-      
-      <!-- Manual browser instructions fallback for standard prompt if deferredPrompt is missing -->
-      <div id="pwa-browser-menu-instructions" style="display: none; margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-        <div class="ios-instruction-step">
-          <span>1.</span>
-          <div>
-            <span class="en">Tap the browser menu icon (<b>⋮</b> or three lines) at the top or bottom of your screen.</span>
-            <span class="kn">ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಮೆನು ಐಕಾನ್ (<b>⋮</b>) ಒತ್ತಿರಿ.</span>
-          </div>
-        </div>
-        <div class="ios-instruction-step" style="margin-top: 8px;">
-          <span>2.</span>
-          <div>
-            <span class="en">Select <b>'Add to Home screen'</b> or <b>'Install app'</b>.</span>
-            <span class="kn"><b>'ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ'</b> ಅಥವಾ <b>'ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="pwa-banner-actions" style="margin-top: 16px;">
-        <button onclick="triggerPwaInstallBanner()" class="pwa-btn-install">
-          📲 <span class="en">Install Now</span><span class="kn">ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span>
-        </button>
-        <button onclick="closePwaBanner()" class="pwa-btn-later">
-          <span class="en">Later</span><span class="kn">ನಂತರ</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- iOS / Safari Version -->
-    <div id="pwa-ios-prompt" style="display: none;">
-      <div class="pwa-banner-header">
-        <div class="pwa-banner-logo">
-          <img src="yep_leader_seal.png" alt="YEP Logo">
-        </div>
-        <div class="pwa-banner-title-area">
-          <h3>
-            <span class="en">Add YEP to Home Screen</span>
-            <span class="kn">ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ</span>
-          </h3>
-          <p style="margin-top: 4px;">
-            <span class="en">Install this app on your iPhone for offline access and direct updates.</span>
-            <span class="kn">ನಿಮ್ಮ ಐಫೋನ್‌ನಲ್ಲಿ ಸುಲಭ ಪ್ರವೇಶಕ್ಕಾಗಿ ಈ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.</span>
-          </p>
-        </div>
-      </div>
-      <div class="ios-instruction-banner" style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-        <div class="ios-instruction-step">
-          <span>1.</span>
-          <div>
-            <span class="en">Tap the share button <span class="ios-icon-share">📤</span> at the bottom of Safari.</span>
-            <span class="kn">ಸಫಾರಿಯ ಕೆಳಭಾಗದಲ್ಲಿರುವ ಶೇರ್ ಬಟನ್ <span class="ios-icon-share">📤</span> ಒತ್ತಿರಿ.</span>
-          </div>
-        </div>
-        <div class="ios-instruction-step" style="margin-top: 8px;">
-          <span>2.</span>
-          <div>
-            <span class="en">Scroll down and select <b>'Add to Home Screen'</b>.</span>
-            <span class="kn">ಕೆಳಗೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ <b>'ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- In-App Browser Fallback Version (e.g. WhatsApp, Facebook) -->
-    <div id="pwa-inapp-prompt" style="display: none;">
-      <div class="pwa-banner-header">
-        <div class="pwa-banner-logo">
-          <img src="yep_leader_seal.png" alt="YEP Logo">
-        </div>
-        <div class="pwa-banner-title-area">
-          <h3>
-            <span class="en">Open in Browser to Install</span>
-            <span class="kn">ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಓಪನ್ ಮಾಡಿ</span>
-          </h3>
-          <p style="margin-top: 4px;">
-            <span class="en">To install the YEP app, tap the menu (<b>...</b> or share icon) and select <b>'Open in Chrome/Safari'</b>.</span>
-            <span class="kn">ಈ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು ಮೆನು ಒತ್ತಿ ಮತ್ತು <b>'ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಓಪನ್ ಮಾಡಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
