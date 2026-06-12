@@ -1692,9 +1692,9 @@
       let width = img.width;
       let height = img.height;
       
-      // Resize to max 600px for avatar
-      const maxWidth = 600;
-      const maxHeight = 600;
+      // Resize to max 800px for avatar
+      const maxWidth = 800;
+      const maxHeight = 800;
       if (width > height) {
         if (width > maxWidth) {
           height = Math.round((height * maxWidth) / width);
@@ -1712,8 +1712,8 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // Export as compressed jpeg (quality 0.7)
-      capturedPhotoData = canvas.toDataURL('image/jpeg', 0.7);
+      // Export as compressed jpeg (quality 0.85)
+      capturedPhotoData = canvas.toDataURL('image/jpeg', 0.85);
       updatePhotoPreview(capturedPhotoData);
 
       // Clean up object URL to free memory
@@ -1763,9 +1763,9 @@
     const video = document.getElementById('video-stream');
     if (!localVideoStream) return;
 
-    // Create virtual canvas to draw frame directly into 600x600 size
+    // Create virtual canvas to draw frame directly into 800x800 size
     const canvas = document.createElement('canvas');
-    const targetSize = 600;
+    const targetSize = 800;
     
     let videoWidth = video.videoWidth || 640;
     let videoHeight = video.videoHeight || 480;
@@ -1782,8 +1782,8 @@
     // Draw mirrored if front camera usually, but standard draw is fine
     ctx.drawImage(video, sx, sy, minSize, minSize, 0, 0, targetSize, targetSize);
     
-    // Save image dataurl (quality 0.7)
-    capturedPhotoData = canvas.toDataURL('image/jpeg', 0.7);
+    // Save image dataurl (quality 0.85)
+    capturedPhotoData = canvas.toDataURL('image/jpeg', 0.85);
     updatePhotoPreview(capturedPhotoData);
     
     closeCamera();
