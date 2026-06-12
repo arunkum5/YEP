@@ -637,6 +637,8 @@
   .btn-action.delete:hover { background: #ff5252; color: white; border-color: #ff5252; box-shadow: 0 4px 10px rgba(255,82,82,0.2); }
   .btn-action.details { background: rgba(255,255,255,0.06); border: 1.5px solid var(--glass-border); color: white; }
   .btn-action.details:hover { background: white; color: var(--charcoal); }
+  .btn-action.download-card { background: rgba(76,175,80,0.1); border: 1.5px solid rgba(76,175,80,0.25); color: #4caf50; margin-left: 6px; }
+  .btn-action.download-card:hover { background: #4caf50; color: white; border-color: #4caf50; box-shadow: 0 4px 10px rgba(76,175,80,0.2); }
   
   /* Status Badges */
   .badge {
@@ -916,6 +918,8 @@
   .btn-modal-action.approve:hover { background: var(--dark-green); }
   .btn-modal-action.delete { background: rgba(255,82,82,0.15); color: #ff5252; border: 1.5px solid rgba(255,82,82,0.3); }
   .btn-modal-action.delete:hover { background: #ff5252; color: white; }
+  .btn-modal-action.download { background: #4caf50; color: white; }
+  .btn-modal-action.download:hover { background: var(--dark-green); }
 
   /* Right half - Live ID Card preview */
   .details-right {
@@ -1406,6 +1410,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       </div>
       <div class="details-actions">
         <button class="btn-modal-action approve" id="detail-btn-approve" onclick="handleApproveSingleInModal()">✊ Approve Member</button>
+        <button class="btn-modal-action download" id="detail-btn-download" onclick="handleDownloadSingleInModal()">📥 Download ID Card</button>
         <button class="btn-modal-action delete" onclick="handleDeleteSingleInModal()">✕ Delete Registration</button>
       </div>
     </div>
@@ -2122,6 +2127,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         approveBtn.textContent = '✊ Approve';
         approveBtn.onclick = (e) => { e.stopPropagation(); handleApproveMember(member.id); };
         tdActions.appendChild(approveBtn);
+      } else {
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn-action download-card';
+        downloadBtn.textContent = '📥 Card';
+        downloadBtn.onclick = (e) => { e.stopPropagation(); downloadCardAsAdmin(member, downloadBtn); };
+        tdActions.appendChild(downloadBtn);
       }
       
       const deleteBtn = document.createElement('button');
@@ -2384,12 +2395,15 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     document.getElementById('detail-full-name').textContent = member.name || 'Unnamed';
     document.getElementById('detail-edu-qualification').textContent = member.qualification || 'None';
 
-    // Show/hide approve button based on state
+    // Show/hide approve and download buttons based on state
     const approveBtn = document.getElementById('detail-btn-approve');
+    const downloadBtn = document.getElementById('detail-btn-download');
     if (member.approved) {
       approveBtn.style.display = 'none';
+      downloadBtn.style.display = 'flex';
     } else {
       approveBtn.style.display = 'block';
+      downloadBtn.style.display = 'none';
     }
 
     // Fill card preview
@@ -2451,6 +2465,13 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   function handleDeleteSingleInModal() {
     if (activeDetailMember) {
       handleDeleteMember(activeDetailMember.id);
+    }
+  }
+
+  function handleDownloadSingleInModal() {
+    if (activeDetailMember) {
+      const downloadBtn = document.getElementById('detail-btn-download');
+      downloadCardAsAdmin(activeDetailMember, downloadBtn);
     }
   }
 
@@ -2635,6 +2656,254 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     renderVisualAnalytics();
 
     alert("Successfully generated 15 realistic mock registrations.");
+  }
+
+  function downloadCardAsAdmin(member, downloadBtn) {
+    const originalContent = downloadBtn.innerHTML;
+    downloadBtn.disabled = true;
+    downloadBtn.innerHTML = '⚙️...';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 880;
+    canvas.height = 520;
+    const ctx = canvas.getContext('2d');
+
+    // Helper: Draw rounded rectangle
+    function drawRoundedRect(x, y, width, height, radius, fillStyle, strokeStyle, strokeWidth) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      if (fillStyle) {
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+      }
+      if (strokeStyle && strokeWidth) {
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = strokeWidth;
+        ctx.stroke();
+      }
+    }
+
+    // Load images in parallel
+    const sealImg = new Image();
+    const photoImg = new Image();
+    photoImg.crossOrigin = "anonymous"; // Bypass CORS if supported on server
+
+    let imagesLoaded = 0;
+    function checkLoad() {
+      imagesLoaded++;
+      if (imagesLoaded === 2) {
+        drawAndDownload();
+      }
+    }
+
+    sealImg.onload = checkLoad;
+    photoImg.onload = checkLoad;
+    sealImg.onerror = () => {
+      console.error("Failed to load seal image");
+      checkLoad();
+    };
+    photoImg.onerror = () => {
+      console.error("Failed to load user photo");
+      checkLoad();
+    };
+
+    sealImg.src = "yep_leader_seal.png";
+    photoImg.src = member.photo_url || "yep_leader_seal.png";
+
+    function drawAndDownload() {
+      try {
+        // 1. Draw Card Background
+        const grad = ctx.createLinearGradient(0, 0, 880, 520);
+        grad.addColorStop(0, '#1c1c2e');
+        grad.addColorStop(1, '#0a0a10');
+        drawRoundedRect(0, 0, 880, 520, 32, grad, '#F4C430', 4);
+
+        // 2. Draw Left Tricolor Edge Stripe (width 14px)
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(32, 0);
+        ctx.quadraticCurveTo(0, 0, 0, 32);
+        ctx.lineTo(0, 520 - 32);
+        ctx.quadraticCurveTo(0, 520, 32, 520);
+        ctx.lineTo(14, 520);
+        ctx.lineTo(14, 0);
+        ctx.closePath();
+        ctx.clip();
+
+        // Fill tricolor stripe
+        ctx.fillStyle = '#FF6B00'; // Saffron
+        ctx.fillRect(0, 0, 14, 520 / 3);
+        ctx.fillStyle = '#FFFFFF'; // White
+        ctx.fillRect(0, 520 / 3, 14, 520 / 3);
+        ctx.fillStyle = '#138808'; // Green
+        ctx.fillRect(0, (2 * 520) / 3, 14, 520 / 3);
+        ctx.restore();
+
+        // 3. Draw Header Layout
+        // Seal Emblem Logo
+        const sealX = 60, sealY = 40, sealSize = 100;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sealX + sealSize/2, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.fillStyle = '#0a0a10';
+        ctx.fill();
+        if (sealImg.complete && sealImg.naturalWidth) {
+          ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize);
+        }
+        ctx.restore();
+        
+        ctx.beginPath();
+        ctx.arc(sealX + sealSize/2, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
+        ctx.strokeStyle = '#F4C430';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Header Texts
+        ctx.font = "bold 26px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#F4C430";
+        ctx.fillText("YoungSTAR PARTY", 180, 68);
+
+        ctx.font = "bold 21px 'Tiro Kannada', serif";
+        ctx.fillStyle = "#F4C430";
+        ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 180, 102);
+
+        ctx.font = "14px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#C9A227";
+        ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 180, 128);
+
+        // Header Badge "MEMBER" (right-aligned)
+        ctx.font = "bold 13px 'Rajdhani', sans-serif";
+        const badgeText = "MEMBER";
+        const badgeWidth = ctx.measureText(badgeText).width + 16;
+        drawRoundedRect(880 - badgeWidth - 50, 65, badgeWidth, 30, 6, "rgba(244,196,48,0.1)", "#F4C430", 1.5);
+        ctx.fillStyle = "#F4C430";
+        ctx.textAlign = "center";
+        ctx.fillText(badgeText, 880 - badgeWidth/2 - 50, 84);
+        ctx.textAlign = "left"; // reset
+
+        // Header separator line
+        ctx.beginPath();
+        ctx.moveTo(50, 165);
+        ctx.lineTo(830, 165);
+        ctx.strokeStyle = "rgba(255,255,255,0.08)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 4. Draw Body Layout
+        // Avatar Photo (x=50, y=195, size=180x180)
+        const photoX = 60, photoY = 195, photoSize = 180;
+        drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, "rgba(0,0,0,0.3)", "rgba(255,255,255,0.15)", 3);
+        ctx.save();
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(photoX, photoY, photoSize, photoSize, 12);
+        } else {
+          ctx.rect(photoX, photoY, photoSize, photoSize);
+        }
+        ctx.closePath();
+        ctx.clip();
+        if (photoImg.complete && photoImg.naturalWidth) {
+          ctx.drawImage(photoImg, photoX, photoY, photoSize, photoSize);
+        } else {
+          ctx.fillStyle = "rgba(255,255,255,0.05)";
+          ctx.fillRect(photoX, photoY, photoSize, photoSize);
+          ctx.font = "bold 48px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.2)";
+          ctx.textAlign = "center";
+          ctx.fillText("YEP", photoX + photoSize/2, photoY + photoSize/2 + 16);
+          ctx.textAlign = "left";
+        }
+        ctx.restore();
+
+        // Member Info Fields
+        const infoX = 270;
+        
+        // Name Field
+        ctx.font = "bold 24px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText(member.name, infoX, 215);
+
+        // Member ID Field
+        ctx.font = "12px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText("MEMBER ID", infoX, 255);
+        ctx.font = "bold 19px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#F4C430";
+        const memIdVal = member.member_id || `YEP-KA-${String(member.id).padStart(4, '0')}`;
+        ctx.fillText(memIdVal, infoX, 280);
+
+        // Phone Field
+        ctx.font = "12px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText("MOBILE PHONE", infoX, 320);
+        ctx.font = "600 17px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.fillText(member.phone, infoX, 342);
+
+        // Location Field
+        ctx.font = "12px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText("DISTRICT & TALUK", infoX, 382);
+        ctx.font = "600 17px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        const districtVal = member.district ? member.district.split('/')[0].trim() : 'N/A';
+        const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
+        ctx.fillText(`${districtVal} · ${talukVal}`, infoX, 404);
+
+        // 5. Draw Footer Layout
+        ctx.beginPath();
+        ctx.moveTo(50, 440);
+        ctx.lineTo(830, 440);
+        ctx.strokeStyle = "rgba(255,255,255,0.08)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Footer Text Left
+        ctx.font = "bold 13px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.35)";
+        ctx.fillText("YoungSTAR Empowerment Party", 60, 475);
+        ctx.font = "bold 11px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#FF6B00";
+        ctx.fillText("Youth Power – Our Strength – Our Future", 60, 495);
+
+        // Footer Status Badge Right
+        ctx.font = "bold 12px 'Rajdhani', sans-serif";
+        const statusText = "✓ APPROVED";
+        const statusWidth = ctx.measureText(statusText).width + 16;
+        drawRoundedRect(880 - statusWidth - 50, 462, statusWidth, 28, 4, "rgba(76,175,80,0.1)", "#4CAF50", 1.5);
+        ctx.fillStyle = "#4CAF50";
+        ctx.textAlign = "center";
+        ctx.fillText(statusText, 880 - statusWidth/2 - 50, 480);
+        ctx.textAlign = "left";
+
+        // 6. Trigger Download Action
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        const link = document.createElement('a');
+        link.download = `YEP_Member_Card_${member.name.replace(/\s+/g, '_')}.jpg`;
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+      } catch (err) {
+        console.error("Canvas drawing failed:", err);
+        alert("Failed to generate download image: " + err.message);
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = originalContent;
+      }
+    }
   }
 </script>
 </body>
