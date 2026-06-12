@@ -2667,6 +2667,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     canvas.width = 880;
     canvas.height = 520;
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Helper: Draw rounded rectangle
     function drawRoundedRect(x, y, width, height, radius, fillStyle, strokeStyle, strokeWidth) {
@@ -2717,7 +2719,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     };
 
     sealImg.src = "yep_leader_seal.png";
-    photoImg.src = member.photo_url || "yep_leader_seal.png";
+    photoImg.src = member.photo_url ? ("/api/proxy?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
 
     function drawAndDownload() {
       try {
