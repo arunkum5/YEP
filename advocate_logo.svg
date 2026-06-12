@@ -5,38 +5,79 @@
       <stop offset="50%" stop-color="#F4C430" />
       <stop offset="100%" stop-color="#C9A227" />
     </linearGradient>
+    
+    <!-- A single leaf pair for the laurel wreath -->
+    <g id="leaf-pair">
+      <path d="M 0,0 C -3,-4 -6,-4 -8,0 C -6,4 -3,4 0,0" fill="url(#gold-grad)" />
+      <path d="M 0,0 C 3,-4 6,-4 8,0 C 6,4 3,4 0,0" fill="url(#gold-grad)" />
+    </g>
   </defs>
+
+  <!-- BACKGROUND SHIELD/GLOW (optional, transparent by default) -->
   
-  <!-- Central Pillar / Base steps -->
-  <path d="M 30,85 L 70,85 L 66,80 L 34,80 Z" fill="url(#gold-grad)" />
-  <path d="M 35,80 L 65,80 L 62,75 L 38,75 Z" fill="url(#gold-grad)" opacity="0.9" />
-  
-  <!-- Vertical shaft -->
-  <rect x="47.5" y="25" width="5" height="50" rx="1.5" fill="url(#gold-grad)" />
-  
-  <!-- Pillar decorative top/finial -->
-  <circle cx="50" cy="20" r="4.5" fill="url(#gold-grad)" />
-  <circle cx="50" cy="25" r="3" fill="url(#gold-grad)" />
-  
-  <!-- Main horizontal beam -->
-  <path d="M 16,33 C 25,29 35,31 50,31 C 65,31 75,29 84,33 C 85,33.5 85,34.5 84,35 C 75,37 65,35 50,35 C 35,35 25,37 16,35 C 15,34.5 15,33.5 16,33 Z" fill="url(#gold-grad)" />
-  <circle cx="50" cy="33" r="2.5" fill="#FFFFFF" opacity="0.3" />
-  
-  <!-- Left Scale Pan (hanging from 16, 34) -->
-  <!-- Chains -->
-  <line x1="16" y1="34" x2="6" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
-  <line x1="16" y1="34" x2="26" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
-  <!-- Pan bowl -->
-  <path d="M 6,60 L 26,60 C 26,68 6,68 6,60 Z" fill="url(#gold-grad)" />
-  <!-- Pan hanger link -->
-  <circle cx="16" cy="34" r="1.5" fill="url(#gold-grad)" />
-  
-  <!-- Right Scale Pan (hanging from 84, 34) -->
-  <!-- Chains -->
-  <line x1="84" y1="34" x2="74" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
-  <line x1="84" y1="34" x2="94" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
-  <!-- Pan bowl -->
-  <path d="M 74,60 L 94,60 C 94,68 74,68 74,60 Z" fill="url(#gold-grad)" />
-  <!-- Pan hanger link -->
-  <circle cx="84" cy="34" r="1.5" fill="url(#gold-grad)" />
+  <!-- LAUREL WREATH BRANCHES -->
+  <!-- Left Laurel Wreath -->
+  <g transform="translate(50,50)">
+    <!-- Stems and leaves placed around circular path (radius 38) -->
+    <path d="M -9,36 A 38,38 0 0,1 -38,0 A 38,38 0 0,1 -15,-35" fill="none" stroke="url(#gold-grad)" stroke-width="1.8" stroke-linecap="round" />
+    
+    <!-- Leaves along left branch -->
+    <use href="#leaf-pair" transform="translate(-18, 33) rotate(-30)" />
+    <use href="#leaf-pair" transform="translate(-29, 24) rotate(-50)" />
+    <use href="#leaf-pair" transform="translate(-36, 12) rotate(-70)" />
+    <use href="#leaf-pair" transform="translate(-38, -2) rotate(-90)" />
+    <use href="#leaf-pair" transform="translate(-35, -16) rotate(-110)" />
+    <use href="#leaf-pair" transform="translate(-27, -27) rotate(-130)" />
+    <use href="#leaf-pair" transform="translate(-16, -34) rotate(-150)" />
+  </g>
+
+  <!-- Right Laurel Wreath -->
+  <g transform="translate(50,50)">
+    <path d="M 9,36 A 38,38 0 0,0 38,0 A 38,38 0 0,0 15,-35" fill="none" stroke="url(#gold-grad)" stroke-width="1.8" stroke-linecap="round" />
+    
+    <!-- Leaves along right branch -->
+    <use href="#leaf-pair" transform="translate(18, 33) rotate(30)" />
+    <use href="#leaf-pair" transform="translate(29, 24) rotate(50)" />
+    <use href="#leaf-pair" transform="translate(36, 12) rotate(70)" />
+    <use href="#leaf-pair" transform="translate(38, -2) rotate(90)" />
+    <use href="#leaf-pair" transform="translate(35, -16) rotate(110)" />
+    <use href="#leaf-pair" transform="translate(27, -27) rotate(130)" />
+    <use href="#leaf-pair" transform="translate(16, -34) rotate(150)" />
+  </g>
+
+  <!-- Stars at the bottom sides -->
+  <!-- Left Star -->
+  <polygon points="30,81 31.5,77 35,77 32,75 33,71.5 30,73.5 27,71.5 28,75 25,77 28.5,77" fill="url(#gold-grad)" />
+  <!-- Right Star -->
+  <polygon points="70,81 71.5,77 75,77 72,75 73,71.5 70,73.5 67,71.5 68,75 65,77 68.5,77" fill="url(#gold-grad)" />
+
+  <!-- SCALED SCALES OF JUSTICE (Centered at 50, 46 to leave space at bottom) -->
+  <g transform="translate(50, 46) scale(0.62) translate(-50, -50)">
+    <!-- Central Pillar / Base steps -->
+    <path d="M 30,85 L 70,85 L 66,80 L 34,80 Z" fill="url(#gold-grad)" />
+    <path d="M 35,80 L 65,80 L 62,75 L 38,75 Z" fill="url(#gold-grad)" opacity="0.9" />
+    
+    <!-- Vertical shaft -->
+    <rect x="47.5" y="25" width="5" height="50" rx="1.5" fill="url(#gold-grad)" />
+    
+    <!-- Pillar decorative top/finial -->
+    <circle cx="50" cy="20" r="4.5" fill="url(#gold-grad)" />
+    <circle cx="50" cy="25" r="3" fill="url(#gold-grad)" />
+    
+    <!-- Main horizontal beam -->
+    <path d="M 16,33 C 25,29 35,31 50,31 C 65,31 75,29 84,33 C 85,33.5 85,34.5 84,35 C 75,37 65,35 50,35 C 35,35 25,37 16,35 C 15,34.5 15,33.5 16,33 Z" fill="url(#gold-grad)" />
+    <circle cx="50" cy="33" r="2.5" fill="#FFFFFF" opacity="0.3" />
+    
+    <!-- Left Scale Pan (hanging from 16, 34) -->
+    <line x1="16" y1="34" x2="6" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+    <line x1="16" y1="34" x2="26" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+    <path d="M 6,60 L 26,60 C 26,68 6,68 6,60 Z" fill="url(#gold-grad)" />
+    <circle cx="16" cy="34" r="1.5" fill="url(#gold-grad)" />
+    
+    <!-- Right Scale Pan (hanging from 84, 34) -->
+    <line x1="84" y1="34" x2="74" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+    <line x1="84" y1="34" x2="94" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+    <path d="M 74,60 L 94,60 C 94,68 74,68 74,60 Z" fill="url(#gold-grad)" />
+    <circle cx="84" cy="34" r="1.5" fill="url(#gold-grad)" />
+  </g>
 </svg>
