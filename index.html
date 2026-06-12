@@ -2709,6 +2709,7 @@
   const pwaInstallBanner = document.getElementById('pwa-install-banner');
   const pwaStandardPrompt = document.getElementById('pwa-standard-prompt');
   const pwaIosPrompt = document.getElementById('pwa-ios-prompt');
+  const pwaInAppPrompt = document.getElementById('pwa-inapp-prompt');
 
   // Helper to check if user dismissed prompt recently (within 24 hours)
   function isPromptDismissed() {
@@ -2730,19 +2731,69 @@
   }
 
   function triggerPwaInstallBanner() {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted YEP PWA installation');
-      } else {
-        console.log('User dismissed YEP PWA installation');
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted YEP PWA installation');
+        } else {
+          console.log('User dismissed YEP PWA installation');
+        }
+        deferredPrompt = null;
+        if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
+        if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
+        closePwaBanner();
+      });
+    } else {
+      // Fallback: show manual installation instructions
+      const browserInstructions = document.getElementById('pwa-browser-menu-instructions');
+      if (browserInstructions) {
+        browserInstructions.style.display = 'block';
+        // Hide the install button since they need to do it manually
+        const installBtn = document.querySelector('.pwa-btn-install');
+        if (installBtn) installBtn.style.display = 'none';
       }
-      deferredPrompt = null;
-      if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
-      if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
-      closePwaBanner();
-    });
+    }
+  }
+
+  // Detect environment
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  const isInAppBrowser = /FBAN|FBAV|Instagram|Twitter|Pinterest|LinkedIn|Line|FB_IAB|Webview|IAB|Messenger|WhatsApp/i.test(navigator.userAgent) || (navigator.standalone === undefined && navigator.userAgent.indexOf('Safari') === -1 && !isIOS);
+
+  function initializePwaBanner() {
+    if (isStandalone || isPromptDismissed()) return;
+
+    // Show banner after 2 seconds
+    setTimeout(() => {
+      if (!pwaInstallBanner) return;
+
+      if (isInAppBrowser) {
+        pwaStandardPrompt.style.display = 'none';
+        pwaIosPrompt.style.display = 'none';
+        if (pwaInAppPrompt) pwaInAppPrompt.style.display = 'block';
+        showBannerElement();
+      } else if (isIOS) {
+        pwaStandardPrompt.style.display = 'none';
+        if (pwaIosPrompt) pwaIosPrompt.style.display = 'block';
+        if (pwaInAppPrompt) pwaInAppPrompt.style.display = 'none';
+        showBannerElement();
+      } else {
+        pwaIosPrompt.style.display = 'none';
+        if (pwaInAppPrompt) pwaInAppPrompt.style.display = 'none';
+        if (pwaStandardPrompt) pwaStandardPrompt.style.display = 'block';
+        showBannerElement();
+      }
+    }, 2000);
+  }
+
+  function showBannerElement() {
+    pwaInstallBanner.style.display = 'block';
+    pwaInstallBanner.style.opacity = '0';
+    pwaInstallBanner.style.transform = 'translateY(40px) scale(0.95)';
+    void pwaInstallBanner.offsetWidth;
+    pwaInstallBanner.style.opacity = '1';
+    pwaInstallBanner.style.transform = 'translateY(0) scale(1)';
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -2750,48 +2801,7 @@
     deferredPrompt = e;
     if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'inline-flex';
     if (pwaMobileBtn) pwaMobileBtn.style.display = 'flex';
-
-    // Automatically show banner after 2 seconds if not dismissed
-    if (!isPromptDismissed()) {
-      setTimeout(() => {
-        if (pwaInstallBanner && pwaStandardPrompt) {
-          pwaIosPrompt.style.display = 'none';
-          pwaStandardPrompt.style.display = 'block';
-          pwaInstallBanner.style.display = 'block';
-          pwaInstallBanner.style.opacity = '0';
-          pwaInstallBanner.style.transform = 'translateY(40px) scale(0.95)';
-          
-          // Force reflow and animate in
-          void pwaInstallBanner.offsetWidth;
-          pwaInstallBanner.style.opacity = '1';
-          pwaInstallBanner.style.transform = 'translateY(0) scale(1)';
-        }
-      }, 2000);
-    }
   });
-
-  // iOS-Specific prompt display
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-
-  if (isIOS && !isStandalone && !isPromptDismissed()) {
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        if (pwaInstallBanner && pwaIosPrompt) {
-          pwaStandardPrompt.style.display = 'none';
-          pwaIosPrompt.style.display = 'block';
-          pwaInstallBanner.style.display = 'block';
-          pwaInstallBanner.style.opacity = '0';
-          pwaInstallBanner.style.transform = 'translateY(40px) scale(0.95)';
-          
-          // Force reflow and animate in
-          void pwaInstallBanner.offsetWidth;
-          pwaInstallBanner.style.opacity = '1';
-          pwaInstallBanner.style.transform = 'translateY(0) scale(1)';
-        }
-      }, 3000);
-    });
-  }
 
   function triggerPwaInstall() {
     if (!deferredPrompt) return;
@@ -2818,6 +2828,13 @@
     if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
     if (pwaInstallBanner) pwaInstallBanner.style.display = 'none';
   });
+
+  // Run initializations
+  if (document.readyState === 'complete') {
+    initializePwaBanner();
+  } else {
+    window.addEventListener('load', initializePwaBanner);
+  }
 
   // Service Worker Registration
   if ('serviceWorker' in navigator) {
@@ -2851,6 +2868,25 @@
           </p>
         </div>
       </div>
+      
+      <!-- Manual browser instructions fallback for standard prompt if deferredPrompt is missing -->
+      <div id="pwa-browser-menu-instructions" style="display: none; margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
+        <div class="ios-instruction-step">
+          <span>1.</span>
+          <div>
+            <span class="en">Tap the browser menu icon (<b>⋮</b> or three lines) at the top or bottom of your screen.</span>
+            <span class="kn">ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಮೆನು ಐಕಾನ್ (<b>⋮</b>) ಒತ್ತಿರಿ.</span>
+          </div>
+        </div>
+        <div class="ios-instruction-step" style="margin-top: 8px;">
+          <span>2.</span>
+          <div>
+            <span class="en">Select <b>'Add to Home screen'</b> or <b>'Install app'</b>.</span>
+            <span class="kn"><b>'ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ'</b> ಅಥವಾ <b>'ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
+          </div>
+        </div>
+      </div>
+
       <div class="pwa-banner-actions" style="margin-top: 16px;">
         <button onclick="triggerPwaInstallBanner()" class="pwa-btn-install">
           📲 <span class="en">Install Now</span><span class="kn">ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span>
@@ -2892,6 +2928,25 @@
             <span class="en">Scroll down and select <b>'Add to Home Screen'</b>.</span>
             <span class="kn">ಕೆಳಗೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ <b>'ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- In-App Browser Fallback Version (e.g. WhatsApp, Facebook) -->
+    <div id="pwa-inapp-prompt" style="display: none;">
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-logo">
+          <img src="yep_leader_seal.png" alt="YEP Logo">
+        </div>
+        <div class="pwa-banner-title-area">
+          <h3>
+            <span class="en">Open in Browser to Install</span>
+            <span class="kn">ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಓಪನ್ ಮಾಡಿ</span>
+          </h3>
+          <p style="margin-top: 4px;">
+            <span class="en">To install the YEP app, tap the menu (<b>...</b> or share icon) and select <b>'Open in Chrome/Safari'</b>.</span>
+            <span class="kn">ಈ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು ಮೆನು ಒತ್ತಿ ಮತ್ತು <b>'ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಓಪನ್ ಮಾಡಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
+          </p>
         </div>
       </div>
     </div>
