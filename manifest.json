@@ -1,0 +1,25 @@
+{
+  "name": "YoungSTAR Empowerment Party",
+  "short_name": "YEP",
+  "description": "YoungSTAR Empowerment Party Membership Portal Karnataka",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a10",
+  "theme_color": "#FFE800",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "yep_leader_seal.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

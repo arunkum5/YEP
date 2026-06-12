@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1C1C2E">
+<link rel="manifest" href="manifest.json">
 <title>YoungSTAR Empowerment Party – YEP Karnataka</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1378,6 +1382,9 @@
     <a href="javascript:void(0)" onclick="openSearchCardModal()" class="nav-download-btn">
       🔍 <span class="en">Download ID</span><span class="kn">ID ಕಾರ್ಡ್</span>
     </a>
+    <a href="javascript:void(0)" id="pwa-desktop-btn" class="nav-download-btn pwa-install-btn" style="display: none; background: var(--saffron); border-color: var(--saffron); margin-left: 10px; margin-right: 10px;">
+      📲 <span class="en">Install App</span><span class="kn">ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್</span>
+    </a>
     <a href="admin.html" class="nav-admin-btn">
       🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
     </a>
@@ -1399,6 +1406,9 @@
     </a>
     <a href="admin.html" class="mobile-drawer-btn admin" onclick="toggleMobileMenu()">
       🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
+    </a>
+    <a href="javascript:void(0)" id="pwa-mobile-btn" class="mobile-drawer-btn pwa-install-btn" style="display: none; background: var(--saffron); border-color: var(--saffron);">
+      📲 <span class="en">Install App</span><span class="kn">ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span>
     </a>
   </div>
 </nav>
@@ -2459,6 +2469,51 @@
       toggleBtn.classList.toggle('active');
       drawer.classList.toggle('active');
     }
+  }
+
+  // PWA Install Prompt handling
+  let deferredPrompt;
+  const pwaDesktopBtn = document.getElementById('pwa-desktop-btn');
+  const pwaMobileBtn = document.getElementById('pwa-mobile-btn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'inline-flex';
+    if (pwaMobileBtn) pwaMobileBtn.style.display = 'flex';
+  });
+
+  function triggerPwaInstall() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted YEP PWA installation');
+      } else {
+        console.log('User dismissed YEP PWA installation');
+      }
+      deferredPrompt = null;
+      if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
+      if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
+    });
+  }
+
+  if (pwaDesktopBtn) pwaDesktopBtn.addEventListener('click', triggerPwaInstall);
+  if (pwaMobileBtn) pwaMobileBtn.addEventListener('click', triggerPwaInstall);
+
+  window.addEventListener('appinstalled', (evt) => {
+    console.log('YEP App successfully installed!');
+    if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
+    if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
+  });
+
+  // Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('ServiceWorker registered:', reg))
+        .catch(err => console.error('ServiceWorker registration failed:', err));
+    });
   }
 </script>
 </body>
