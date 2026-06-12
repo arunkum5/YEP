@@ -988,8 +988,11 @@
   /* ── LANGUAGE CONTROLS ── */
   function setLang(lang) {
     document.body.className = 'lang-' + lang;
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-    document.getElementById('btn-kn').classList.toggle('active', lang === 'kn');
+    
+    const btnEn = document.getElementById('btn-en');
+    const btnKn = document.getElementById('btn-kn');
+    if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+    if (btnKn) btnKn.classList.toggle('active', lang === 'kn');
     
     // Toggle selector options visibility/disability depending on active class
     const selects = document.querySelectorAll('select.form-control');
