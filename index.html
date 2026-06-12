@@ -2903,7 +2903,9 @@
     initializePwaBanner();
   } else {
     window.addEventListener('DOMContentLoaded', initializePwaBanner);
-  }\n\n  // Service Worker Registration
+  }
+
+  // Service Worker Registration
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
