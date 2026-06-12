@@ -101,8 +101,8 @@ export async function onRequestPost(context) {
       }
     });
 
-    // Public Development URL prefix for the R2 bucket
-    const R2_PUBLIC_URL = "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev";
+    // Public Development URL prefix for the R2 bucket (uses environment variable if defined, otherwise falls back)
+    const R2_PUBLIC_URL = env.R2_PUBLIC_URL || "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev";
     const publicUrl = `${R2_PUBLIC_URL}/${cleanFilename}`;
 
     return new Response(JSON.stringify({ 
