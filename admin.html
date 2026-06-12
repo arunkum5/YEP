@@ -1899,6 +1899,17 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     document.getElementById('sidebar-panel').classList.toggle('active');
   }
 
+  // Close mobile sidebar when clicking outside
+  document.addEventListener('click', (event) => {
+    const panel = document.getElementById('sidebar-panel');
+    const navBtn = document.querySelector('.btn-mobile-nav');
+    if (panel && panel.classList.contains('active')) {
+      if (!panel.contains(event.target) && (!navBtn || !navBtn.contains(event.target))) {
+        panel.classList.remove('active');
+      }
+    }
+  });
+
   /* ── DATA FETCHING & RENDERING ── */
   async function fetchMembers() {
     if (!supabaseClient) return;

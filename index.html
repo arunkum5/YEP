@@ -658,9 +658,9 @@
     .footer-right { text-align: center; }
   }
   @media (max-width: 768px) {
-    nav { padding: 8px 3% !important; gap: 10px !important; }
+    nav { padding: 4px 3% !important; gap: 8px !important; }
     .nav-logo img { width: 38px; height: 38px; }
-    .nav-brand { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 2px !important; }
+    .nav-brand { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 0px !important; }
     .nav-mobile-join {
       display: inline-flex !important;
       align-items: center;
@@ -684,8 +684,8 @@
     .brand-tagline { display: none !important; }
     .brand-col-en { display: block !important; }
     .brand-col-kn { display: block !important; }
-    .brand-col-kn .brand-heading { font-family: 'Tiro Kannada', serif !important; font-size: 1.05rem !important; }
-    .brand-col-en .brand-heading { font-size: 1.15rem !important; }
+    .brand-col-kn .brand-heading { font-family: 'Tiro Kannada', serif !important; font-size: 1.0rem !important; line-height: 1.1 !important; }
+    .brand-col-en .brand-heading { font-size: 1.1rem !important; line-height: 1.1 !important; }
     .nav-cta { display: none !important; }
     .lang-toggle { display: none !important; }
     .nav-admin-btn { display: none !important; }
@@ -2796,6 +2796,18 @@
       drawer.classList.toggle('active');
     }
   }
+
+  // Close mobile drawer when clicking outside
+  document.addEventListener('click', (event) => {
+    const drawer = document.getElementById('mobile-drawer');
+    const toggleBtn = document.getElementById('mobile-toggle-btn');
+    if (drawer && drawer.classList.contains('active')) {
+      if (!drawer.contains(event.target) && !toggleBtn.contains(event.target)) {
+        drawer.classList.remove('active');
+        toggleBtn.classList.remove('active');
+      }
+    }
+  });
 
   // PWA Install Prompt handling
   let deferredPrompt;
