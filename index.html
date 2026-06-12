@@ -681,11 +681,10 @@
     .brand-col-en .brand-heading { font-size: 1.15rem !important; }
     .nav-cta { display: none !important; }
     .lang-toggle { display: none !important; }
-    .nav-admin-btn {
-      padding: 5px 10px !important;
-      font-size: 0.8rem !important;
-      border-radius: 3px !important;
-    }
+    .nav-admin-btn { display: none !important; }
+    .nav-download-btn { display: none !important; }
+    .nav-mobile-join { display: none !important; }
+    .mobile-menu-toggle { display: flex !important; }
     /* Leader name 20% smaller on mobile */
     .leader-info h2 { font-size: 1.92rem !important; }
     .leader-kn-name { font-size: 1.36rem !important; }
@@ -1181,6 +1180,134 @@
       font-size: 0.6rem;
     }
   }
+
+  /* Desktop Download Button */
+  .nav-download-btn {
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: white !important;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    padding: 7px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .nav-download-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  /* Hamburger Toggle for Mobile */
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+    outline: none;
+  }
+  .mobile-menu-toggle .icon-bar {
+    width: 100%;
+    height: 2px;
+    background-color: var(--gold);
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  
+  .mobile-menu-toggle.active .icon-bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .mobile-menu-toggle.active .icon-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu-toggle.active .icon-bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Collapsible Dropdown Drawer */
+  .mobile-menu-drawer {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 16, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    z-index: 999;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease, padding 0.3s ease;
+  }
+  .mobile-menu-drawer.active {
+    max-height: 300px;
+    opacity: 1;
+    padding: 24px 20px;
+  }
+
+  .mobile-drawer-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-transform: uppercase;
+  }
+  .mobile-drawer-btn.join {
+    background: var(--saffron);
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+  }
+  .mobile-drawer-btn.join:hover {
+    background: var(--deep-saffron);
+  }
+  .mobile-drawer-btn.download {
+    background: rgba(244, 196, 48, 0.08);
+    border: 1.5px solid var(--gold);
+    color: var(--gold) !important;
+    box-shadow: 0 4px 12px rgba(244, 196, 48, 0.1);
+  }
+  .mobile-drawer-btn.download:hover {
+    background: rgba(244, 196, 48, 0.15);
+  }
+  .mobile-drawer-btn.admin {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    color: white !important;
+  }
+  .mobile-drawer-btn.admin:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 </style>
 </head>
 <body class="lang-en">
@@ -1219,10 +1346,6 @@
       </div>
     </div>
   </div>
-  <a href="join.html" class="nav-mobile-join">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 110 10A5 5 0 0112 2zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>
-    Join
-  </a>
   <div class="nav-right">
     <ul class="nav-links">
       <li><a href="#manifesto"><span class="en">Manifesto</span><span class="kn">ಪ್ರಣಾಳಿಕೆ</span></a></li>
@@ -1240,11 +1363,33 @@
       <span class="en">Join for Change</span>
       <span class="kn">ಬದಲಾವಣೆಗಾಗಿ ಜೊತೆಯಾಗಿ</span>
     </a>
+    <a href="javascript:void(0)" onclick="openSearchCardModal()" class="nav-download-btn">
+      🔍 <span class="en">Download ID</span><span class="kn">ID ಕಾರ್ಡ್</span>
+    </a>
     <a href="admin.html" class="nav-admin-btn">
       🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
     </a>
+    <!-- MOBILE HAMBURGER TOGGLE -->
+    <button class="mobile-menu-toggle" id="mobile-toggle-btn" onclick="toggleMobileMenu()" aria-label="Toggle Menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE MENU DRAWER (collapsible overlay below nav) -->
+<div class="mobile-menu-drawer" id="mobile-drawer">
+  <a href="join.html" class="mobile-drawer-btn join" onclick="toggleMobileMenu()">
+    ✊ <span class="en">Join Us</span><span class="kn">ನಮ್ಮೊಂದಿಗೆ ಸೇರಿ</span>
+  </a>
+  <a href="javascript:void(0)" onclick="toggleMobileMenu(); openSearchCardModal();" class="mobile-drawer-btn download">
+    🔍 <span class="en">Download ID Card</span><span class="kn">ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್</span>
+  </a>
+  <a href="admin.html" class="mobile-drawer-btn admin" onclick="toggleMobileMenu()">
+    🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
+  </a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -2267,6 +2412,15 @@
         downloadBtn.disabled = false;
         downloadBtn.innerHTML = originalContent;
       }
+    }
+  }
+
+  function toggleMobileMenu() {
+    const toggleBtn = document.getElementById('mobile-toggle-btn');
+    const drawer = document.getElementById('mobile-drawer');
+    if (toggleBtn && drawer) {
+      toggleBtn.classList.toggle('active');
+      drawer.classList.toggle('active');
     }
   }
 </script>
