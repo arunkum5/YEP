@@ -763,6 +763,373 @@
     0%, 100% { opacity: 0.15; transform: scale(0.8); }
     50% { opacity: 0.9; transform: scale(1.2); }
   }
+
+  /* ── MODAL MEMBERSHIP CARD RETRIEVAL ── */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(8, 8, 16, 0.85);
+    backdrop-filter: blur(15px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeInModal 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  @keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-card {
+    background: linear-gradient(135deg, rgba(28,28,46,0.95), rgba(10,10,16,0.98));
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 30px 24px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244,196,48,0.15);
+  }
+  .modal-card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .modal-card-subtitle {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.45;
+  }
+  .modal-card-subtitle .kn {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.4);
+    display: block;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .membership-card {
+    background: linear-gradient(135deg, rgba(28,28,46,0.95), rgba(10,10,16,0.98));
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244,196,48,0.15);
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .membership-card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+    background: linear-gradient(to bottom, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+  }
+  .membership-card.pending-watermark::after {
+    content: 'PENDING VERIFICATION';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.1rem;
+    font-weight: 900;
+    color: rgba(255, 82, 82, 0.12);
+    white-space: nowrap;
+    pointer-events: none;
+    border: 4px dashed rgba(255, 82, 82, 0.12);
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    padding-left: 10px;
+  }
+  .card-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-logo img {
+    width: 76px;
+    height: 76px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+  }
+  .card-title-wrap {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    text-align: left;
+  }
+  .card-title-main {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .card-title-main-kn {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 1px;
+  }
+  .card-title-sub {
+    font-size: 0.65rem;
+    color: var(--gold);
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.5px;
+    margin-top: 1px;
+  }
+  .card-badge {
+    background: rgba(244,196,48,0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .card-body {
+    display: flex;
+    gap: 18px;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .card-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.15);
+    overflow: hidden;
+    background: rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+  .card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+  .card-field {
+    margin-bottom: 6px;
+  }
+  .card-field.name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+  .card-label {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-val {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+  }
+  .card-id-highlight {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  .card-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+  }
+  .card-seal {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.3;
+    text-align: left;
+  }
+  .card-seal span {
+    color: var(--saffron);
+    font-weight: 600;
+  }
+
+  .success-notice-box {
+    background: rgba(244, 196, 48, 0.08);
+    border: 1px dashed rgba(244, 196, 48, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    max-width: 440px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .success-notice-box .notice-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .success-notice-box .notice-content {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.95);
+    font-weight: 600;
+    text-align: left;
+  }
+  .success-notice-box .notice-text-kn {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-top: 6px;
+    display: block;
+    line-height: 1.45;
+    font-weight: 700;
+  }
+
+  .modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    align-items: center;
+  }
+  .modal-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+  .modal-btn.home {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .modal-btn.home:hover {
+    background: rgba(255,255,255,0.15);
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 440px) {
+    .membership-card {
+      padding: 16px;
+    }
+    .card-header {
+      padding-left: 0;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+    }
+    .card-logo {
+      gap: 6px;
+    }
+    .card-logo img {
+      width: 50px;
+      height: 50px;
+    }
+    .card-title-main {
+      font-size: 0.95rem;
+    }
+    .card-title-main-kn {
+      font-size: 0.8rem;
+    }
+    .card-title-sub {
+      font-size: 0.55rem;
+    }
+    .card-badge {
+      font-size: 0.55rem;
+      padding: 2px 4px;
+    }
+    .card-body {
+      gap: 12px;
+      padding-left: 0;
+    }
+    .card-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+    }
+    .card-field.name {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+    .card-label {
+      font-size: 0.55rem;
+    }
+    .card-val {
+      font-size: 0.75rem;
+    }
+    .card-id-highlight {
+      font-size: 0.8rem;
+    }
+    .card-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      padding-left: 0;
+    }
+    .card-seal {
+      font-size: 0.6rem;
+    }
+  }
 </style>
 </head>
 <body class="lang-en">
@@ -811,6 +1178,7 @@
       <li><a href="#leader"><span class="en">Leadership</span><span class="kn">ನಾಯಕತ್ವ</span></a></li>
       <li><a href="join.html"><span class="en">Join YEP</span><span class="kn">ಸೇರಿ</span></a></li>
       <li><a href="#contact"><span class="en">Contact</span><span class="kn">ಸಂಪರ್ಕ</span></a></li>
+      <li><a href="admin.html"><span class="en">Admin</span><span class="kn">ಅಡ್ಮಿನ್</span></a></li>
     </ul>
     <!-- LANGUAGE TOGGLE -->
     <div class="lang-toggle">
@@ -857,6 +1225,11 @@
       <div class="hero-actions">
         <a href="join.html" class="btn-primary">✊ <span class="en">Join YEP Today</span><span class="kn">ಇಂದೇ ಸೇರಿ</span></a>
         <a href="#manifesto" class="btn-outline"><span class="en">Our Vision →</span><span class="kn">ನಮ್ಮ ದೃಷ್ಟಿ →</span></a>
+      </div>
+      <div class="hero-status-link" style="margin-top: 18px;">
+        <a href="javascript:void(0)" onclick="openSearchCardModal()" style="color: var(--gold); text-decoration: underline; font-weight: 600; font-size: 0.95rem; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;">
+          🔍 <span class="en">Already Registered? Download ID Card</span><span class="kn">ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದೀರಾ? ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</span>
+        </a>
       </div>
     </div>
     <div class="hero-image-wrap">
@@ -1114,7 +1487,8 @@
       <div class="footer-right">
         by <a href="https://www.trustwork.co.in" target="_blank">www.trustwork.co.in</a> | 
         <a href="tel:+919353010107">+91 93530 10107</a> | 
-        <a href="mailto:support@trustwork.co.in">support@trustwork.co.in</a>
+        <a href="mailto:support@trustwork.co.in">support@trustwork.co.in</a> | 
+        <a href="admin.html" style="color:var(--gold);font-weight:600;">Admin Panel</a>
       </div>
     </div>
   </div>
@@ -1296,6 +1670,108 @@
   });
 </script>
 
+<!-- SEARCH CARD MODAL -->
+<div class="modal-overlay" id="search-card-modal">
+  <!-- 1. Search Form View -->
+  <div class="modal-card" id="search-form-view">
+    <button type="button" onclick="closeSearchCardModal()" style="position:absolute; top:15px; right:15px; background:transparent; border:none; color:rgba(255,255,255,0.5); font-size:1.5rem; cursor:pointer; padding:0; width:auto; line-height:1; outline:none;">✕</button>
+    <div class="modal-card-title" style="margin-top: 10px;">
+      <span class="en">Search YEP ID Card</span>
+      <span class="kn" style="font-family: 'Tiro Kannada', serif; font-size: 1.25rem; color: var(--gold); display: block; margin-top: 4px;">ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಹುಡುಕಾಟ</span>
+    </div>
+    <div class="modal-card-subtitle">
+      <span class="en">Enter your registered 10-digit mobile number to verify status and download your card.</span>
+      <span class="kn">ಸ್ಥಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಲು ಮತ್ತು ನಿಮ್ಮ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ನಿಮ್ಮ ನೋಂದಾಯಿತ 10-ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.</span>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label for="search-phone-input" style="display:block; font-size:0.85rem; color:rgba(255,255,255,0.6); margin-bottom:8px; font-family:'Rajdhani',sans-serif; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Mobile Number / ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</label>
+      <input type="tel" id="search-phone-input" class="form-control" maxlength="10" placeholder="e.g. 9845500932" inputmode="numeric" pattern="[0-9]*" style="width:100%; box-sizing:border-box; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:12px; color:white; font-size:1.05rem; font-family:'Rajdhani',sans-serif; letter-spacing:1px; outline:none; transition:border-color 0.2s;">
+      <span class="feedback-msg error" id="search-error-msg" style="display:none; color:#FF5252; font-size:0.78rem; margin-top:6px; line-height:1.35;"></span>
+    </div>
+
+    <!-- Loader -->
+    <div id="search-loader" style="display:none; text-align:center; margin-bottom:20px;">
+      <div class="loader-spinner" style="display:inline-block; width:24px; height:24px; border:3px solid rgba(244,196,48,0.1); border-top:3px solid var(--gold); border-radius:50%; animation: spin 1s linear infinite;"></div>
+    </div>
+    
+    <button type="button" class="modal-btn" id="search-submit-btn" onclick="handleSearchCard()" style="background:var(--saffron); color:white; font-weight:700; width:100%;">
+      🔍 <span class="en">Verify &amp; Retrieve</span><span class="kn">ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಪಡೆದುಕೊಳ್ಳಿ</span>
+    </button>
+  </div>
+
+  <!-- 2. Search Results View -->
+  <div id="search-results-view" style="display:none; width:100%; max-width:440px; flex-direction:column; align-items:center; gap:20px;">
+    <!-- Mockup Membership Card -->
+    <div class="membership-card pending-watermark" id="retrieved-card" style="width:100%;">
+      <div class="card-header">
+        <div class="card-logo">
+          <img src="yep_leader_seal.png" alt="YEP logo">
+          <div class="card-title-wrap">
+            <span class="card-title-main">YoungSTAR PARTY</span>
+            <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
+            <span class="card-title-sub">YEP KARNATAKA</span>
+          </div>
+        </div>
+        <div class="card-badge" id="retrieved-status-badge">MEMBER</div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-avatar">
+          <img id="retrieved-photo" src="" alt="Member Photo">
+        </div>
+        <div class="card-info">
+          <div class="card-field name" id="retrieved-name-val">Loading Name</div>
+          
+          <div class="card-field">
+            <div class="card-label">Member ID</div>
+            <div class="card-val card-id-highlight" id="retrieved-id-val">PENDING VERIFICATION</div>
+          </div>
+
+          <div class="card-field">
+            <div class="card-label">Mobile Phone</div>
+            <div class="card-val" id="retrieved-phone-val">N/A</div>
+          </div>
+
+          <div class="card-field">
+            <div class="card-label">District &amp; Taluk</div>
+            <div class="card-val" id="retrieved-location-val">N/A</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="card-seal">
+          YoungSTAR Empowerment Party<br>
+          <span>Youth Power – Our Strength – Our Future</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending status notice box -->
+    <div class="success-notice-box" id="retrieved-notice-box" style="display:none; margin-top:0;">
+      <div class="notice-icon">⏱️</div>
+      <div class="notice-content">
+        <div class="notice-text-en">Under review. Once approved (usually within 24 hours), you can download your official YEP ID card.</div>
+        <div class="notice-text-kn">ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ. ಅನುಮೋದನೆಯ ನಂತರ (ಸಾಮಾನ್ಯವಾಗಿ 24 ಗಂಟೆಗಳಲ್ಲಿ), ನಿಮ್ಮ ಅಧಿಕೃತ YEP ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಬಹುದು.</div>
+      </div>
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="modal-actions" style="margin-top:0;">
+      <button type="button" class="modal-btn" id="retrieved-download-btn" style="background:#4CAF50; color:white; font-weight:700; width:100%; display:none;">
+        📥 <span class="en">Download ID Card</span><span class="kn">ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</span>
+      </button>
+      <button type="button" class="modal-btn home" onclick="resetSearchForm()" style="width:100%;">
+        🔍 <span class="en">Search Another Number</span><span class="kn">ಮತ್ತೊಂದು ಸಂಖ್ಯೆಯನ್ನು ಹುಡುಕಿ</span>
+      </button>
+      <button type="button" class="modal-btn" onclick="closeSearchCardModal()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white; width:100%;">
+        ✕ <span class="en">Close</span><span class="kn">ಮುಚ್ಚಿ</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- FLOATING ACTION BUTTON -->
 <a href="join.html" class="floating-join-btn" aria-label="Join for Change">
   <span class="btn-ripple"></span>
@@ -1362,6 +1838,379 @@
       el.addEventListener('click', trackCtaClick);
     });
   });
+
+  // ── SEARCH CARD MODAL LOGIC ──
+  function openSearchCardModal() {
+    document.getElementById('search-card-modal').classList.add('active');
+    resetSearchForm();
+  }
+
+  function closeSearchCardModal() {
+    document.getElementById('search-card-modal').classList.remove('active');
+  }
+
+  function resetSearchForm() {
+    document.getElementById('search-phone-input').value = "";
+    document.getElementById('search-error-msg').style.display = 'none';
+    document.getElementById('search-form-view').style.display = 'block';
+    document.getElementById('search-results-view').style.display = 'none';
+    document.getElementById('search-loader').style.display = 'none';
+    document.getElementById('search-submit-btn').disabled = false;
+  }
+
+  async function handleSearchCard() {
+    const phoneInput = document.getElementById('search-phone-input').value.trim();
+    const errorMsgEl = document.getElementById('search-error-msg');
+    
+    // Validate phone number
+    if (!/^[6-9]\d{9}$/.test(phoneInput)) {
+      errorMsgEl.textContent = "Please enter a valid 10-digit mobile number starting with 6-9.";
+      errorMsgEl.style.display = 'block';
+      return;
+    }
+    
+    errorMsgEl.style.display = 'none';
+    const submitBtn = document.getElementById('search-submit-btn');
+    const loader = document.getElementById('search-loader');
+    
+    submitBtn.disabled = true;
+    loader.style.display = 'block';
+    
+    try {
+      const { data, error } = await supabaseClient
+        .from('members')
+        .select('*')
+        .eq('phone', phoneInput)
+        .maybeSingle();
+        
+      if (error) throw error;
+      
+      if (!data) {
+        errorMsgEl.textContent = "No membership registration found with this mobile number. Please register first.";
+        errorMsgEl.style.display = 'block';
+        submitBtn.disabled = false;
+        loader.style.display = 'none';
+        return;
+      }
+      
+      // Render card data
+      renderRetrievedCard(data);
+      
+      // Toggle view
+      document.getElementById('search-form-view').style.display = 'none';
+      document.getElementById('search-results-view').style.display = 'flex';
+    } catch (err) {
+      console.error("Search failed:", err);
+      errorMsgEl.textContent = "An error occurred while fetching your card: " + err.message;
+      errorMsgEl.style.display = 'block';
+      submitBtn.disabled = false;
+      loader.style.display = 'none';
+    }
+  }
+
+  function renderRetrievedCard(member) {
+    const cardEl = document.getElementById('retrieved-card');
+    const statusBadge = document.getElementById('retrieved-status-badge');
+    
+    // Set text values
+    document.getElementById('retrieved-photo').src = member.photo_url || "yep_leader_seal.png";
+    document.getElementById('retrieved-name-val').textContent = member.name;
+    document.getElementById('retrieved-phone-val').textContent = member.phone;
+    
+    const district = member.district ? member.district.split('/')[0].trim() : 'N/A';
+    const taluk = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
+    document.getElementById('retrieved-location-val').textContent = `${district} · ${taluk}`;
+    
+    // Set approval status
+    const downloadBtn = document.getElementById('retrieved-download-btn');
+    const noticeBox = document.getElementById('retrieved-notice-box');
+    
+    if (member.approved) {
+      cardEl.classList.remove('pending-watermark');
+      document.getElementById('retrieved-id-val').textContent = member.member_id || `YEP-KA-${String(member.id).padStart(4, '0')}`;
+      document.getElementById('retrieved-id-val').style.color = 'var(--gold)';
+      
+      statusBadge.className = 'card-badge';
+      statusBadge.style.background = 'rgba(76, 175, 80, 0.1)';
+      statusBadge.style.borderColor = '#4CAF50';
+      statusBadge.style.color = '#4CAF50';
+      statusBadge.style.display = 'inline-flex';
+      statusBadge.style.alignItems = 'center';
+      statusBadge.style.gap = '4px';
+      statusBadge.textContent = '✓ APPROVED';
+      
+      downloadBtn.style.display = 'flex';
+      noticeBox.style.display = 'none';
+      
+      // Store member data for download click
+      downloadBtn.onclick = () => downloadCardAsImage(member);
+    } else {
+      cardEl.classList.add('pending-watermark');
+      document.getElementById('retrieved-id-val').textContent = 'PENDING VERIFICATION';
+      document.getElementById('retrieved-id-val').style.color = 'rgba(255,255,255,0.4)';
+      
+      statusBadge.className = 'card-badge';
+      statusBadge.style.background = 'rgba(255, 82, 82, 0.1)';
+      statusBadge.style.borderColor = '#FF5252';
+      statusBadge.style.color = '#FF5252';
+      statusBadge.style.display = 'inline-flex';
+      statusBadge.style.alignItems = 'center';
+      statusBadge.style.gap = '4px';
+      statusBadge.textContent = '✕ PENDING';
+      
+      downloadBtn.style.display = 'none';
+      noticeBox.style.display = 'flex';
+    }
+  }
+
+  function downloadCardAsImage(member) {
+    const downloadBtn = document.getElementById('retrieved-download-btn');
+    const originalContent = downloadBtn.innerHTML;
+    downloadBtn.disabled = true;
+    downloadBtn.innerHTML = '⚙️ <span class="en">Generating...</span><span class="kn">ರಚಿಸಲಾಗುತ್ತಿದೆ...</span>';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 880;
+    canvas.height = 520;
+    const ctx = canvas.getContext('2d');
+
+    // Helper: Draw rounded rectangle
+    function drawRoundedRect(x, y, width, height, radius, fillStyle, strokeStyle, strokeWidth) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      if (fillStyle) {
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+      }
+      if (strokeStyle && strokeWidth) {
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = strokeWidth;
+        ctx.stroke();
+      }
+    }
+
+    // Load images in parallel
+    const sealImg = new Image();
+    const photoImg = new Image();
+    photoImg.crossOrigin = "anonymous"; // Bypass CORS if supported on server
+
+    let imagesLoaded = 0;
+    function checkLoad() {
+      imagesLoaded++;
+      if (imagesLoaded === 2) {
+        drawAndDownload();
+      }
+    }
+
+    sealImg.onload = checkLoad;
+    photoImg.onload = checkLoad;
+    sealImg.onerror = () => {
+      console.error("Failed to load seal image");
+      checkLoad();
+    };
+    photoImg.onerror = () => {
+      console.error("Failed to load user photo");
+      checkLoad();
+    };
+
+    sealImg.src = "yep_leader_seal.png";
+    photoImg.src = member.photo_url || "yep_leader_seal.png";
+
+    function drawAndDownload() {
+      try {
+        // 1. Draw Card Background
+        const grad = ctx.createLinearGradient(0, 0, 880, 520);
+        grad.addColorStop(0, '#1c1c2e');
+        grad.addColorStop(1, '#0a0a10');
+        drawRoundedRect(0, 0, 880, 520, 32, grad, '#F4C430', 4);
+
+        // 2. Draw Left Tricolor Edge Stripe (width 14px)
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(32, 0);
+        ctx.quadraticCurveTo(0, 0, 0, 32);
+        ctx.lineTo(0, 520 - 32);
+        ctx.quadraticCurveTo(0, 520, 32, 520);
+        ctx.lineTo(14, 520);
+        ctx.lineTo(14, 0);
+        ctx.closePath();
+        ctx.clip();
+
+        // Fill tricolor stripe
+        ctx.fillStyle = '#FF6B00'; // Saffron
+        ctx.fillRect(0, 0, 14, 520 / 3);
+        ctx.fillStyle = '#FFFFFF'; // White
+        ctx.fillRect(0, 520 / 3, 14, 520 / 3);
+        ctx.fillStyle = '#138808'; // Green
+        ctx.fillRect(0, (2 * 520) / 3, 14, 520 / 3);
+        ctx.restore();
+
+        // 3. Draw Header Layout
+        // Seal Emblem Logo
+        const sealX = 60, sealY = 40, sealSize = 100;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sealX + sealSize/2, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.fillStyle = '#0a0a10';
+        ctx.fill();
+        if (sealImg.complete && sealImg.naturalWidth) {
+          ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize);
+        }
+        ctx.restore();
+        
+        ctx.beginPath();
+        ctx.arc(sealX + sealSize/2, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
+        ctx.strokeStyle = '#F4C430';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Header Texts
+        ctx.font = "bold 26px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#F4C430";
+        ctx.fillText("YoungSTAR PARTY", 180, 68);
+
+        ctx.font = "bold 21px 'Tiro Kannada', serif";
+        ctx.fillStyle = "#F4C430";
+        ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 180, 102);
+
+        ctx.font = "14px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#C9A227";
+        ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 180, 128);
+
+        // Header Badge "MEMBER" (right-aligned)
+        ctx.font = "bold 13px 'Rajdhani', sans-serif";
+        const badgeText = "MEMBER";
+        const badgeWidth = ctx.measureText(badgeText).width + 16;
+        drawRoundedRect(880 - badgeWidth - 50, 65, badgeWidth, 30, 6, "rgba(244,196,48,0.1)", "#F4C430", 1.5);
+        ctx.fillStyle = "#F4C430";
+        ctx.textAlign = "center";
+        ctx.fillText(badgeText, 880 - badgeWidth/2 - 50, 84);
+        ctx.textAlign = "left"; // reset
+
+        // Header separator line
+        ctx.beginPath();
+        ctx.moveTo(50, 165);
+        ctx.lineTo(830, 165);
+        ctx.strokeStyle = "rgba(255,255,255,0.08)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 4. Draw Body Layout
+        // Avatar Photo (x=50, y=195, size=180x180)
+        const photoX = 60, photoY = 195, photoSize = 180;
+        drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, "rgba(0,0,0,0.3)", "rgba(255,255,255,0.15)", 3);
+        ctx.save();
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(photoX, photoY, photoSize, photoSize, 12);
+        } else {
+          ctx.rect(photoX, photoY, photoSize, photoSize);
+        }
+        ctx.closePath();
+        ctx.clip();
+        if (photoImg.complete && photoImg.naturalWidth) {
+          ctx.drawImage(photoImg, photoX, photoY, photoSize, photoSize);
+        } else {
+          ctx.fillStyle = "rgba(255,255,255,0.05)";
+          ctx.fillRect(photoX, photoY, photoSize, photoSize);
+          ctx.font = "bold 48px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.2)";
+          ctx.textAlign = "center";
+          ctx.fillText("YEP", photoX + photoSize/2, photoY + photoSize/2 + 16);
+          ctx.textAlign = "left";
+        }
+        ctx.restore();
+
+        // Member Info Fields
+        const infoX = 270;
+        
+        // Name Field
+        ctx.font = "bold 24px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText(member.name, infoX, 215);
+
+        // Member ID Field
+        ctx.font = "12px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText("MEMBER ID", infoX, 255);
+        ctx.font = "bold 19px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#F4C430";
+        const memIdVal = member.member_id || `YEP-KA-${String(member.id).padStart(4, '0')}`;
+        ctx.fillText(memIdVal, infoX, 280);
+
+        // Phone Field
+        ctx.font = "12px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText("MOBILE PHONE", infoX, 320);
+        ctx.font = "600 17px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.fillText(member.phone, infoX, 342);
+
+        // Location Field
+        ctx.font = "12px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fillText("DISTRICT & TALUK", infoX, 382);
+        ctx.font = "600 17px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        const districtVal = member.district ? member.district.split('/')[0].trim() : 'N/A';
+        const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
+        ctx.fillText(`${districtVal} · ${talukVal}`, infoX, 404);
+
+        // 5. Draw Footer Layout
+        ctx.beginPath();
+        ctx.moveTo(50, 440);
+        ctx.lineTo(830, 440);
+        ctx.strokeStyle = "rgba(255,255,255,0.08)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Footer Text Left
+        ctx.font = "bold 13px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.35)";
+        ctx.fillText("YoungSTAR Empowerment Party", 60, 475);
+        ctx.font = "bold 11px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#FF6B00";
+        ctx.fillText("Youth Power – Our Strength – Our Future", 60, 495);
+
+        // Footer Status Badge Right
+        ctx.font = "bold 12px 'Rajdhani', sans-serif";
+        const statusText = "✓ APPROVED";
+        const statusWidth = ctx.measureText(statusText).width + 16;
+        drawRoundedRect(880 - statusWidth - 50, 462, statusWidth, 28, 4, "rgba(76,175,80,0.1)", "#4CAF50", 1.5);
+        ctx.fillStyle = "#4CAF50";
+        ctx.textAlign = "center";
+        ctx.fillText(statusText, 880 - statusWidth/2 - 50, 480);
+        ctx.textAlign = "left";
+
+        // 6. Trigger Download Action
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        const link = document.createElement('a');
+        link.download = `YEP_Member_Card_${member.name.replace(/\s+/g, '_')}.jpg`;
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+      } catch (err) {
+        console.error("Canvas drawing failed:", err);
+        alert("Failed to generate download image: " + err.message);
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = originalContent;
+      }
+    }
+  }
 </script>
 </body>
 </html>
