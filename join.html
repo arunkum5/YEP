@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1C1C2E">
 <title>Join YEP for Change – membership Registration</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -507,7 +510,9 @@
     font-family: 'Rajdhani', sans-serif;
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--white);
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   .card-title-sub {
     font-size: 0.65rem;
@@ -674,6 +679,147 @@
     .footer-left { text-align: center; }
     .footer-right { text-align: center; }
     .form-card { padding: 24px 16px; }
+  }
+  @media (max-width: 576px) {
+    body {
+      background: #12121e;
+    }
+    .container {
+      padding: 0;
+      align-items: stretch;
+      min-height: calc(100vh - 65px);
+    }
+    .form-card {
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+      backdrop-filter: none;
+      padding: 24px 16px;
+      max-width: 100%;
+      margin: 0;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-step {
+      flex: 1;
+    }
+    .form-title {
+      font-size: 1.6rem;
+      margin-top: 8px;
+    }
+    .form-subtitle {
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .nav-buttons {
+      position: sticky;
+      bottom: 0;
+      background: #1C1C2E;
+      padding: 16px 0 16px 0;
+      margin-top: auto;
+      z-index: 100;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    /* Touch optimization */
+    .btn-nav, .photo-btn {
+      padding: 16px 20px;
+      font-size: 1.05rem;
+    }
+  }
+
+  /* Terms Disclaimer & Tooltip */
+  .terms-disclaimer {
+    margin-top: 16px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    position: relative;
+  }
+  .terms-link-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .terms-link {
+    color: var(--gold);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .tooltip-box {
+    visibility: hidden;
+    width: 290px;
+    background: rgba(20, 20, 32, 0.98);
+    border: 1px solid var(--gold);
+    color: #f0f0f5;
+    text-align: left;
+    border-radius: 8px;
+    padding: 12px 14px;
+    position: absolute;
+    z-index: 110;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    pointer-events: none;
+  }
+  /* Tooltip arrow */
+  .tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--gold) transparent transparent transparent;
+  }
+  .terms-link-wrap:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+  .tooltip-box strong {
+    display: block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    color: var(--saffron);
+    margin-bottom: 6px;
+  }
+  .tooltip-box ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .tooltip-box ul li {
+    font-size: 0.75rem;
+    line-height: 1.35;
+    margin-bottom: 5px;
+    position: relative;
+    padding-left: 10px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .tooltip-box ul li::before {
+    content: "•";
+    color: var(--gold);
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .tooltip-box ul li:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Mobile adjustments for tooltip positioning */
+  @media (max-width: 576px) {
+    .tooltip-box {
+      width: 260px;
+      bottom: 135%;
+    }
   }
 </style>
 </head>
@@ -868,6 +1014,38 @@
           ✊ <span class="en">Submit Membership</span><span class="kn">ಸದಸ್ಯತ್ವ ಸಲ್ಲಿಸಿ</span>
         </button>
       </div>
+
+      <!-- TERMS DISCLAIMER -->
+      <div class="terms-disclaimer" id="terms-disclaimer" style="display: none;">
+        <span class="en">By submitting, you agree to our </span>
+        <span class="kn">ಸಲ್ಲಿಸುವ ಮೂಲಕ, ನೀವು ನಮ್ಮ </span>
+        <span class="terms-link-wrap">
+          <span class="terms-link en">Terms & Conditions</span>
+          <span class="terms-link kn">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು</span>
+          <span class="tooltip-box">
+            <div class="en">
+              <strong>Membership Rules:</strong>
+              <ul>
+                <li>Do not misuse the official YoungSTAR Party membership card.</li>
+                <li>The party leadership reserves the right to cancel or suspend membership at any time.</li>
+                <li>Adhere to the core values, ethics, and code of conduct of the party.</li>
+                <li>Membership does not confer any official executive authority within the party.</li>
+              </ul>
+            </div>
+            <div class="kn">
+              <strong>ಸದಸ್ಯತ್ವ ನಿಯಮಗಳು:</strong>
+              <ul>
+                <li>ಅಧಿಕೃತ ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಅನ್ನು ದುರುಪಯೋಗಪಡಿಸಿಕೊಳ್ಳಬೇಡಿ.</li>
+                <li>ಪಕ್ಷದ ನಾಯಕತ್ವವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಸದಸ್ಯತ್ವವನ್ನು ರದ್ದುಗೊಳಿಸುವ ಹಕ್ಕನ್ನು ಹೊಂದಿದೆ.</li>
+                <li>ಪಕ್ಷದ ನೈತಿಕ ಮೌಲ್ಯಗಳು ಮತ್ತು ನೀತಿ ಸಂಹಿತೆಗೆ ಬದ್ಧರಾಗಿರಬೇಕು.</li>
+                <li>ಸದಸ್ಯತ್ವವು ಪಕ್ಷದ ಯಾವುದೇ ಅಧಿಕೃತ ಆಡಳಿತಾತ್ಮಕ ಅಧಿಕಾರವನ್ನು ನೀಡುವುದಿಲ್ಲ.</li>
+              </ul>
+            </div>
+          </span>
+        </span>
+        <span class="en">.</span>
+        <span class="kn">ಒಪ್ಪುತ್ತೀರಿ.</span>
+      </div>
     </form>
   </div>
 </div>
@@ -877,7 +1055,7 @@
   <div class="membership-card pending-watermark" id="membership-id-card">
     <div class="card-header">
       <div class="card-logo">
-        <img src="logo.png" alt="YEP logo">
+        <img src="yep_leader_seal.png" alt="YEP logo">
         <div class="card-title-wrap">
           <span class="card-title-main">YoungSTAR PARTY</span>
           <span class="card-title-sub">YEP KARNATAKA</span>
@@ -1200,6 +1378,7 @@
     document.getElementById('btn-home').style.display = currentStep === 1 ? 'flex' : 'none';
     document.getElementById('btn-next').style.display = currentStep < totalSteps ? 'flex' : 'none';
     document.getElementById('btn-submit').style.display = currentStep === totalSteps ? 'flex' : 'none';
+    document.getElementById('terms-disclaimer').style.display = currentStep === totalSteps ? 'block' : 'none';
 
     // Stop camera if navigating away from Step 3
     if (currentStep !== 3) {
@@ -1281,6 +1460,41 @@
     return isValid;
   }
 
+  /* ── IMAGE COMPRESSION UTILITY ── */
+  function compressImage(dataUrl, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = dataUrl;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate aspect ratio resizing
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to compressed base64 JPEG
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = (err) => reject(err);
+    });
+  }
+
   /* ── CAMERA / IMAGE CAPTURE API ── */
   function triggerFileInput() {
     closeCamera();
@@ -1292,9 +1506,16 @@
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
-      capturedPhotoData = event.target.result;
-      updatePhotoPreview(capturedPhotoData);
+    reader.onload = async (event) => {
+      const rawDataUrl = event.target.result;
+      try {
+        capturedPhotoData = await compressImage(rawDataUrl, 800, 800, 0.7);
+        updatePhotoPreview(capturedPhotoData);
+      } catch (err) {
+        console.error("Compression failed, using fallback:", err);
+        capturedPhotoData = rawDataUrl;
+        updatePhotoPreview(capturedPhotoData);
+      }
     };
     reader.readAsDataURL(file);
   }
@@ -1331,7 +1552,7 @@
     }
   }
 
-  function captureSnapshot() {
+  async function captureSnapshot() {
     const video = document.getElementById('video-stream');
     if (!localVideoStream) return;
 
@@ -1345,8 +1566,15 @@
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     // Save image dataurl
-    capturedPhotoData = canvas.toDataURL('image/jpeg');
-    updatePhotoPreview(capturedPhotoData);
+    const rawDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+    try {
+      capturedPhotoData = await compressImage(rawDataUrl, 800, 800, 0.7);
+      updatePhotoPreview(capturedPhotoData);
+    } catch (err) {
+      console.error("Compression failed, using fallback:", err);
+      capturedPhotoData = rawDataUrl;
+      updatePhotoPreview(capturedPhotoData);
+    }
     
     closeCamera();
   }
@@ -1465,7 +1693,25 @@
       const successModal = document.getElementById('success-modal');
       successModal.classList.add('active');
     } catch (dbErr) {
-      alert("Registration Error (Database insert): " + dbErr.message);
+      let friendlyMsg = dbErr.message || "Something went wrong.";
+      // Postgres unique_violation error code is 23505
+      if (dbErr.code === "23505") {
+        const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+        if (dbErr.message.includes("phone")) {
+          friendlyMsg = activeLang === 'kn' 
+            ? "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+            : "A member with this mobile number is already registered.";
+        } else if (dbErr.message.includes("aadhaar")) {
+          friendlyMsg = activeLang === 'kn' 
+            ? "ಈ ಆಧಾರ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+            : "A member with this Aadhaar number is already registered.";
+        } else {
+          friendlyMsg = activeLang === 'kn' 
+            ? "ಈ ವಿವರಗಳೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+            : "A member with these details is already registered.";
+        }
+      }
+      alert("Registration Error: " + friendlyMsg);
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalContent;
     }

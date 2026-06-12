@@ -1044,6 +1044,19 @@
       <div class="footer-left">
         © 2026 <span class="youngstar-gradient">YoungSTAR</span> <span class="yep">Empowerment Party</span> · Karnataka · All Rights Reserved<br>
         <small style="margin-top:6px;display:block;color:var(--gold);font-size:0.85rem;font-weight:500;opacity:0.9;">ಯುವ ಶಕ್ತಿ – ನಮ್ಮ ಶಕ್ತಿ – ನಮ್ಮ ಭವಿಷ್ಯ</small>
+        
+        <!-- VISITOR & CLICK COUNTERS -->
+        <div class="footer-stats" style="margin-top: 14px; display: flex; align-items: center; gap: 16px; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: rgba(255, 255, 255, 0.4); letter-spacing: 0.5px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="display: inline-block; width: 6px; height: 6px; background: #39FF14; border-radius: 50%; box-shadow: 0 0 6px #39FF14;"></span>
+            <span class="en">Visitors:</span><span class="kn">ಭೇಟಿ ನೀಡಿದವರು:</span>
+            <span id="visitor-count-val" style="color: var(--gold); font-weight: 700;">...</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="en">Clicks:</span><span class="kn">ಕ್ಲಿಕ್‌ಗಳು:</span>
+            <span id="click-count-val" style="color: var(--saffron); font-weight: 700;">...</span>
+          </div>
+        </div>
       </div>
       <div class="footer-right">
         by <a href="https://www.trustwork.co.in" target="_blank">www.trustwork.co.in</a> | 
@@ -1235,5 +1248,67 @@
   <span class="btn-ripple"></span>
   <span class="btn-icon">✊</span>
 </a>
+
+<!-- SUPABASE CLIENT SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // SUPABASE CONFIGURATION
+  const SUPABASE_URL = 'https://hqaimprjdejeklrtntfz.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Initialize and track visitor stats
+  async function initializeStats() {
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+      try {
+        // Increment visitor counter on load
+        const { data: visitorData, error: visitorErr } = await supabaseClient.rpc('increment_counter', { counter_id: 'visitors' });
+        if (!visitorErr && visitorData !== null) {
+          const visitorEl = document.getElementById('visitor-count-val');
+          if (visitorEl) visitorEl.textContent = visitorData;
+        }
+
+        // Fetch current click count on load
+        const { data: stats, error: statsErr } = await supabaseClient
+          .from('page_stats')
+          .select('count')
+          .eq('id', 'clicks')
+          .single();
+        
+        if (!statsErr && stats) {
+          const clickEl = document.getElementById('click-count-val');
+          if (clickEl) clickEl.textContent = stats.count;
+        }
+      } catch (err) {
+        console.error("Stats initialization failed:", err);
+      }
+    }
+  }
+
+  // Increment click count in Supabase for CTA clicks
+  async function trackCtaClick() {
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.rpc('increment_counter', { counter_id: 'clicks' });
+        if (!error && data !== null) {
+          const clickEl = document.getElementById('click-count-val');
+          if (clickEl) clickEl.textContent = data;
+        }
+      } catch (err) {
+        console.error("Click tracking failed:", err);
+      }
+    }
+  }
+
+  // Hook stats initialization and CTA click tracking
+  window.addEventListener('DOMContentLoaded', () => {
+    initializeStats();
+
+    // Attach click listener to important CTA elements
+    document.querySelectorAll('.nav-cta, .btn-primary, .btn-outline, .floating-join-btn, .contact-chip, .nav-links a').forEach(el => {
+      el.addEventListener('click', trackCtaClick);
+    });
+  });
+</script>
 </body>
 </html>

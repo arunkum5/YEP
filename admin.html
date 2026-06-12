@@ -1299,15 +1299,15 @@
                 <span class="sql-title">SQL Script</span>
                 <button class="btn-copy-sql" onclick="copySqlSchema(this)">Copy SQL Schema</button>
               </div>
-              <pre class="sql-code" id="sql-schema-code">-- SQL Schema to create the 'members' table in Supabase
+              <pre class="sql-code" id="sql-schema-code">-- SQL Schema to create the 'members' table and stats counter in Supabase
 -- Paste this in your Supabase SQL Editor and click 'Run'
 
 CREATE TABLE IF NOT EXISTS public.members (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     name TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    aadhaar TEXT NOT NULL,
+    phone TEXT NOT NULL CONSTRAINT unique_phone UNIQUE,
+    aadhaar TEXT NOT NULL CONSTRAINT unique_aadhaar UNIQUE,
     qualification TEXT,
     state TEXT NOT NULL DEFAULT 'Karnataka',
     district TEXT NOT NULL,
@@ -1332,7 +1332,32 @@ CREATE POLICY "Allow admin full access"
 ON public.members FOR ALL 
 TO authenticated 
 USING (true) 
-WITH CHECK (true);</pre>
+WITH CHECK (true);
+
+-- 3. Create page_stats table for visitor & click counts
+CREATE TABLE IF NOT EXISTS public.page_stats (
+    id TEXT PRIMARY KEY,
+    count INT DEFAULT 0 NOT NULL
+);
+
+-- Seed initial counter records
+INSERT INTO public.page_stats (id, count) VALUES ('visitors', 0) ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.page_stats (id, count) VALUES ('clicks', 0) ON CONFLICT (id) DO NOTHING;
+
+-- Create RPC function to safely increment counters bypassing RLS
+CREATE OR REPLACE FUNCTION increment_counter(counter_id TEXT)
+RETURNS INT AS $$
+DECLARE
+  new_count INT;
+BEGIN
+  INSERT INTO public.page_stats (id, count)
+  VALUES (counter_id, 1)
+  ON CONFLICT (id)
+  DO UPDATE SET count = public.page_stats.count + 1
+  RETURNING count INTO new_count;
+  RETURN new_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             </div>
           </div>
         </div>
