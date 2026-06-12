@@ -1472,41 +1472,6 @@
     return isValid;
   }
 
-  /* ── IMAGE COMPRESSION UTILITY ── */
-  function compressImage(dataUrl, maxWidth = 800, maxHeight = 800, quality = 0.7) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = dataUrl;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-
-        // Calculate aspect ratio resizing
-        if (width > height) {
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-        } else {
-          if (height > maxHeight) {
-            width = Math.round((width * maxHeight) / height);
-            height = maxHeight;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Convert to compressed base64 JPEG
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = (err) => reject(err);
-    });
-  }
-
   /* ── CAMERA / IMAGE CAPTURE API ── */
   function triggerFileInput() {
     closeCamera();
@@ -1517,19 +1482,52 @@
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const rawDataUrl = event.target.result;
-      try {
-        capturedPhotoData = await compressImage(rawDataUrl, 800, 800, 0.7);
-        updatePhotoPreview(capturedPhotoData);
-      } catch (err) {
-        console.error("Compression failed, using fallback:", err);
-        capturedPhotoData = rawDataUrl;
-        updatePhotoPreview(capturedPhotoData);
+    // Check file size (max 15MB)
+    if (file.size > 15 * 1024 * 1024) {
+      alert("Selected photo is too large. Please select a photo smaller than 15MB.");
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.src = objectUrl;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      
+      // Resize to max 600px for avatar
+      const maxWidth = 600;
+      const maxHeight = 600;
+      if (width > height) {
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = Math.round((width * maxHeight) / height);
+          height = maxHeight;
+        }
       }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Export as compressed jpeg (quality 0.7)
+      capturedPhotoData = canvas.toDataURL('image/jpeg', 0.7);
+      updatePhotoPreview(capturedPhotoData);
+
+      // Clean up object URL to free memory
+      URL.revokeObjectURL(objectUrl);
     };
-    reader.readAsDataURL(file);
+    img.onerror = (err) => {
+      console.error("Image load error:", err);
+      alert("Unable to process this image format. Please select a standard JPEG/PNG photo.");
+      URL.revokeObjectURL(objectUrl);
+    };
   }
 
   function openCamera() {
@@ -1564,29 +1562,32 @@
     }
   }
 
-  async function captureSnapshot() {
+  function captureSnapshot() {
     const video = document.getElementById('video-stream');
     if (!localVideoStream) return;
 
-    // Create virtual canvas to draw frame
+    // Create virtual canvas to draw frame directly into 600x600 size
     const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
+    const targetSize = 600;
+    
+    let videoWidth = video.videoWidth || 640;
+    let videoHeight = video.videoHeight || 480;
+    
+    canvas.width = targetSize;
+    canvas.height = targetSize;
     const ctx = canvas.getContext('2d');
     
-    // Draw mirrored if using front camera usually, but standard draw is fine
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Crop center square
+    const minSize = Math.min(videoWidth, videoHeight);
+    const sx = (videoWidth - minSize) / 2;
+    const sy = (videoHeight - minSize) / 2;
     
-    // Save image dataurl
-    const rawDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-    try {
-      capturedPhotoData = await compressImage(rawDataUrl, 800, 800, 0.7);
-      updatePhotoPreview(capturedPhotoData);
-    } catch (err) {
-      console.error("Compression failed, using fallback:", err);
-      capturedPhotoData = rawDataUrl;
-      updatePhotoPreview(capturedPhotoData);
-    }
+    // Draw mirrored if front camera usually, but standard draw is fine
+    ctx.drawImage(video, sx, sy, minSize, minSize, 0, 0, targetSize, targetSize);
+    
+    // Save image dataurl (quality 0.7)
+    capturedPhotoData = canvas.toDataURL('image/jpeg', 0.7);
+    updatePhotoPreview(capturedPhotoData);
     
     closeCamera();
   }
