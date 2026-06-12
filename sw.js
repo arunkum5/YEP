@@ -1,8 +1,8 @@
 const CACHE_NAME = 'yep-cache-v1';
 const ASSETS_TO_CACHE = [
-  './index.html',
-  './join.html',
-  './admin.html',
+  './',
+  './join',
+  './admin',
   './yep_leader_seal.png',
   './logo.png',
   './yep_logo.svg',
@@ -80,9 +80,9 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // If a request for HTML page fails, return index.html fallback
+          // If a request for HTML page fails, return index fallback
           if (event.request.headers.get('accept').includes('text/html')) {
-            return caches.match('./index.html');
+            return caches.match('./');
           }
         });
       })
