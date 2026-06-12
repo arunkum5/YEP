@@ -461,6 +461,22 @@
     content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
     background: linear-gradient(to bottom, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
   }
+  /* Pending Watermark overlay */
+  .membership-card.pending-watermark::after {
+    content: 'PENDING VERIFICATION';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.1rem;
+    font-weight: 900;
+    color: rgba(255, 82, 82, 0.12);
+    white-space: nowrap;
+    pointer-events: none;
+    border: 4px dashed rgba(255, 82, 82, 0.12);
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+  }
   .card-header {
     display: flex;
     align-items: center;
@@ -858,7 +874,7 @@
 
 <!-- SUCCESS CARD MODAL -->
 <div class="modal-overlay" id="success-modal">
-  <div class="membership-card" id="membership-id-card">
+  <div class="membership-card pending-watermark" id="membership-id-card">
     <div class="card-header">
       <div class="card-logo">
         <img src="logo.png" alt="YEP logo">
@@ -879,7 +895,7 @@
         
         <div class="card-field">
           <div class="card-label">Member ID</div>
-          <div class="card-val card-id-highlight" id="card-id-val">YEP-KA-2026-10492</div>
+          <div class="card-val card-id-highlight" id="card-id-val" style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</div>
         </div>
 
         <div class="card-field">
@@ -894,7 +910,7 @@
         YoungSTAR Empowerment Party<br>
         <span>Youth Power – Our Strength – Our Future</span>
       </div>
-      <div class="card-badge" style="background:rgba(19, 136, 8, 0.1);border-color:var(--green);color:var(--green)">VERIFIED</div>
+      <div class="card-badge" id="card-status-badge" style="background:rgba(255, 82, 82, 0.1);border-color:#FF5252;color:#FF5252;display:inline-flex;align-items:center;gap:4px;">✕ PENDING</div>
     </div>
   </div>
 
@@ -1429,13 +1445,9 @@
       if (error) throw error;
 
       // Populate preview card in success modal
-      const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
-      const statePrefix = stateVal === 'Karnataka' ? 'KA' : 'IN';
-      const yepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
-
       document.getElementById('card-photo').src = photoUrl;
       document.getElementById('card-name-val').textContent = name;
-      document.getElementById('card-id-val').textContent = yepId;
+      document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
       document.getElementById('card-location-val').textContent = `${district.split(' / ')[0]} · ${taluk.split(' / ')[0]}`;
 
       // Create dynamic WhatsApp share link
