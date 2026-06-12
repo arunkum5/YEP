@@ -952,7 +952,7 @@
     border-radius: 20px;
     width: 100%;
     max-width: 380px;
-    min-height: 570px;
+    min-height: 610px;
     padding: 20px;
     position: relative;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244,196,48,0.15);
@@ -1034,6 +1034,22 @@
     font-weight: 700;
     font-family: 'Rajdhani', sans-serif;
     letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+  .card-leader-info {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.35;
+    margin-top: 5px;
+    margin-bottom: 2px;
+    text-align: center;
+  }
+  .card-leader-info-kn {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 0.72rem;
+    display: block;
     margin-top: 2px;
   }
   .card-badge {
@@ -2960,10 +2976,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         ctx.restore();
 
         // 3. Draw Header Layout
-        // Centered Seal Emblem Logo (160px diameter, 60% larger than 100px)
-        const sealSize = 160;
-        const sealX = (600 - sealSize) / 2; // 220
-        const sealY = 35;
+        // Centered Seal Emblem Logo (150px diameter)
+        const sealSize = 150;
+        const sealX = (600 - sealSize) / 2; // 225
+        const sealY = 28;
         ctx.save();
         ctx.beginPath();
         ctx.arc(300, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
@@ -2987,28 +3003,37 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         
         ctx.font = "bold 28px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#1a1a1a";
-        ctx.fillText("YoungSTAR PARTY", 300, 230);
+        ctx.fillText("YoungSTAR PARTY", 300, 210);
 
         ctx.font = "bold 24px 'Tiro Kannada', serif";
         ctx.fillStyle = "#1a1a1a";
-        ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 300, 265);
+        ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 300, 242);
 
-        ctx.font = "bold 14px 'Rajdhani', sans-serif";
+        // Leader Credentials
+        ctx.font = "bold 13px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#1a1a1a";
+        ctx.fillText("K N Jagadish Kumar – Advocate – High Court of Delhi", 300, 270);
+        
+        ctx.font = "bold 13px 'Tiro Kannada', serif";
+        ctx.fillStyle = "#1a1a1a";
+        ctx.fillText("ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್", 300, 290);
+
+        ctx.font = "bold 11px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#5d0000";
-        ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 300, 292);
+        ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 300, 310);
 
         // 4. Draw Body Layout
         // Glassmorphic Details Card Plate
         const containerX = 50;
-        const containerY = 315;
+        const containerY = 325;
         const containerW = 500;
-        const containerH = 480;
+        const containerH = 460;
         drawRoundedRect(containerX, containerY, containerW, containerH, 16, "rgba(0,0,0,0.35)", "rgba(255,255,255,0.1)", 1.5);
 
-        // Centered Avatar Photo (220x220px, larger and clearer)
-        const photoSize = 220;
-        const photoX = (600 - photoSize) / 2; // 190
-        const photoY = 335;
+        // Centered Avatar Photo (200x200px)
+        const photoSize = 200;
+        const photoX = (600 - photoSize) / 2; // 200
+        const photoY = 345;
         
         drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, "rgba(0,0,0,0.3)", "rgba(255,255,255,0.15)", 3);
         ctx.save();
@@ -3025,7 +3050,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         } else {
           ctx.fillStyle = "rgba(255,255,255,0.05)";
           ctx.fillRect(photoX, photoY, photoSize, photoSize);
-          ctx.font = "bold 48px 'Rajdhani', sans-serif";
+          ctx.font = "bold 44px 'Rajdhani', sans-serif";
           ctx.fillStyle = "rgba(255,255,255,0.2)";
           ctx.textAlign = "center";
           ctx.fillText("YEP", 300, photoY + photoSize/2 + 16);
@@ -3036,7 +3061,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, null, '#F4C430', 3);
 
         // Member Name (with dynamic auto-scale for long names)
-        let nameFontSize = 32;
+        let nameFontSize = 30;
         ctx.font = `bold ${nameFontSize}px 'Rajdhani', sans-serif`;
         let nameWidth = ctx.measureText(member.name).width;
         while (nameWidth > 460 && nameFontSize > 20) {
@@ -3046,7 +3071,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         }
         ctx.fillStyle = "#FFFFFF";
         ctx.textAlign = "center";
-        ctx.fillText(member.name, 300, 595);
+        ctx.fillText(member.name, 300, 575);
 
         // Left-aligned Member Info Fields
         const detailsX = 90;
@@ -3055,29 +3080,29 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         // Member ID
         ctx.font = "14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fillText("MEMBER ID", detailsX, 635);
+        ctx.fillText("MEMBER ID", detailsX, 620);
         ctx.font = "bold 22px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#F4C430";
         const memIdVal = member.member_id || `YEP-KA-${String(member.id).padStart(4, '0')}`;
-        ctx.fillText(memIdVal, detailsX, 660);
+        ctx.fillText(memIdVal, detailsX, 642);
 
         // Mobile Phone
         ctx.font = "14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fillText("MOBILE PHONE", detailsX, 698);
+        ctx.fillText("MOBILE PHONE", detailsX, 672);
         ctx.font = "600 18px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.95)";
-        ctx.fillText(member.phone, detailsX, 720);
+        ctx.fillText(member.phone, detailsX, 692);
 
         // District & Taluk
         ctx.font = "14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fillText("DISTRICT & TALUK", detailsX, 755);
+        ctx.fillText("DISTRICT & TALUK", detailsX, 722);
         ctx.font = "600 18px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.95)";
         const districtVal = member.district ? member.district.split('/')[0].trim() : 'N/A';
         const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
-        ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 777);
+        ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 742);
 
         // Status Stamp on Right Side of the Details Box (Dynamic APPROVED vs PENDING)
         ctx.font = "bold 14px 'Rajdhani', sans-serif";
@@ -3086,7 +3111,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         const statusBg = member.approved ? "rgba(76,175,80,0.12)" : "rgba(255,82,82,0.12)";
         const statusWidth = ctx.measureText(statusText).width + 20;
         const statusX = 440 - statusWidth/2;
-        const statusY = 690;
+        const statusY = 665;
         
         drawRoundedRect(statusX, statusY, statusWidth, 32, 6, statusBg, statusColor, 1.5);
         ctx.fillStyle = statusColor;
