@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="50%" stop-color="#F4C430" />
+      <stop offset="100%" stop-color="#C9A227" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Central Pillar / Base steps -->
+  <path d="M 30,85 L 70,85 L 66,80 L 34,80 Z" fill="url(#gold-grad)" />
+  <path d="M 35,80 L 65,80 L 62,75 L 38,75 Z" fill="url(#gold-grad)" opacity="0.9" />
+  
+  <!-- Vertical shaft -->
+  <rect x="47.5" y="25" width="5" height="50" rx="1.5" fill="url(#gold-grad)" />
+  
+  <!-- Pillar decorative top/finial -->
+  <circle cx="50" cy="20" r="4.5" fill="url(#gold-grad)" />
+  <circle cx="50" cy="25" r="3" fill="url(#gold-grad)" />
+  
+  <!-- Main horizontal beam -->
+  <path d="M 16,33 C 25,29 35,31 50,31 C 65,31 75,29 84,33 C 85,33.5 85,34.5 84,35 C 75,37 65,35 50,35 C 35,35 25,37 16,35 C 15,34.5 15,33.5 16,33 Z" fill="url(#gold-grad)" />
+  <circle cx="50" cy="33" r="2.5" fill="#FFFFFF" opacity="0.3" />
+  
+  <!-- Left Scale Pan (hanging from 16, 34) -->
+  <!-- Chains -->
+  <line x1="16" y1="34" x2="6" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+  <line x1="16" y1="34" x2="26" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+  <!-- Pan bowl -->
+  <path d="M 6,60 L 26,60 C 26,68 6,68 6,60 Z" fill="url(#gold-grad)" />
+  <!-- Pan hanger link -->
+  <circle cx="16" cy="34" r="1.5" fill="url(#gold-grad)" />
+  
+  <!-- Right Scale Pan (hanging from 84, 34) -->
+  <!-- Chains -->
+  <line x1="84" y1="34" x2="74" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+  <line x1="84" y1="34" x2="94" y2="60" stroke="url(#gold-grad)" stroke-width="1.2" />
+  <!-- Pan bowl -->
+  <path d="M 74,60 L 94,60 C 94,68 74,68 74,60 Z" fill="url(#gold-grad)" />
+  <!-- Pan hanger link -->
+  <circle cx="84" cy="34" r="1.5" fill="url(#gold-grad)" />
+</svg>
