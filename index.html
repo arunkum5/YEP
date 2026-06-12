@@ -1347,6 +1347,201 @@
   .mobile-drawer-btn.admin:hover {
     background: rgba(255, 255, 255, 0.1);
   }
+
+  /* Custom PWA Install Banner styling */
+  .pwa-banner {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 10000;
+    width: calc(100% - 48px);
+    max-width: 420px;
+    background: rgba(18, 18, 24, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(244, 196, 48, 0.15);
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Rajdhani', sans-serif;
+    color: #ffffff;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .pwa-banner-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .pwa-banner-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .pwa-banner-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid var(--saffron);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(244, 196, 48, 0.3);
+  }
+
+  .pwa-banner-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pwa-banner-title-area {
+    flex-grow: 1;
+    padding-right: 20px;
+  }
+
+  .pwa-banner-title-area h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .pwa-banner-title-area h3 span {
+    display: block;
+  }
+
+  .pwa-banner-title-area h3 span.kn {
+    font-size: 13px;
+    color: var(--saffron);
+    margin-top: 1px;
+    font-weight: 600;
+  }
+
+  .pwa-banner-title-area p {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.4;
+  }
+
+  .pwa-banner-title-area p span {
+    display: block;
+  }
+
+  .pwa-banner-title-area p span.kn {
+    font-size: 11px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+
+  .pwa-banner-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pwa-banner-close:hover {
+    color: #ffffff;
+  }
+
+  .pwa-banner-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .pwa-btn-install {
+    flex-grow: 1;
+    background: linear-gradient(135deg, var(--saffron) 0%, #FF9800 100%);
+    border: none;
+    color: #000000;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pwa-btn-install:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(244, 196, 48, 0.35);
+  }
+
+  .pwa-btn-later {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .pwa-btn-later:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+
+  /* iOS instruction floating popup */
+  .ios-instruction-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ios-instruction-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.3;
+  }
+
+  .ios-instruction-step span {
+    display: inline-block;
+  }
+
+  .ios-icon-share {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-flex;
+    font-size: 11px;
+    margin: 0 2px;
+  }
+
+  @media (max-width: 576px) {
+    .pwa-banner {
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      width: calc(100% - 32px);
+    }
+  }
 </style>
 </head>
 <body class="lang-en">
@@ -2511,13 +2706,92 @@
   let deferredPrompt;
   const pwaDesktopBtn = document.getElementById('pwa-desktop-btn');
   const pwaMobileBtn = document.getElementById('pwa-mobile-btn');
+  const pwaInstallBanner = document.getElementById('pwa-install-banner');
+  const pwaStandardPrompt = document.getElementById('pwa-standard-prompt');
+  const pwaIosPrompt = document.getElementById('pwa-ios-prompt');
+
+  // Helper to check if user dismissed prompt recently (within 24 hours)
+  function isPromptDismissed() {
+    const dismissedTime = localStorage.getItem('pwa-prompt-dismissed');
+    if (!dismissedTime) return false;
+    const hours = (Date.now() - parseInt(dismissedTime, 10)) / (1000 * 60 * 60);
+    return hours < 24; // Do not show again for 24 hours
+  }
+
+  function closePwaBanner() {
+    if (pwaInstallBanner) {
+      pwaInstallBanner.style.opacity = '0';
+      pwaInstallBanner.style.transform = 'translateY(20px) scale(0.95)';
+      setTimeout(() => {
+        pwaInstallBanner.style.display = 'none';
+      }, 300);
+    }
+    localStorage.setItem('pwa-prompt-dismissed', Date.now().toString());
+  }
+
+  function triggerPwaInstallBanner() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted YEP PWA installation');
+      } else {
+        console.log('User dismissed YEP PWA installation');
+      }
+      deferredPrompt = null;
+      if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
+      if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
+      closePwaBanner();
+    });
+  }
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'inline-flex';
     if (pwaMobileBtn) pwaMobileBtn.style.display = 'flex';
+
+    // Automatically show banner after 2 seconds if not dismissed
+    if (!isPromptDismissed()) {
+      setTimeout(() => {
+        if (pwaInstallBanner && pwaStandardPrompt) {
+          pwaIosPrompt.style.display = 'none';
+          pwaStandardPrompt.style.display = 'block';
+          pwaInstallBanner.style.display = 'block';
+          pwaInstallBanner.style.opacity = '0';
+          pwaInstallBanner.style.transform = 'translateY(40px) scale(0.95)';
+          
+          // Force reflow and animate in
+          void pwaInstallBanner.offsetWidth;
+          pwaInstallBanner.style.opacity = '1';
+          pwaInstallBanner.style.transform = 'translateY(0) scale(1)';
+        }
+      }, 2000);
+    }
   });
+
+  // iOS-Specific prompt display
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+  if (isIOS && !isStandalone && !isPromptDismissed()) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (pwaInstallBanner && pwaIosPrompt) {
+          pwaStandardPrompt.style.display = 'none';
+          pwaIosPrompt.style.display = 'block';
+          pwaInstallBanner.style.display = 'block';
+          pwaInstallBanner.style.opacity = '0';
+          pwaInstallBanner.style.transform = 'translateY(40px) scale(0.95)';
+          
+          // Force reflow and animate in
+          void pwaInstallBanner.offsetWidth;
+          pwaInstallBanner.style.opacity = '1';
+          pwaInstallBanner.style.transform = 'translateY(0) scale(1)';
+        }
+      }, 3000);
+    });
+  }
 
   function triggerPwaInstall() {
     if (!deferredPrompt) return;
@@ -2531,6 +2805,7 @@
       deferredPrompt = null;
       if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
       if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
+      if (pwaInstallBanner) pwaInstallBanner.style.display = 'none';
     });
   }
 
@@ -2541,6 +2816,7 @@
     console.log('YEP App successfully installed!');
     if (pwaDesktopBtn) pwaDesktopBtn.style.display = 'none';
     if (pwaMobileBtn) pwaMobileBtn.style.display = 'none';
+    if (pwaInstallBanner) pwaInstallBanner.style.display = 'none';
   });
 
   // Service Worker Registration
@@ -2552,5 +2828,75 @@
     });
   }
 </script>
+
+<!-- Custom PWA Install Dialog/Banner -->
+<div id="pwa-install-banner" class="pwa-banner" style="display: none; opacity: 0; transform: translateY(40px) scale(0.95);">
+  <div class="pwa-banner-content">
+    <button class="pwa-banner-close" onclick="closePwaBanner()" aria-label="Close">✕</button>
+    
+    <!-- Android / Chrome / Desktop Version -->
+    <div id="pwa-standard-prompt" style="display: none;">
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-logo">
+          <img src="yep_leader_seal.png" alt="YEP Logo">
+        </div>
+        <div class="pwa-banner-title-area">
+          <h3>
+            <span class="en">Install YEP App</span>
+            <span class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span>
+          </h3>
+          <p style="margin-top: 4px;">
+            <span class="en">Install YEP App to access your ID card offline and enjoy faster loading.</span>
+            <span class="kn">ಆಫ್‌ಲೈನ್ ಪ್ರವೇಶ ಮತ್ತು ತ್ವರಿತ ಐಡಿ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್‌ಗಾಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.</span>
+          </p>
+        </div>
+      </div>
+      <div class="pwa-banner-actions" style="margin-top: 16px;">
+        <button onclick="triggerPwaInstallBanner()" class="pwa-btn-install">
+          📲 <span class="en">Install Now</span><span class="kn">ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ</span>
+        </button>
+        <button onclick="closePwaBanner()" class="pwa-btn-later">
+          <span class="en">Later</span><span class="kn">ನಂತರ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- iOS / Safari Version -->
+    <div id="pwa-ios-prompt" style="display: none;">
+      <div class="pwa-banner-header">
+        <div class="pwa-banner-logo">
+          <img src="yep_leader_seal.png" alt="YEP Logo">
+        </div>
+        <div class="pwa-banner-title-area">
+          <h3>
+            <span class="en">Add YEP to Home Screen</span>
+            <span class="kn">ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ</span>
+          </h3>
+          <p style="margin-top: 4px;">
+            <span class="en">Install this app on your iPhone for offline access and direct updates.</span>
+            <span class="kn">ನಿಮ್ಮ ಐಫೋನ್‌ನಲ್ಲಿ ಸುಲಭ ಪ್ರವೇಶಕ್ಕಾಗಿ ಈ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.</span>
+          </p>
+        </div>
+      </div>
+      <div class="ios-instruction-banner" style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
+        <div class="ios-instruction-step">
+          <span>1.</span>
+          <div>
+            <span class="en">Tap the share button <span class="ios-icon-share">📤</span> at the bottom of Safari.</span>
+            <span class="kn">ಸಫಾರಿಯ ಕೆಳಭಾಗದಲ್ಲಿರುವ ಶೇರ್ ಬಟನ್ <span class="ios-icon-share">📤</span> ಒತ್ತಿರಿ.</span>
+          </div>
+        </div>
+        <div class="ios-instruction-step" style="margin-top: 8px;">
+          <span>2.</span>
+          <div>
+            <span class="en">Scroll down and select <b>'Add to Home Screen'</b>.</span>
+            <span class="kn">ಕೆಳಗೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ <b>'ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ'</b> ಆಯ್ಕೆಮಾಡಿ.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
