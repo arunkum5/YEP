@@ -152,11 +152,21 @@
     border-radius: 50%;
     border: 1.5px solid var(--gold);
     object-fit: cover;
+    transition: all 0.3s ease;
+  }
+  .sidebar-header:hover img {
+    border-color: var(--saffron);
+    box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    transform: rotate(5deg);
   }
   .sidebar-brand {
     font-family: 'Rajdhani', sans-serif;
     font-size: 1.3rem; font-weight: 700;
     color: var(--white); letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  .sidebar-header:hover .sidebar-brand {
+    text-shadow: 0 0 10px rgba(244, 196, 48, 0.5);
   }
   .sidebar-brand span { color: var(--gold); }
   
@@ -1202,7 +1212,8 @@
     border-top: 1px solid var(--glass-border); background: var(--dark-charcoal); text-align: center;
     margin-top: auto;
   }
-  footer span.yep { color: var(--saffron); font-weight: 600; }
+  footer span.yep { color: var(--saffron); font-weight: 600; transition: all 0.3s ease; }
+  footer span.yep:hover { color: var(--gold) !important; text-shadow: 0 0 8px rgba(244, 196, 48, 0.6); }
 
   /* Responsive styling */
   @media (max-width: 992px) {

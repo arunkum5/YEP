@@ -79,13 +79,17 @@
     content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
   }
-  .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-  .header-logo img { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold); }
+  .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: transform 0.3s ease; }
+  .header-logo:hover { transform: scale(1.02); }
+  .header-logo img { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold); transition: all 0.3s ease; }
+  .header-logo:hover img { border-color: var(--saffron); box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); transform: rotate(5deg); }
   .header-brand {
     font-family: 'Rajdhani', sans-serif;
     font-size: 1.25rem; font-weight: 700;
     color: var(--white); letter-spacing: 0.5px;
+    transition: all 0.3s ease;
   }
+  .header-logo:hover .header-brand { text-shadow: 0 0 10px rgba(244, 196, 48, 0.5); }
   .header-brand span { color: var(--gold); }
 
   /* ── MAIN LAYOUT ── */
@@ -759,6 +763,11 @@
   footer span.yep {
     color: var(--saffron);
     font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  footer span.yep:hover {
+    color: var(--gold) !important;
+    text-shadow: 0 0 8px rgba(244, 196, 48, 0.6);
   }
   .footer-bottom-inner {
     display: flex;

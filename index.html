@@ -74,8 +74,10 @@
     background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
     animation: tricolor-glow 2.5s infinite ease-in-out;
   }
-  .nav-logo { display: flex; align-items: center; gap: 12px; }
-  .nav-logo img { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold); }
+  .nav-logo { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.3s ease; }
+  .nav-logo:hover { transform: scale(1.02); }
+  .nav-logo img { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold); transition: all 0.3s ease; }
+  .nav-logo:hover img { border-color: var(--saffron); box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); transform: rotate(5deg); }
   .nav-brand {
     font-family: 'Rajdhani', sans-serif;
     font-size: 1.3rem; font-weight: 700;
@@ -625,7 +627,8 @@
     transform: translateY(-2px);
   }
   .footer-bottom { font-size: 0.78rem; color: rgba(255,255,255,0.25); padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); max-width: 1000px; margin: 0 auto; }
-  .footer-bottom .yep { color: var(--saffron); font-weight: 600; }
+  .footer-bottom .yep { color: var(--saffron); font-weight: 600; transition: all 0.3s ease; }
+  .footer-bottom .yep:hover { color: var(--gold) !important; text-shadow: 0 0 8px rgba(244, 196, 48, 0.6); }
   .footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
   .footer-left { text-align: left; }
   .footer-right { text-align: right; color: rgba(255,255,255,0.6); }
@@ -727,10 +730,19 @@
   /* ── YoungSTAR CROSS GRADIENT ── */
   .youngstar-gradient {
     background: linear-gradient(135deg, var(--gold) 15%, var(--saffron) 60%, #D32F2F 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
     filter: drop-shadow(0 2px 8px rgba(244, 196, 48, 0.2));
+    transition: all 0.3s ease, background-position 0.5s ease;
+  }
+  .youngstar-gradient:hover,
+  .brand-col:hover .youngstar-gradient,
+  .nav-logo:hover .youngstar-gradient {
+    background-position: right center;
+    filter: drop-shadow(0 0 12px rgba(244, 196, 48, 0.6)) drop-shadow(0 2px 8px rgba(255, 107, 0, 0.45));
+    transform: scale(1.02);
   }
 
   /* ── TYPEWRITER CURSOR ── */
@@ -1567,7 +1579,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">
+  <div class="nav-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="cursor: pointer;">
     <img src="logo.png" alt="YEP Logo">
     <div class="nav-brand" style="display:flex; align-items:center; line-height: 1.1;">
       <div class="brand-col brand-col-en">
