@@ -748,6 +748,16 @@
     color: white;
     box-shadow: 0 4px 12px rgba(255, 82, 82, 0.2);
   }
+  .btn-bulk.download {
+    background: rgba(244, 196, 48, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(244, 196, 48, 0.25);
+  }
+  .btn-bulk.download:hover {
+    background: var(--gold);
+    color: var(--charcoal);
+    box-shadow: 0 4px 12px rgba(244, 196, 48, 0.2);
+  }
   .btn-bulk.cancel {
     background: transparent;
     color: var(--text-secondary);
@@ -1632,6 +1642,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   <div class="bulk-btns">
     <button class="btn-bulk approve" onclick="handleBulkApprove()">✊ Approve</button>
     <button class="btn-bulk delete" onclick="handleBulkDelete()">✕ Delete</button>
+    <button class="btn-bulk download" id="btn-bulk-download" onclick="handleBulkDownload()">📇 ID Cards</button>
     <button class="btn-bulk cancel" onclick="clearBulkSelection()">Cancel</button>
   </div>
 </div>
@@ -2507,6 +2518,30 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
   }
 
+  async function handleBulkDownload() {
+    if (selectedIds.length === 0) return;
+
+    const downloadBtn = document.getElementById('btn-bulk-download');
+    const originalContent = downloadBtn.innerHTML;
+    downloadBtn.disabled = true;
+
+    // Get the selected members data
+    const selectedMembers = allMembers.filter(m => selectedIds.includes(m.id));
+
+    let processed = 0;
+    for (const member of selectedMembers) {
+      downloadBtn.innerHTML = `⚙️ ${processed + 1}/${selectedIds.length}`;
+      await new Promise(resolve => {
+        generateAndDownloadCard(member, resolve);
+      });
+      processed++;
+    }
+
+    downloadBtn.disabled = false;
+    downloadBtn.innerHTML = originalContent;
+    clearBulkSelection();
+  }
+
   async function handleBulkApprove() {
     if (!confirm(`Are you sure you want to approve ${selectedIds.length} selected members?`)) return;
 
@@ -2997,7 +3032,13 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const originalContent = downloadBtn.innerHTML;
     downloadBtn.disabled = true;
     downloadBtn.innerHTML = '⚙️...';
+    generateAndDownloadCard(member, () => {
+      downloadBtn.disabled = false;
+      downloadBtn.innerHTML = originalContent;
+    });
+  }
 
+  function generateAndDownloadCard(member, onComplete) {
     const canvas = document.createElement('canvas');
     canvas.width = 600;
     canvas.height = 900;
@@ -3286,8 +3327,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         console.error("Canvas drawing failed:", err);
         alert("Failed to generate download image: " + err.message);
       } finally {
-        downloadBtn.disabled = false;
-        downloadBtn.innerHTML = originalContent;
+        if (typeof onComplete === 'function') {
+          onComplete();
+        }
       }
     }
   }
