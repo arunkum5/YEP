@@ -982,7 +982,7 @@
               <button type="button" class="photo-btn accent" onclick="triggerFileInput()">
                 📁 <span class="en">Upload Image</span><span class="kn">ಗ್ಯಾಲರಿಯಿಂದ ಅಪ್ಲೋಡ್</span>
               </button>
-              <input type="file" id="file-input" accept="image/*" onchange="handleFileInput(event)" style="display: none;">
+              <input type="file" id="file-input" accept="image/jpeg, image/png, image/jpg" onchange="handleFileInput(event)" style="display: none;">
             </div>
 
             <!-- Webcam Streaming Container -->
@@ -1478,13 +1478,41 @@
     document.getElementById('file-input').click();
   }
 
+  function resetPhotoPreview() {
+    capturedPhotoData = null;
+    const placeholder = document.getElementById('preview-placeholder');
+    const img = document.getElementById('img-preview');
+    const group = document.getElementById('group-photo');
+    const fileInput = document.getElementById('file-input');
+
+    img.src = "";
+    img.style.display = 'none';
+    placeholder.style.display = '';
+    group.classList.remove('has-success');
+    group.classList.remove('has-error');
+    document.getElementById('error-photo').style.display = 'none';
+    if (fileInput) fileInput.value = "";
+  }
+
   function handleFileInput(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Check file size (max 15MB)
-    if (file.size > 15 * 1024 * 1024) {
-      alert("Selected photo is too large. Please select a photo smaller than 15MB.");
+    // Check file format (Allow only JPEG, JPG, PNG)
+    const validMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const validExtensions = ['jpeg', 'jpg', 'png'];
+
+    if (!validMimeTypes.includes(file.type) && !validExtensions.includes(fileExtension)) {
+      alert("Invalid file format. Please upload a JPEG, JPG, or PNG image.");
+      resetPhotoPreview();
+      return;
+    }
+
+    // Check file size (max 10MB to accommodate high-res mobile photos while preventing malicious bloat)
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Selected photo is too large. Please select a photo smaller than 10MB.");
+      resetPhotoPreview();
       return;
     }
 
@@ -1526,6 +1554,7 @@
     img.onerror = (err) => {
       console.error("Image load error:", err);
       alert("Unable to process this image format. Please select a standard JPEG/PNG photo.");
+      resetPhotoPreview();
       URL.revokeObjectURL(objectUrl);
     };
   }
@@ -1647,8 +1676,24 @@
           image: capturedPhotoData
         })
       });
+      
+      if (!response.ok) {
+        const text = await response.text();
+        let errorMsg = `Server error (Status ${response.status})`;
+        try {
+          const json = JSON.parse(text);
+          if (json && json.error) {
+            errorMsg = json.error;
+          }
+        } catch (_) {
+          // If response is HTML, grab a clean snippet
+          errorMsg += `: ${text.substring(0, 150).replace(/<[^>]*>/g, '').trim()}`;
+        }
+        throw new Error(errorMsg);
+      }
+      
       const uploadResult = await response.json();
-      if (!response.ok || !uploadResult.success) {
+      if (!uploadResult.success) {
         throw new Error(uploadResult.error || "Failed to upload photo to storage.");
       }
       photoUrl = uploadResult.photo_url;
