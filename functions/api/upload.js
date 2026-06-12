@@ -92,7 +92,7 @@ export async function onRequestPost(context) {
 
     // Strip original extension from filename and append correct one
     const baseName = filename.replace(/\.[^/.]+$/, "");
-    const cleanFilename = `${Date.now()}_${baseName.replace(/[^a-zA-Z0-9.\-_]/g, '_')}.${extension}`;
+    const cleanFilename = `${baseName.replace(/[^a-zA-Z0-9.\-_]/g, '_')}.${extension}`;
 
     // Upload to the bound Cloudflare R2 bucket (env.BUCKET)
     await env.BUCKET.put(cleanFilename, bytes.buffer, {

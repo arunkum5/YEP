@@ -1814,6 +1814,10 @@
 
     // Capture values
     const name = document.getElementById('reg-name').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const qualification = document.getElementById('reg-qualification').value;
+    const village = document.getElementById('reg-village').value;
+    const rawAadhaar = document.getElementById('reg-aadhaar').value;
     const stateVal = document.getElementById('reg-state').value;
     let district = "";
     let taluk = "";
@@ -1840,7 +1844,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          filename: `${name.replace(/\s+/g, '_')}_photo.jpg`,
+          filename: `${phone}_photo.jpg`,
           image: capturedPhotoData
         })
       });
@@ -1874,10 +1878,6 @@
 
     // 2. Insert member record to Supabase
     try {
-      const qualification = document.getElementById('reg-qualification').value;
-      const village = document.getElementById('reg-village').value;
-      const phone = document.getElementById('reg-phone').value;
-      const rawAadhaar = document.getElementById('reg-aadhaar').value;
       const cleanAadhaar = rawAadhaar.replace(/\s+/g, '');
       const hash = await sha256(cleanAadhaar);
       const last4 = cleanAadhaar.slice(-4);
