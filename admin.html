@@ -1335,6 +1335,11 @@ TO authenticated
 USING (true) 
 WITH CHECK (true);
 
+-- 3. Allow public read access to verify membership status
+CREATE POLICY "Allow public select" 
+ON public.members FOR SELECT 
+USING (true);
+
 -- 3. Create page_stats table for visitor & click counts
 CREATE TABLE IF NOT EXISTS public.page_stats (
     id TEXT PRIMARY KEY,
