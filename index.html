@@ -119,6 +119,52 @@
   .nav-cta:hover { background: var(--deep-saffron); }
   .nav-mobile-join { display: none; }
 
+  .nav-admin-btn {
+    border: 1.5px solid rgba(244, 196, 48, 0.4);
+    background: rgba(244, 196, 48, 0.06);
+    color: var(--gold) !important;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    padding: 7px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+  .nav-admin-btn:hover {
+    background: rgba(244, 196, 48, 0.15);
+    border-color: var(--gold);
+    box-shadow: 0 0 12px rgba(244, 196, 48, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .register-here-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--saffron);
+    color: white !important;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 8px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(255,107,0,0.2);
+  }
+  .register-here-btn:hover {
+    background: var(--deep-saffron);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(255,107,0,0.3);
+  }
+
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
@@ -635,6 +681,11 @@
     .brand-col-en .brand-heading { font-size: 1.15rem !important; }
     .nav-cta { display: none !important; }
     .lang-toggle { display: none !important; }
+    .nav-admin-btn {
+      padding: 5px 10px !important;
+      font-size: 0.8rem !important;
+      border-radius: 3px !important;
+    }
     /* Leader name 20% smaller on mobile */
     .leader-info h2 { font-size: 1.92rem !important; }
     .leader-kn-name { font-size: 1.36rem !important; }
@@ -1189,6 +1240,10 @@
       <span class="en">Join for Change</span>
       <span class="kn">ಬದಲಾವಣೆಗಾಗಿ ಜೊತೆಯಾಗಿ</span>
     </a>
+    <a href="admin.html" class="nav-admin-btn">
+      🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
+    </a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -1886,7 +1941,10 @@
       if (error) throw error;
       
       if (!data) {
-        errorMsgEl.textContent = "No membership registration found with this mobile number. Please register first.";
+        errorMsgEl.innerHTML = `
+          <div style="margin-bottom: 8px;">No membership registration found with this mobile number.</div>
+          <a href="join.html" class="register-here-btn">✊ Click here to Register / ನೋಂದಾಯಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ</a>
+        `;
         errorMsgEl.style.display = 'block';
         submitBtn.disabled = false;
         loader.style.display = 'none';
