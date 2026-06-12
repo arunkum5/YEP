@@ -617,6 +617,38 @@
     font-weight: 600;
   }
 
+  .success-notice-box {
+    background: rgba(244, 196, 48, 0.08);
+    border: 1px dashed rgba(244, 196, 48, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    max-width: 440px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+  .success-notice-box .notice-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .success-notice-box .notice-content {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.85);
+  }
+  .success-notice-box .notice-content .kn {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 0.88rem;
+    color: var(--gold);
+    margin-top: 6px;
+    display: block;
+    line-height: 1.5;
+  }
+
   .modal-actions {
     margin-top: 25px;
     display: flex;
@@ -1107,6 +1139,15 @@
         <span>Youth Power – Our Strength – Our Future</span>
       </div>
       <div class="card-badge" id="card-status-badge" style="background:rgba(255, 82, 82, 0.1);border-color:#FF5252;color:#FF5252;display:inline-flex;align-items:center;gap:4px;">✕ PENDING</div>
+    </div>
+  </div>
+
+  <!-- Success Notice Message -->
+  <div class="success-notice-box">
+    <div class="notice-icon">⏱️</div>
+    <div class="notice-content">
+      <div class="en">Your registration is under review. Once approved (usually within 24 hours), you can download your official YEP Membership ID Card.</div>
+      <span class="kn">ನಿಮ್ಮ ನೋಂದಣಿಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ. ಅನುಮೋದನೆಯ ನಂತರ (ಸಾಮಾನ್ಯವಾಗಿ 24 ಗಂಟೆಗಳ ಒಳಗೆ), ನಿಮ್ಮ ಅಧಿಕೃತ YEP ಸದಸ್ಯತ್ವ ID ಕಾರ್ಡ್ ಅನ್ನು ನೀವು ಡೌನ್‌ಲೋಡ್ ಮಾಡಬಹುದು.</span>
     </div>
   </div>
 
