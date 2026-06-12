@@ -2034,7 +2034,7 @@
     en: [
       { id: 'type-en-1', text: 'YoungSTAR' },
       { id: 'type-en-2', text: 'Empowerment' },
-      { id: 'type-en-3', text: 'Party' }
+      { id: 'type-en-3', text: 'Party - YEP' }
     ],
     kn: [
       { id: 'type-kn-1', text: 'ಯಂಗ್‌ಸ್ಟಾರ್' },
@@ -2138,7 +2138,6 @@
   // Trigger typewriter, stars, and preloader on load
   window.addEventListener('DOMContentLoaded', () => {
     const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
-    runTypewriter(activeLang);
     createStars();
     
     // Slow loading simulation (2.5s) to fade out preloader
@@ -2147,6 +2146,10 @@
       if (preloader) {
         preloader.classList.add('fade-out');
       }
+      // Start the typewriter animation exactly as the preloader fades away
+      setTimeout(() => {
+        runTypewriter(activeLang);
+      }, 300);
     }, 2500);
   });
 </script>
