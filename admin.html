@@ -2809,19 +2809,28 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
 
     const headers = ['Name', 'Phone', 'Aadhaar', 'Qualification', 'State', 'District', 'Taluk', 'Village', 'Member ID', 'Status', 'Signup Date'];
-    const rows = filteredMembers.map(m => [
-      m.name || '',
-      m.phone || '',
-      m.aadhaar || '',
-      m.qualification || '',
-      m.state || '',
-      m.district || '',
-      m.taluk || '',
-      m.village || '',
-      m.member_id || 'Pending',
-      m.approved ? 'Approved' : 'Pending',
-      m.created_at ? m.created_at.split('T')[0] : ''
-    ]);
+    const rows = filteredMembers.map(m => {
+      const rawAadhaar = m.aadhaar || '';
+      let displayAadhaar = rawAadhaar;
+      if (rawAadhaar && rawAadhaar.includes(':')) {
+        displayAadhaar = `•••• •••• ${rawAadhaar.split(':')[1]}`;
+      } else if (rawAadhaar && rawAadhaar !== 'N/A') {
+        displayAadhaar = `•••• •••• ${rawAadhaar.slice(-4)}`;
+      }
+      return [
+        m.name || '',
+        m.phone || '',
+        displayAadhaar,
+        m.qualification || '',
+        m.state || '',
+        m.district || '',
+        m.taluk || '',
+        m.village || '',
+        m.member_id || 'Pending',
+        m.approved ? 'Approved' : 'Pending',
+        m.created_at ? m.created_at.split('T')[0] : ''
+      ];
+    });
 
     // Construct CSV content
     let csvContent = "data:text/csv;charset=utf-8,";
