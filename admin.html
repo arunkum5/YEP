@@ -1285,6 +1285,29 @@
       content: 'Select Record';
       margin-right: auto;
     }
+
+    /* Mobile Bulk Actions Bar Optimizations */
+    .bulk-actions-bar {
+      width: 92%;
+      max-width: 500px;
+      padding: 10px 16px;
+      gap: 10px;
+      border-radius: 16px;
+      bottom: 16px;
+    }
+    .bulk-divider {
+      display: none;
+    }
+    .bulk-btns {
+      gap: 6px;
+      flex-grow: 1;
+      justify-content: flex-end;
+    }
+    .btn-bulk {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      gap: 4px;
+    }
   }
 </style>
 </head>
@@ -1604,7 +1627,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
 <!-- BOTTOM FLOATING BULK ACTIONS TOOLBAR -->
 <div class="bulk-actions-bar" id="bulk-bar">
-  <div class="bulk-count" id="bulk-selected-count">0 items selected</div>
+  <div class="bulk-count" id="bulk-selected-count">0 selections</div>
   <div class="bulk-divider"></div>
   <div class="bulk-btns">
     <button class="btn-bulk approve" onclick="handleBulkApprove()">✊ Approve</button>
@@ -2477,7 +2500,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const countEl = document.getElementById('bulk-selected-count');
     
     if (selectedIds.length > 0) {
-      countEl.textContent = `${selectedIds.length} registration${selectedIds.length > 1 ? 's' : ''} selected`;
+      countEl.textContent = `${selectedIds.length} selection${selectedIds.length > 1 ? 's' : ''}`;
       bar.classList.add('active');
     } else {
       bar.classList.remove('active');
