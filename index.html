@@ -1974,20 +1974,31 @@
 
   /* ── COUNTER ANIMATION ── */
   function animateCounter(el) {
+    if (el.animationId) {
+      cancelAnimationFrame(el.animationId);
+    }
     const target = parseInt(el.dataset.target);
     const suffix = el.dataset.suffix || '';
-    const duration = 1600;
+    const duration = 1200; // Snappier animation on hover
     const start = performance.now();
+    
+    el.classList.add('animating');
+    
     function step(now) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
       const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
       const current = Math.floor(ease * target);
       el.textContent = current + suffix;
-      if (progress < 1) requestAnimationFrame(step);
-      else el.textContent = target + suffix;
+      if (progress < 1) {
+        el.animationId = requestAnimationFrame(step);
+      } else {
+        el.textContent = target + suffix;
+        el.animationId = null;
+        el.classList.remove('animating');
+      }
     }
-    requestAnimationFrame(step);
+    el.animationId = requestAnimationFrame(step);
   }
 
   /* ── SCROLL REVEAL + TRIGGER COUNTERS ── */
@@ -2007,6 +2018,16 @@
   }, { threshold: 0.2 });
 
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Trigger counter animation on hover (only if it has already been revealed once and is not currently running)
+  document.querySelectorAll('.stat-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const counter = item.querySelector('.number[data-target]');
+      if (counter && counter.dataset.done && !counter.classList.contains('animating')) {
+        animateCounter(counter);
+      }
+    });
+  });
 
   /* ── TYPEWRITER ANIMATION LOGIC ── */
   const typeText = {
