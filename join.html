@@ -1300,6 +1300,14 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // Helper to hash string to SHA-256 for secure compliance
+  async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
   /* ── KARNATAKA DISTRICTS & TALUKS DATA ── */
   const districtTalukData = {
     "Bagalkote / ಬಾಗಲಕೋಟೆ": ["Bagalkote / ಬಾಗಲಕೋಟೆ", "Badami / ಬಾದಾಮಿ", "Bilagi / ಬಿಳಗಿ", "Hunagunda / ಹುನಗುಂದ", "Jamkhandi / ಜಮಖಂಡಿ", "Mudhola / ಮುಧೋಳ", "Ilkal / ಇಳಕಲ್", "Rabkavi Banhatti / ರಬಕವಿ ಬನಹಟ್ಟಿ", "Guledgudda / ಗುಳೇದಗುಡ್ಡ"],
@@ -1869,12 +1877,16 @@
       const qualification = document.getElementById('reg-qualification').value;
       const village = document.getElementById('reg-village').value;
       const phone = document.getElementById('reg-phone').value;
-      const aadhaar = document.getElementById('reg-aadhaar').value;
+      const rawAadhaar = document.getElementById('reg-aadhaar').value;
+      const cleanAadhaar = rawAadhaar.replace(/\s+/g, '');
+      const hash = await sha256(cleanAadhaar);
+      const last4 = cleanAadhaar.slice(-4);
+      const secureAadhaarPayload = `${hash}:${last4}`;
 
       const memberData = {
         name: name,
         phone: phone,
-        aadhaar: aadhaar,
+        aadhaar: secureAadhaarPayload,
         qualification: qualification || null,
         state: stateVal,
         district: district,

@@ -1738,6 +1738,16 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   // Aadhaar masking toggle map
   let unmaskedAadhaars = {};
 
+  let searchAadhaarHash = '';
+
+  // Helper to hash string to SHA-256 for secure compliance
+  async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
   // Initialize Supabase if credentials are provided
   try {
     const isMock = SUPABASE_URL.indexOf('your-supabase-url') !== -1;
@@ -2203,9 +2213,17 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
   }
 
-  /* ── SEARCH, FILTER & PAGINATION ── */
-  function handleSearchChange() {
+  async function handleSearchChange() {
     currentPage = 1;
+    const searchVal = document.getElementById('search-box').value.trim();
+    const cleanSearchVal = searchVal.replace(/[\s\-]+/g, '');
+    
+    // Check if searching by a full 12-digit Aadhaar
+    if (/^\d{12}$/.test(cleanSearchVal)) {
+      searchAadhaarHash = await sha256(cleanSearchVal);
+    } else {
+      searchAadhaarHash = '';
+    }
     applyFilters();
   }
 
@@ -2224,7 +2242,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       const searchMatch = !searchVal || 
         (member.name && member.name.toLowerCase().includes(searchVal)) ||
         (member.phone && member.phone.includes(searchVal)) ||
-        (member.aadhaar && member.aadhaar.includes(searchVal)) ||
+        (member.aadhaar && (
+          member.aadhaar.includes(searchVal) || 
+          (searchAadhaarHash && member.aadhaar.startsWith(searchAadhaarHash))
+        )) ||
         (member.member_id && member.member_id.toLowerCase().includes(searchVal));
 
       // 2. Status Match
@@ -2308,11 +2329,14 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       const tdAadhaar = document.createElement('td');
       tdAadhaar.setAttribute('data-label', 'Aadhaar');
       const formattedAadhaar = member.aadhaar || 'N/A';
-      let displayAadhaar = formattedAadhaar;
+      const isSecureFormat = formattedAadhaar.includes(':');
+      const last4 = isSecureFormat ? formattedAadhaar.split(':')[1] : formattedAadhaar.slice(-4);
+      let displayAadhaar = `•••• •••• ${last4}`;
       
-      if (!isUnmasked && formattedAadhaar !== 'N/A') {
-        // Mask first two groups (e.g. "•••• •••• 1234")
-        displayAadhaar = `•••• •••• ${formattedAadhaar.slice(-4)}`;
+      if (formattedAadhaar === 'N/A') {
+        displayAadhaar = 'N/A';
+      } else if (isUnmasked && !isSecureFormat) {
+        displayAadhaar = formattedAadhaar;
       }
 
       const maskSpan = document.createElement('span');
@@ -2670,7 +2694,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
     // Fill table fields
     document.getElementById('detail-phone-val').textContent = member.phone || 'N/A';
-    document.getElementById('detail-aadhaar-val').textContent = member.aadhaar || 'N/A';
+    const rawAadhaar = member.aadhaar || 'N/A';
+    let displayAadhaar = rawAadhaar;
+    if (rawAadhaar !== 'N/A' && rawAadhaar.includes(':')) {
+      displayAadhaar = `•••• •••• ${rawAadhaar.split(':')[1]}`;
+    }
+    document.getElementById('detail-aadhaar-val').textContent = displayAadhaar;
     document.getElementById('detail-village-val').textContent = member.village || 'N/A';
     
     const dateStr = member.created_at ? member.created_at.split('T')[0] : 'N/A';
