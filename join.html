@@ -926,7 +926,14 @@
   </div>
 </footer>
 
+<!-- SUPABASE CLIENT SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // SUPABASE CONFIGURATION
+  const SUPABASE_URL = 'https://hqaimprjdejeklrntnfz.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   /* ── KARNATAKA DISTRICTS & TALUKS DATA ── */
   const districtTalukData = {
     "Bagalkote / ಬಾಗಲಕೋಟೆ": ["Bagalkote / ಬಾಗಲಕೋಟೆ", "Badami / ಬಾದಾಮಿ", "Bilagi / ಬಿಳಗಿ", "Hunagunda / ಹುನಗುಂದ", "Jamkhandi / ಜಮಖಂಡಿ", "Mudhola / ಮುಧೋಳ", "Ilkal / ಇಳಕಲ್", "Rabkavi Banhatti / ರಬಕವಿ ಬನಹಟ್ಟಿ", "Guledgudda / ಗುಳೇದಗುಡ್ಡ"],
@@ -1339,7 +1346,7 @@
   }
 
   /* ── FORM SUBMISSION & SUCCESS MODAL ── */
-  function submitForm() {
+  async function submitForm() {
     // Validate photo
     if (!capturedPhotoData) {
       const group = document.getElementById('group-photo');
@@ -1349,7 +1356,7 @@
     }
 
     // Capture values
-    const name = document.getElementById('reg-name').value;
+    const name = document.getElementById('reg-name').value.trim();
     const stateVal = document.getElementById('reg-state').value;
     let district = "";
     let taluk = "";
@@ -1358,35 +1365,96 @@
       district = document.getElementById('reg-district').value;
       taluk = document.getElementById('reg-taluk').value;
     } else {
-      district = document.getElementById('reg-district-text').value;
-      taluk = document.getElementById('reg-taluk-text').value;
+      district = document.getElementById('reg-district-text').value.trim();
+      taluk = document.getElementById('reg-taluk-text').value.trim();
     }
 
-    // Generate random YEP Member ID
-    const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
-    const statePrefix = stateVal === 'Karnataka' ? 'KA' : 'IN';
-    const yepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
+    const submitBtn = document.getElementById('btn-submit');
+    const originalContent = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '✊ <span class="en">Submitting...</span><span class="kn">ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...</span>';
 
-    // Populate membership card data
-    document.getElementById('card-photo').src = capturedPhotoData;
-    document.getElementById('card-name-val').textContent = name;
-    document.getElementById('card-id-val').textContent = yepId;
-    document.getElementById('card-location-val').textContent = `${district} · ${taluk}`;
-
-    // Create dynamic WhatsApp share link
-    const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
-    let shareText = "";
-    if (activeLang === 'kn') {
-      shareText = `ನಾನು ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ (YEP) ಬದಲಾವಣೆಯ ಸದಸ್ಯನಾಗಿದ್ದೇನೆ! ನನ್ನ ಸದಸ್ಯತ್ವ ಐಡಿ: ${yepId}. ನೀವೂ ಇಂದೇ ಸೇರಿ ಬದಲಾವಣೆ ತನ್ನಿ: https://yepkarnataka.com/join.html`;
-    } else {
-      shareText = `I just joined the YoungSTAR Empowerment Party (YEP) for Change! My Member ID is ${yepId}. Join the movement today: https://yepkarnataka.com/join.html`;
+    // 1. Upload captured photo to Cloudflare R2 via Pages Function
+    let photoUrl = "";
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          filename: `${name.replace(/\s+/g, '_')}_photo.jpg`,
+          image: capturedPhotoData
+        })
+      });
+      const uploadResult = await response.json();
+      if (!response.ok || !uploadResult.success) {
+        throw new Error(uploadResult.error || "Failed to upload photo to storage.");
+      }
+      photoUrl = uploadResult.photo_url;
+    } catch (uploadErr) {
+      alert("Registration Error (Image upload): " + uploadErr.message);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalContent;
+      return;
     }
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-    document.getElementById('whatsapp-share-link').href = whatsappUrl;
 
-    // Show modal
-    const successModal = document.getElementById('success-modal');
-    successModal.classList.add('active');
+    // 2. Insert member record to Supabase
+    try {
+      const qualification = document.getElementById('reg-qualification').value;
+      const village = document.getElementById('reg-village').value;
+      const phone = document.getElementById('reg-phone').value;
+      const aadhaar = document.getElementById('reg-aadhaar').value;
+
+      const memberData = {
+        name: name,
+        phone: phone,
+        aadhaar: aadhaar,
+        qualification: qualification || null,
+        state: stateVal,
+        district: district,
+        taluk: taluk,
+        village: village || null,
+        photo_url: photoUrl,
+        approved: false
+      };
+
+      const { data, error } = await supabaseClient
+        .from('members')
+        .insert([memberData])
+        .select();
+
+      if (error) throw error;
+
+      // Populate preview card in success modal
+      const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
+      const statePrefix = stateVal === 'Karnataka' ? 'KA' : 'IN';
+      const yepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
+
+      document.getElementById('card-photo').src = photoUrl;
+      document.getElementById('card-name-val').textContent = name;
+      document.getElementById('card-id-val').textContent = yepId;
+      document.getElementById('card-location-val').textContent = `${district.split(' / ')[0]} · ${taluk.split(' / ')[0]}`;
+
+      // Create dynamic WhatsApp share link
+      const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+      let shareText = "";
+      if (activeLang === 'kn') {
+        shareText = `ನಾನು ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ (YEP) ಬದಲಾವಣೆಯ ಸದಸ್ಯನಾಗಿದ್ದೇನೆ! ನನ್ನ ಸದಸ್ಯತ್ವ ಪ್ರಕ್ರಿಯೆ ಪ್ರಗತಿಯಲ್ಲಿದೆ. ನೀವೂ ಇಂದೇ ಸೇರಿ ಬದಲಾವಣೆ ತನ್ನಿ: https://yep.pages.dev/join.html`;
+      } else {
+        shareText = `I just registered to join the YoungSTAR Empowerment Party (YEP) for Change! Join the movement today: https://yep.pages.dev/join.html`;
+      }
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      document.getElementById('whatsapp-share-link').href = whatsappUrl;
+
+      // Show modal
+      const successModal = document.getElementById('success-modal');
+      successModal.classList.add('active');
+    } catch (dbErr) {
+      alert("Registration Error (Database insert): " + dbErr.message);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalContent;
+    }
   }
 </script>
 </body>
