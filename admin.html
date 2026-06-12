@@ -2564,20 +2564,21 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
 
     try {
-      // Supabase batch updates
-      for (const id of selectedIds) {
+      // Supabase batch updates in parallel
+      const updatePromises = selectedIds.map(async (id) => {
         const targetMember = allMembers.find(m => m.id === id);
         if (targetMember && !targetMember.approved) {
           const statePrefix = targetMember.state === 'Karnataka' ? 'KA' : 'IN';
           const randomIdNumber = Math.floor(10000 + Math.random() * 90000);
           const generatedYepId = `YEP-${statePrefix}-2026-${randomIdNumber}`;
 
-          await supabaseClient
+          return supabaseClient
             .from('members')
             .update({ approved: true, member_id: generatedYepId })
             .eq('id', id);
         }
-      }
+      });
+      await Promise.all(updatePromises);
       alert(`Approved selected members.`);
       selectedIds = [];
       updateBulkActionsBar();
@@ -2623,13 +2624,14 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
 
     try {
-      // Delete photos from Cloudflare R2 first
-      for (const id of selectedIds) {
+      // Delete photos from Cloudflare R2 first in parallel
+      const deletePromises = selectedIds.map(async (id) => {
         const member = allMembers.find(m => m.id === id);
         if (member && member.photo_url) {
           await deleteR2Photo(member.photo_url);
         }
-      }
+      });
+      await Promise.all(deletePromises);
 
       // Supabase batch deletion
       const { error } = await supabaseClient
