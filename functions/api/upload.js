@@ -130,9 +130,43 @@ export async function onRequestOptions() {
   return new Response(null, {
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Max-Age": "86400",
     },
   });
+}
+
+// Handle image deletion from the R2 bucket
+export async function onRequestDelete(context) {
+  try {
+    const { request, env } = context;
+    const { searchParams } = new URL(request.url);
+    const filename = searchParams.get('filename');
+
+    if (!filename) {
+      return new Response(JSON.stringify({ error: "No filename provided" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
+
+    // Delete the file from the R2 bucket
+    await env.BUCKET.delete(filename);
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  }
 }

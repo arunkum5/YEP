@@ -2518,6 +2518,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
   }
 
+  async function deleteR2Photo(photoUrl) {
+    if (!photoUrl || photoUrl.includes('leader_profile.jpg')) return;
+    const filename = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
+    try {
+      await fetch(`/api/upload?filename=${encodeURIComponent(filename)}`, {
+        method: 'DELETE'
+      });
+    } catch (err) {
+      console.error("Failed to delete photo from R2:", err);
+    }
+  }
+
   async function handleBulkDelete() {
     if (!confirm(`WARNING: Are you sure you want to permanently delete the ${selectedIds.length} selected member applications? This action is irreversible.`)) return;
 
@@ -2534,6 +2546,14 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
 
     try {
+      // Delete photos from Cloudflare R2 first
+      for (const id of selectedIds) {
+        const member = allMembers.find(m => m.id === id);
+        if (member && member.photo_url) {
+          await deleteR2Photo(member.photo_url);
+        }
+      }
+
       // Supabase batch deletion
       const { error } = await supabaseClient
         .from('members')
@@ -2622,6 +2642,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
 
     try {
+      // Delete photo from Cloudflare R2 first
+      const member = allMembers.find(m => m.id === id);
+      if (member && member.photo_url) {
+        await deleteR2Photo(member.photo_url);
+      }
+
       const { error } = await supabaseClient
         .from('members')
         .delete()
