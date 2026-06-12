@@ -1837,6 +1837,7 @@
 
     // 1. Upload captured photo to Cloudflare R2 via Pages Function
     let photoUrl = "";
+    let photoSignature = "";
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -1869,6 +1870,7 @@
         throw new Error(uploadResult.error || "Failed to upload photo to storage.");
       }
       photoUrl = uploadResult.photo_url;
+      photoSignature = uploadResult.signature;
     } catch (uploadErr) {
       alert("Registration Error (Image upload): " + uploadErr.message);
       submitBtn.disabled = false;
@@ -1917,7 +1919,7 @@
       if (photoUrl) {
         const filename = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
         try {
-          await fetch(`/api/upload?filename=${encodeURIComponent(filename)}`, {
+          await fetch(`/api/upload?filename=${encodeURIComponent(filename)}&signature=${photoSignature}`, {
             method: 'DELETE'
           });
         } catch (cleanupErr) {

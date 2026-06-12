@@ -2522,8 +2522,16 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     if (!photoUrl || photoUrl.includes('leader_profile.jpg')) return;
     const filename = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
     try {
+      let token = "";
+      if (supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) token = session.access_token;
+      }
       await fetch(`/api/upload?filename=${encodeURIComponent(filename)}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : ''
+        }
       });
     } catch (err) {
       console.error("Failed to delete photo from R2:", err);

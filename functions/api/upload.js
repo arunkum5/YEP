@@ -105,9 +105,13 @@ export async function onRequestPost(context) {
     const R2_PUBLIC_URL = env.R2_PUBLIC_URL || "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev";
     const publicUrl = `${R2_PUBLIC_URL}/${cleanFilename}`;
 
+    const secret = env.JWT_SECRET || 'yep_secure_photo_signature_key_2026';
+    const signature = await generateSignature(cleanFilename, secret);
+
     return new Response(JSON.stringify({ 
       success: true, 
-      photo_url: publicUrl 
+      photo_url: publicUrl,
+      signature: signature
     }), {
       headers: { 
         "Content-Type": "application/json",
@@ -131,10 +135,19 @@ export async function onRequestOptions() {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Max-Age": "86400",
     },
   });
+}
+
+// Helper to generate a validation signature for client-side delete requests
+async function generateSignature(filename, secret) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(filename + secret);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 // Handle image deletion from the R2 bucket
@@ -143,11 +156,57 @@ export async function onRequestDelete(context) {
     const { request, env } = context;
     const { searchParams } = new URL(request.url);
     const filename = searchParams.get('filename');
+    const signature = searchParams.get('signature');
 
     if (!filename) {
       return new Response(JSON.stringify({ error: "No filename provided" }), {
         status: 400,
         headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
+
+    let isAuthorized = false;
+    const secret = env.JWT_SECRET || 'yep_secure_photo_signature_key_2026';
+
+    // 1. Check for valid client signature (used by registration form cleanup)
+    if (signature) {
+      const expectedSignature = await generateSignature(filename, secret);
+      if (signature === expectedSignature) {
+        isAuthorized = true;
+      }
+    }
+
+    // 2. Check for active Supabase Admin Authorization token (used by admin dashboard)
+    if (!isAuthorized) {
+      const authHeader = request.headers.get('Authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        const supabaseUrl = env.SUPABASE_URL || 'https://hqaimprjdejeklrtntfz.supabase.co';
+        const supabaseAnonKey = env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
+
+        try {
+          const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'apikey': supabaseAnonKey
+            }
+          });
+          if (userRes.ok) {
+            isAuthorized = true;
+          }
+        } catch (err) {
+          console.error("Supabase user verification failed:", err);
+        }
+      }
+    }
+
+    if (!isAuthorized) {
+      return new Response(JSON.stringify({ error: "Unauthorized: Invalid signature or session token" }), {
+        status: 401,
+        headers: { 
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
       });
     }
 
