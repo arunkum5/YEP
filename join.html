@@ -1422,10 +1422,9 @@
         approved: false
       };
 
-      const { data, error } = await supabaseClient
+      const { error } = await supabaseClient
         .from('members')
-        .insert([memberData])
-        .select();
+        .insert([memberData]);
 
       if (error) throw error;
 
