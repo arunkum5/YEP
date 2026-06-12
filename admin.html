@@ -1319,6 +1319,60 @@
       gap: 4px;
     }
   }
+
+  /* ── ADMIN MANAGEMENT FOOTER BUTTONS & PASSWORD FIELDS ── */
+  .btn-sidebar-footer {
+    width: 100%;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .btn-sidebar-footer:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(244, 196, 48, 0.05);
+    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.1);
+  }
+  .password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .password-input-container .form-control {
+    padding-right: 40px;
+  }
+  .password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    z-index: 5;
+    transition: color 0.2s;
+  }
+  .password-toggle-btn:hover {
+    color: var(--gold);
+  }
 </style>
 </head>
 <body>
@@ -1339,7 +1393,10 @@
       </div>
       <div class="form-group">
         <label for="admin-password">Password / ಪಾಸ್‌ವರ್ಡ್</label>
-        <input type="password" id="admin-password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+        <div class="password-input-container">
+          <input type="password" id="admin-password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('admin-password', this)">👁️</button>
+        </div>
       </div>
       <button type="submit" class="btn-submit">Sign In Securely</button>
       <div class="error-message" id="login-error">Invalid email or password. Please try again.</div>
@@ -1369,8 +1426,14 @@
         <span class="nav-icon">⚙️</span> DB Settings / ಸೆಟ್ಟಿಂಗ್ಸ್
       </button>
     </nav>
-    <div class="sidebar-footer">
-      <button class="btn-signout" onclick="handleSignOut()">
+    <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 4px;">
+      <button class="btn-sidebar-footer" onclick="openChangePasswordModal()" id="btn-sidebar-change-password">
+        <span class="nav-icon">🔑</span> Change Password
+      </button>
+      <button class="btn-sidebar-footer" onclick="openAddAdminModal()" id="btn-sidebar-add-admin">
+        <span class="nav-icon">👤</span> Add Admin User
+      </button>
+      <button class="btn-signout" onclick="handleSignOut()" style="margin-top: 4px;">
         <span class="nav-icon">🚪</span> Sign Out
       </button>
     </div>
@@ -1752,6 +1815,64 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   </div>
 </div>
 
+<!-- CHANGE PASSWORD MODAL -->
+<div class="details-modal-overlay" id="change-password-modal" onclick="closeChangePasswordModal()">
+  <div class="details-modal-content" onclick="event.stopPropagation()" style="grid-template-columns: 1fr; max-width: 450px; padding: 40px 30px;">
+    <button class="btn-close-details" onclick="closeChangePasswordModal()">✕</button>
+    <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; color: white; margin-bottom: 24px; text-align: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">🔑 Change Password</h3>
+    <form id="change-password-form" onsubmit="handleChangePassword(event)">
+      <div class="form-group">
+        <label for="change-new-password">New Password / ಹೊಸ ಪಾಸ್‌ವರ್ಡ್</label>
+        <div class="password-input-container">
+          <input type="password" id="change-new-password" class="form-control" placeholder="Enter new password" required>
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('change-new-password', this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="change-confirm-password">Confirm Password / ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ</label>
+        <div class="password-input-container">
+          <input type="password" id="change-confirm-password" class="form-control" placeholder="Confirm new password" required>
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('change-confirm-password', this)">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit" style="margin-top: 10px;">Update Password</button>
+      <div class="error-message" id="change-password-error"></div>
+      <div style="color: #4caf50; font-size: 0.85rem; margin-top: 12px; text-align: center; display: none; padding: 8px; background: rgba(76,175,80,0.1); border-radius: 4px; border: 1.5px solid rgba(76,175,80,0.2);" id="change-password-success"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ADD ADMIN USER MODAL -->
+<div class="details-modal-overlay" id="add-admin-modal" onclick="closeAddAdminModal()">
+  <div class="details-modal-content" onclick="event.stopPropagation()" style="grid-template-columns: 1fr; max-width: 450px; padding: 40px 30px;">
+    <button class="btn-close-details" onclick="closeAddAdminModal()">✕</button>
+    <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; color: white; margin-bottom: 24px; text-align: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">👤 Add Admin User</h3>
+    <form id="add-admin-form" onsubmit="handleAddAdmin(event)">
+      <div class="form-group">
+        <label for="add-admin-email">Admin Email / ಇಮೇಲ್</label>
+        <input type="email" id="add-admin-email" class="form-control" placeholder="Enter new admin email" required>
+      </div>
+      <div class="form-group">
+        <label for="add-admin-password">Password / ಪಾಸ್‌ವರ್ಡ್</label>
+        <div class="password-input-container">
+          <input type="password" id="add-admin-password" class="form-control" placeholder="Enter password" required>
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('add-admin-password', this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="add-admin-confirm-password">Confirm Password / ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ</label>
+        <div class="password-input-container">
+          <input type="password" id="add-admin-confirm-password" class="form-control" placeholder="Confirm password" required>
+          <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('add-admin-confirm-password', this)">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit" style="margin-top: 10px;">Create Admin Account</button>
+      <div class="error-message" id="add-admin-error"></div>
+      <div style="color: #4caf50; font-size: 0.85rem; margin-top: 12px; text-align: center; display: none; padding: 8px; background: rgba(76,175,80,0.1); border-radius: 4px; border: 1.5px solid rgba(76,175,80,0.2);" id="add-admin-success"></div>
+    </form>
+  </div>
+</div>
+
 <!-- SUPABASE CLIENT SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1857,12 +1978,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     errorEl.style.display = 'none';
 
     if (!supabaseClient) {
-      // If running mock mode
-      if (email === "admin@yep.com" && password === "admin123") {
+      // Mock mode auth check
+      const defaultAdminPassword = localStorage.getItem('mockAdminPassword') || 'admin123';
+      let mockAdmins = JSON.parse(localStorage.getItem('mockAdmins') || '[]');
+      
+      const isDefaultAdmin = email === "admin@yep.com" && password === defaultAdminPassword;
+      const isCustomAdmin = mockAdmins.some(a => a.email === email && a.password === password);
+      
+      if (isDefaultAdmin || isCustomAdmin) {
         toggleView(true);
         loadMockupData();
       } else {
-        errorEl.textContent = "Mock login details: use admin@yep.com / admin123";
+        errorEl.textContent = `Invalid mock email or password. Hint: admin@yep.com / ${defaultAdminPassword}`;
         errorEl.style.display = 'block';
       }
       return;
@@ -3333,6 +3460,179 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
           onComplete();
         }
       }
+    }
+  }
+
+  /* ── ADMIN MANAGEMENT LOGIC ── */
+  function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁️';
+    }
+  }
+
+  function openChangePasswordModal() {
+    document.getElementById('change-password-error').style.display = 'none';
+    document.getElementById('change-password-success').style.display = 'none';
+    document.getElementById('change-password-form').reset();
+    
+    document.getElementById('change-new-password').type = 'password';
+    document.getElementById('change-confirm-password').type = 'password';
+    const toggleBtns = document.querySelectorAll('#change-password-modal .password-toggle-btn');
+    toggleBtns.forEach(btn => btn.textContent = '👁️');
+
+    document.getElementById('change-password-modal').classList.add('active');
+  }
+
+  function closeChangePasswordModal() {
+    document.getElementById('change-password-modal').classList.remove('active');
+  }
+
+  function openAddAdminModal() {
+    document.getElementById('add-admin-error').style.display = 'none';
+    document.getElementById('add-admin-success').style.display = 'none';
+    document.getElementById('add-admin-form').reset();
+    
+    document.getElementById('add-admin-password').type = 'password';
+    document.getElementById('add-admin-confirm-password').type = 'password';
+    const toggleBtns = document.querySelectorAll('#add-admin-modal .password-toggle-btn');
+    toggleBtns.forEach(btn => btn.textContent = '👁️');
+
+    document.getElementById('add-admin-modal').classList.add('active');
+  }
+
+  function closeAddAdminModal() {
+    document.getElementById('add-admin-modal').classList.remove('active');
+  }
+
+  async function handleChangePassword(e) {
+    e.preventDefault();
+    const newPassword = document.getElementById('change-new-password').value;
+    const confirmPassword = document.getElementById('change-confirm-password').value;
+    const errorEl = document.getElementById('change-password-error');
+    const successEl = document.getElementById('change-password-success');
+
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    if (newPassword !== confirmPassword) {
+      errorEl.textContent = "Passwords do not match!";
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      errorEl.textContent = "Password must be at least 6 characters long.";
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (!supabaseClient) {
+      // Mock mode
+      localStorage.setItem('mockAdminPassword', newPassword);
+      successEl.textContent = "Mock admin password updated successfully! (No database residues)";
+      successEl.style.display = 'block';
+      setTimeout(() => {
+        closeChangePasswordModal();
+      }, 2000);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
+      if (error) {
+        errorEl.textContent = error.message;
+        errorEl.style.display = 'block';
+      } else {
+        successEl.textContent = "Password updated successfully!";
+        successEl.style.display = 'block';
+        setTimeout(() => {
+          closeChangePasswordModal();
+        }, 2000);
+      }
+    } catch (err) {
+      errorEl.textContent = "Network error. Please try again.";
+      errorEl.style.display = 'block';
+    }
+  }
+
+  async function handleAddAdmin(e) {
+    e.preventDefault();
+    const email = document.getElementById('add-admin-email').value.trim();
+    const password = document.getElementById('add-admin-password').value;
+    const confirmPassword = document.getElementById('add-admin-confirm-password').value;
+    const errorEl = document.getElementById('add-admin-error');
+    const successEl = document.getElementById('add-admin-success');
+
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    if (password !== confirmPassword) {
+      errorEl.textContent = "Passwords do not match!";
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (password.length < 6) {
+      errorEl.textContent = "Password must be at least 6 characters long.";
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    if (!supabaseClient) {
+      // Mock mode
+      let mockAdmins = JSON.parse(localStorage.getItem('mockAdmins') || '[]');
+      if (mockAdmins.some(a => a.email === email) || email === "admin@yep.com") {
+        errorEl.textContent = "Admin user with this email already exists in mockup storage.";
+        errorEl.style.display = 'block';
+        return;
+      }
+      mockAdmins.push({ email, password });
+      localStorage.setItem('mockAdmins', JSON.stringify(mockAdmins));
+      successEl.textContent = `Mock admin user "${email}" created successfully!`;
+      successEl.style.display = 'block';
+      setTimeout(() => {
+        closeAddAdminModal();
+      }, 2000);
+      return;
+    }
+
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        errorEl.textContent = "Unauthorized: No active admin session found.";
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const token = session.access_token;
+      const response = await fetch('/api/create-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        errorEl.textContent = result.error || "Failed to create admin user.";
+        errorEl.style.display = 'block';
+      } else {
+        successEl.textContent = `Admin user "${email}" created successfully!`;
+        successEl.style.display = 'block';
+        setTimeout(() => {
+          closeAddAdminModal();
+        }, 2000);
+      }
+    } catch (err) {
+      errorEl.textContent = "Network error. Please try again.";
+      errorEl.style.display = 'block';
     }
   }
 

@@ -161,9 +161,81 @@ async function runTests() {
   await Promise.all(deletePromises);
   const deleteDuration = Date.now() - deleteStartTime;
   console.log(`✅ Successfully deleted 10 files concurrently in ${deleteDuration}ms (~${Math.round(10 / (deleteDuration / 1000))} deletions/sec)`);
+  // 8. Test Admin User Creation (POST /api/create-admin)
+  console.log("\n🧪 Test 8: Admin User Creation (POST /api/create-admin) - Security & Mock Verification");
   
+  // A. Unauthorized (no token)
+  const noTokenRes = await fetch(`${BASE_URL}/api/create-admin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: "test_new_admin@yep.com", password: "password123" })
+  });
+  console.log(`Status code (expected 401): ${noTokenRes.status}`);
+  if (noTokenRes.status !== 401) {
+    throw new Error(`Expected status 401 for unauthorized admin creation, got ${noTokenRes.status}`);
+  }
+  
+  // B. Authorized mock registration
+  const mockCreateRes = await fetch(`${BASE_URL}/api/create-admin`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer mock_admin_token'
+    },
+    body: JSON.stringify({ email: "test_new_admin@yep.com", password: "password123" })
+  });
+  console.log(`Status code (expected 200): ${mockCreateRes.status}`);
+  if (mockCreateRes.status !== 200) {
+    const errText = await mockCreateRes.text();
+    throw new Error(`Expected status 200 for mock admin creation, got ${mockCreateRes.status}: ${errText}`);
+  }
+  
+  const createResult = await mockCreateRes.json();
+  console.log("Create Admin Response:", createResult);
+  if (!createResult.success || !createResult.user || createResult.user.email !== "test_new_admin@yep.com") {
+    throw new Error("Invalid admin creation response structure or email mismatch!");
+  }
+  
+  // C. Test Validation - Invalid Email format (expected 400)
+  console.log("\n🧪 Test 8C: Input validation - Invalid Email format");
+  const invalidEmailRes = await fetch(`${BASE_URL}/api/create-admin`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer mock_admin_token'
+    },
+    body: JSON.stringify({ email: "invalid-email-format", password: "password123" })
+  });
+  console.log(`Status code (expected 400): ${invalidEmailRes.status}`);
+  if (invalidEmailRes.status !== 400) {
+    throw new Error(`Expected status 400 for invalid email, got ${invalidEmailRes.status}`);
+  }
+  const invalidEmailText = await invalidEmailRes.text();
+  console.log("Response text (expected invalid format error):", invalidEmailText);
+
+  // D. Test Validation - Weak/Short Password (expected 400)
+  console.log("\n🧪 Test 8D: Input validation - Weak/Short Password");
+  const weakPasswordRes = await fetch(`${BASE_URL}/api/create-admin`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer mock_admin_token'
+    },
+    body: JSON.stringify({ email: "valid@yep.com", password: "123" })
+  });
+  console.log(`Status code (expected 400): ${weakPasswordRes.status}`);
+  if (weakPasswordRes.status !== 400) {
+    throw new Error(`Expected status 400 for weak password, got ${weakPasswordRes.status}`);
+  }
+  const weakPasswordText = await weakPasswordRes.text();
+  console.log("Response text (expected password length error):", weakPasswordText);
+
+  console.log("✅ Admin User Creation API passed successfully (zero residue).");
+
   console.log("\n🎉 ALL BACKEND API TESTS PASSED SUCCESSFULLY! 🎉\n");
+
 }
+
 
 async function main() {
   console.log("🚀 Launching local Wrangler Dev Server...");
