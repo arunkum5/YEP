@@ -2055,6 +2055,24 @@
 
             } catch (dbErr) {
               console.error(dbErr);
+              if (dbErr.code === "23505") {
+                try {
+                  const { data: existingMember } = await supabaseClient
+                    .from('members')
+                    .select('id, payment_id')
+                    .eq('phone', phone)
+                    .maybeSingle();
+
+                  if (existingMember && existingMember.payment_id === paymentResponse.razorpay_payment_id) {
+                    console.log("Database entry already created by webhook. Proceeding to success UI.");
+                    showSuccessUI(name, phone, district, taluk, photoUrl);
+                    return;
+                  }
+                } catch (checkErr) {
+                  console.error("Failed to query duplicate record status:", checkErr);
+                }
+              }
+
               let friendlyMsg = dbErr.message || "Database insert failed.";
               if (dbErr.code === "23505") {
                 const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';

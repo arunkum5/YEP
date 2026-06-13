@@ -1,3 +1,4 @@
+// Force fresh build to load new R2 bindings
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
