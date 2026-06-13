@@ -1988,17 +1988,47 @@
           amount_paid: 0.00
         };
 
-        const { data: insertData, error: dbError } = await supabaseClient
-          .from('members')
-          .insert([memberData])
-          .select();
+        let savedMemberUuid = null;
+        
+        try {
+          const { data: insertData, error: dbError } = await supabaseClient
+            .from('members')
+            .insert([memberData])
+            .select();
 
-        if (dbError) throw dbError;
-        if (!insertData || insertData.length === 0) {
-          throw new Error("Failed to retrieve saved member details.");
+          if (dbError) throw dbError;
+          if (!insertData || insertData.length === 0) {
+            throw new Error("Failed to retrieve saved member details.");
+          }
+          savedMemberUuid = insertData[0].id;
+        } catch (dbError) {
+          if (dbError.code === "23505") {
+            // Query to see if the existing duplicate record is pending
+            const { data: existingMember, error: fetchError } = await supabaseClient
+              .from('members')
+              .select('id, payment_status')
+              .or(`phone.eq.${phone},aadhaar.eq.${secureAadhaarPayload}`)
+              .maybeSingle();
+
+            if (!fetchError && existingMember && existingMember.payment_status === 'pending') {
+              console.log("Existing member is in pending status. Overwriting details and reusing ID: " + existingMember.id);
+              savedMemberUuid = existingMember.id;
+              
+              // Overwrite details of the pending record
+              const { error: updateError } = await supabaseClient
+                .from('members')
+                .update(memberData)
+                .eq('id', savedMemberUuid);
+
+              if (updateError) throw updateError;
+            } else {
+              // It's a real duplicate of an already paid member, or query failed. Throw the error.
+              throw dbError;
+            }
+          } else {
+            throw dbError;
+          }
         }
-
-        const savedMemberUuid = insertData[0].id;
 
         // 3. Initialize Payment Gateway order, passing the member UUID in notes
         const checkoutRes = await fetch('/api/create-checkout', {
