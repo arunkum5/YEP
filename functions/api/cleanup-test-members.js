@@ -25,7 +25,7 @@ export async function onRequestPost(context) {
     const results = [];
 
     for (const prefix of prefixes) {
-      const deleteRes = await fetch(`${supabaseUrl}/rest/v1/members?phone=like.${prefix}%`, {
+      const deleteRes = await fetch(`${supabaseUrl}/rest/v1/members?phone=like.${prefix}%25`, {
         method: 'DELETE',
         headers: {
           'apikey': supabaseKey,
