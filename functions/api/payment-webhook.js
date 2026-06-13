@@ -39,111 +39,97 @@ export async function onRequestPost(context) {
       const paymentEntity = body.payload.payment.entity;
       const notes = paymentEntity.notes || {};
 
-      // If webhook has valid registration notes, insert to Supabase as fallback
+      // If webhook has valid registration notes
       if (notes.phone && notes.name && notes.aadhaar) {
-      const supabaseUrl = env.SUPABASE_URL || 'https://hqaimprjdejeklrtntfz.supabase.co';
-      const supabaseKey = env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
+        const supabaseUrl = env.SUPABASE_URL || 'https://hqaimprjdejeklrtntfz.supabase.co';
+        const supabaseKey = env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
 
-      if (notes.member_uuid) {
-        // Update the existing pending member record to 'paid'
-        const updateRes = await fetch(`${supabaseUrl}/rest/v1/members?id=eq.${encodeURIComponent(notes.member_uuid)}`, {
-          method: "PATCH",
-          headers: {
-            "apikey": supabaseKey,
-            "Authorization": `Bearer ${supabaseKey}`,
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal"
-          },
-          body: JSON.stringify({
-            payment_status: 'paid',
-            payment_id: paymentEntity.id,
-            amount_paid: paymentEntity.amount / 100 // Convert paise to INR
-          })
-        });
-
-        if (updateRes.ok) {
-          // Trigger WhatsApp welcome message
-          const requestUrl = new URL(request.url);
-          const domain = `${requestUrl.protocol}//${requestUrl.host}`;
-          
-          try {
-            await fetch(`${domain}/api/send-whatsapp`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                phone: notes.phone,
-                name: notes.name
-              })
-            });
-          } catch (waErr) {
-            console.error("Webhook failed to trigger WhatsApp message: ", waErr);
-          }
-        } else {
-          const updateErrText = await updateRes.text();
-          console.error("Webhook failed to update member payment details: ", updateErrText);
-        }
-      }
-      // Fallback: If webhook contains full registration notes but no UUID, check and insert (old path)
-      else if (notes.phone && notes.name && notes.aadhaar) {
-        // Check if member already exists
-        const checkRes = await fetch(`${supabaseUrl}/rest/v1/members?phone=eq.${encodeURIComponent(notes.phone)}&select=id`, {
-          method: "GET",
-          headers: {
-            "apikey": supabaseKey,
-            "Authorization": `Bearer ${supabaseKey}`
-          }
-        });
-
-        const checkData = await checkRes.json();
-
-        // If member doesn't exist yet, insert them
-        if (checkRes.ok && (!checkData || checkData.length === 0)) {
-          const insertRes = await fetch(`${supabaseUrl}/rest/v1/members`, {
-            method: "POST",
+        // Check if member already exists (supports both UUID note or lookup by phone)
+        let checkRes;
+        if (notes.member_uuid) {
+          checkRes = await fetch(`${supabaseUrl}/rest/v1/members?id=eq.${encodeURIComponent(notes.member_uuid)}&select=id,payment_status`, {
+            method: "GET",
             headers: {
               "apikey": supabaseKey,
-              "Authorization": `Bearer ${supabaseKey}`,
-              "Content-Type": "application/json",
-              "Prefer": "return=minimal"
-            },
-            body: JSON.stringify({
-              name: notes.name,
-              phone: notes.phone,
-              aadhaar: notes.aadhaar,
-              qualification: notes.qualification || null,
-              state: notes.state || 'Karnataka',
-              district: notes.district,
-              taluk: notes.taluk,
-              village: notes.village || null,
-              photo_url: notes.photo_url,
-              approved: false,
-              payment_status: 'paid',
-              payment_id: paymentEntity.id,
-              amount_paid: paymentEntity.amount / 100
-            })
+              "Authorization": `Bearer ${supabaseKey}`
+            }
           });
+        } else {
+          checkRes = await fetch(`${supabaseUrl}/rest/v1/members?phone=eq.${encodeURIComponent(notes.phone)}&select=id,payment_status`, {
+            method: "GET",
+            headers: {
+              "apikey": supabaseKey,
+              "Authorization": `Bearer ${supabaseKey}`
+            }
+          });
+        }
 
-          if (insertRes.ok) {
-            // Trigger WhatsApp welcome message
-            const requestUrl = new URL(request.url);
-            const domain = `${requestUrl.protocol}//${requestUrl.host}`;
-            
-            try {
-              await fetch(`${domain}/api/send-whatsapp`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+        if (checkRes.ok) {
+          const checkData = await checkRes.json();
+          if (checkData && checkData.length > 0) {
+            const existingMember = checkData[0];
+            // If the existing record is not paid, update it to paid
+            if (existingMember.payment_status !== 'paid') {
+              const updateRes = await fetch(`${supabaseUrl}/rest/v1/members?id=eq.${encodeURIComponent(existingMember.id)}`, {
+                method: "PATCH",
+                headers: {
+                  "apikey": supabaseKey,
+                  "Authorization": `Bearer ${supabaseKey}`,
+                  "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
-                  phone: notes.phone,
-                  name: notes.name
+                  payment_status: 'paid',
+                  payment_id: paymentEntity.id,
+                  amount_paid: paymentEntity.amount / 100 // Convert paise to INR
                 })
               });
-            } catch (waErr) {
-              console.error("Webhook failed to trigger WhatsApp message: ", waErr);
+
+              if (updateRes.ok) {
+                // Trigger WhatsApp welcome message
+                await triggerWhatsApp(notes.phone, notes.name, request.url);
+              } else {
+                const updateErrText = await updateRes.text();
+                console.error("Webhook failed to update member payment details: ", updateErrText);
+              }
             }
           } else {
-            const insertErrText = await insertRes.text();
-            console.error("Webhook failed to insert member: ", insertErrText);
+            // Member does not exist, insert them as paid
+            const insertRes = await fetch(`${supabaseUrl}/rest/v1/members`, {
+              method: "POST",
+              headers: {
+                "apikey": supabaseKey,
+                "Authorization": `Bearer ${supabaseKey}`,
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal"
+              },
+              body: JSON.stringify({
+                name: notes.name,
+                phone: notes.phone,
+                aadhaar: notes.aadhaar,
+                qualification: notes.qualification || null,
+                state: notes.state || 'Karnataka',
+                district: notes.district,
+                taluk: notes.taluk,
+                village: notes.village || null,
+                photo_url: notes.photo_url,
+                approved: false,
+                payment_status: 'paid',
+                payment_id: paymentEntity.id,
+                amount_paid: paymentEntity.amount / 100
+              })
+            });
+
+            if (insertRes.ok) {
+              // Trigger WhatsApp welcome message
+              await triggerWhatsApp(notes.phone, notes.name, request.url);
+            } else {
+              const insertErrText = await insertRes.text();
+              console.error("Webhook failed to insert member: ", insertErrText);
+            }
           }
+        } else {
+          const checkErrText = await checkRes.text();
+          console.error("Webhook failed to query database: ", checkErrText);
         }
       }
     }
@@ -168,4 +154,22 @@ function hexToBytes(hex) {
     bytes.push(parseInt(hex.substr(c, 2), 16));
   }
   return new Uint8Array(bytes);
+}
+
+// Helper: Trigger WhatsApp Welcome Message
+async function triggerWhatsApp(phone, name, requestUrlStr) {
+  try {
+    const requestUrl = new URL(requestUrlStr);
+    const domain = `${requestUrl.protocol}//${requestUrl.host}`;
+    await fetch(`${domain}/api/send-whatsapp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        phone: phone,
+        name: name
+      })
+    });
+  } catch (waErr) {
+    console.error("Webhook failed to trigger WhatsApp message:", waErr);
+  }
 }

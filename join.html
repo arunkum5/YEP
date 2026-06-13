@@ -1971,66 +1971,24 @@
     // Check if payment requirement is enabled
     if (paymentRequired) {
       try {
-        // 2. Insert member record to Supabase first as 'pending'
-        const memberData = {
-          name: name,
-          phone: phone,
-          aadhaar: secureAadhaarPayload,
-          qualification: qualification || null,
-          state: stateVal,
-          district: district,
-          taluk: taluk,
-          village: village || null,
-          photo_url: photoUrl,
-          approved: false,
-          payment_status: 'pending',
-          payment_id: 'pending_checkout',
-          amount_paid: 0.00
-        };
+        // 1. Check if member already successfully registered (paid or free status)
+        const { data: existingMember, error: fetchError } = await supabaseClient
+          .from('members')
+          .select('id, payment_status')
+          .or(`phone.eq.${phone},aadhaar.eq.${secureAadhaarPayload}`)
+          .maybeSingle();
 
-        let savedMemberUuid = null;
-        
-        try {
-          const { data: insertData, error: dbError } = await supabaseClient
-            .from('members')
-            .insert([memberData])
-            .select();
-
-          if (dbError) throw dbError;
-          if (!insertData || insertData.length === 0) {
-            throw new Error("Failed to retrieve saved member details.");
-          }
-          savedMemberUuid = insertData[0].id;
-        } catch (dbError) {
-          if (dbError.code === "23505") {
-            // Query to see if the existing duplicate record is pending
-            const { data: existingMember, error: fetchError } = await supabaseClient
-              .from('members')
-              .select('id, payment_status')
-              .or(`phone.eq.${phone},aadhaar.eq.${secureAadhaarPayload}`)
-              .maybeSingle();
-
-            if (!fetchError && existingMember && existingMember.payment_status === 'pending') {
-              console.log("Existing member is in pending status. Overwriting details and reusing ID: " + existingMember.id);
-              savedMemberUuid = existingMember.id;
-              
-              // Overwrite details of the pending record
-              const { error: updateError } = await supabaseClient
-                .from('members')
-                .update(memberData)
-                .eq('id', savedMemberUuid);
-
-              if (updateError) throw updateError;
-            } else {
-              // It's a real duplicate of an already paid member, or query failed. Throw the error.
-              throw dbError;
-            }
-          } else {
-            throw dbError;
+        if (!fetchError && existingMember) {
+          if (existingMember.payment_status === 'paid' || existingMember.payment_status === 'free') {
+            const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+            let duplicateMsg = activeLang === 'kn'
+              ? "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಆಧಾರ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ."
+              : "A member with this mobile number or Aadhaar number is already registered.";
+            throw new Error(duplicateMsg);
           }
         }
 
-        // 3. Initialize Payment Gateway order, passing the member UUID in notes
+        // 2. Initialize Payment Gateway order, passing the full registration details in notes
         const checkoutRes = await fetch('/api/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2040,9 +1998,15 @@
             phone: phone,
             name: name,
             notes: {
-              member_uuid: savedMemberUuid,
               name: name,
-              phone: phone
+              phone: phone,
+              aadhaar: secureAadhaarPayload,
+              qualification: qualification || '',
+              state: stateVal || '',
+              district: district || '',
+              taluk: taluk || '',
+              village: village || '',
+              photo_url: photoUrl || ''
             }
           })
         });
@@ -2067,19 +2031,47 @@
           order_id: checkoutData.order.id,
           handler: async function (paymentResponse) {
             try {
-              // 4. Update member record to 'paid' in Supabase
-              const { error: updateError } = await supabaseClient
+              // 3. Insert member record to Supabase as 'paid'
+              const memberData = {
+                name: name,
+                phone: phone,
+                aadhaar: secureAadhaarPayload,
+                qualification: qualification || null,
+                state: stateVal,
+                district: district,
+                taluk: taluk,
+                village: village || null,
+                photo_url: photoUrl,
+                approved: false,
+                payment_status: 'paid',
+                payment_id: paymentResponse.razorpay_payment_id,
+                amount_paid: 99.00
+              };
+
+              const { error: dbError } = await supabaseClient
                 .from('members')
-                .update({
-                  payment_status: 'paid',
-                  payment_id: paymentResponse.razorpay_payment_id,
-                  amount_paid: 99.00
-                })
-                .eq('id', savedMemberUuid);
+                .insert([memberData]);
 
-              if (updateError) throw updateError;
+              if (dbError) {
+                // If it fails with duplicate key, check if webhook already inserted it
+                if (dbError.code === "23505") {
+                  const { data: verifiedMember, error: verifyError } = await supabaseClient
+                    .from('members')
+                    .select('id, payment_status')
+                    .or(`phone.eq.${phone},aadhaar.eq.${secureAadhaarPayload}`)
+                    .maybeSingle();
 
-              // 5. Trigger WhatsApp welcome message
+                  if (!verifyError && verifiedMember && verifiedMember.payment_status === 'paid') {
+                    console.log("Member was already successfully inserted by webhook:", verifiedMember.id);
+                  } else {
+                    throw dbError; // Real error
+                  }
+                } else {
+                  throw dbError;
+                }
+              }
+
+              // 4. Trigger WhatsApp welcome message
               try {
                 await fetch('/api/send-whatsapp', {
                   method: 'POST',
@@ -2112,7 +2104,7 @@
           },
           modal: {
             ondismiss: function () {
-              alert("Checkout closed. Your registration details are saved, but your membership card will remain inactive until payment is completed.");
+              alert("Checkout closed. Your registration details were not saved. Please try again to complete your registration.");
               submitBtn.disabled = false;
               submitBtn.innerHTML = originalContent;
             }
