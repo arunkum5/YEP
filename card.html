@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YEP Membership Card / ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್</title>
+  
+  <!-- GOOGLE FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&family=Tiro+Kannada&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --saffron: #FF6B00;
+      --deep-saffron: #E05500;
+      --white: #FFFFFF;
+      --green: #138808;
+      --dark-green: #0A5C06;
+      --navy: #1A237E;
+      --gold: #F4C430;
+      --dark-gold: #C9A227;
+      --charcoal: #1C1C2E;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--charcoal);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Background Glowing Stars & Effects */
+    #starfield {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(circle at center, #26223e 0%, #121020 100%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 10;
+    }
+
+    /* PREMIUM CARD DESIGN */
+    .membership-card {
+      background: linear-gradient(180deg, #FFD54F 0%, #FFC107 35%, #D84315 70%, #B71C1C 100%);
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 380px;
+      min-height: 610px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244,196,48,0.15);
+      overflow: hidden;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .membership-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+      background: linear-gradient(to right, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+    }
+    
+    .membership-card.pending-watermark::after {
+      content: 'PENDING VERIFICATION';
+      position: absolute; top: 55%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: rgba(255, 82, 82, 0.15);
+      white-space: nowrap;
+      pointer-events: none;
+      border: 4px dashed rgba(255, 82, 82, 0.15);
+      padding: 8px 16px;
+      letter-spacing: 2px;
+      border-radius: 8px;
+      z-index: 10;
+    }
+    
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+    .card-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-logo img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    .card-title-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .card-title-main {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #1a1a1a;
+    }
+    .card-title-main-kn {
+      font-family: 'Tiro Kannada', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-top: 1px;
+    }
+    .card-title-sub {
+      font-size: 0.75rem;
+      color: #5d0000;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .card-leader-info {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.35;
+      margin-top: 5px;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+    .card-leader-info-kn {
+      font-family: 'Tiro Kannada', serif;
+      font-size: 0.72rem;
+      display: block;
+      margin-top: 2px;
+    }
+    .card-badge {
+      margin-top: 8px;
+      background: rgba(244,196,48,0.1);
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .card-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 12px;
+      border: 3px solid var(--gold);
+      overflow: hidden;
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+    .card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      text-align: center;
+    }
+    .card-field.name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      word-break: break-word;
+    }
+    .card-details-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      padding-left: 10px;
+    }
+    .card-field {
+      margin-bottom: 2px;
+    }
+    .card-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.95);
+    }
+    .card-id-highlight {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+
+    .card-footer {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+    .card-seal {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.4;
+    }
+    .card-seal span {
+      color: #FFEB3B;
+      font-size: 0.65rem;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Actions UI */
+    .actions-box {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .btn-action {
+      width: 100%;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(19, 136, 8, 0.25);
+    }
+    .btn-action:hover:not(:disabled) {
+      background: var(--dark-green);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(19, 136, 8, 0.35);
+    }
+    .btn-action:disabled {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.3);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-home {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      text-decoration: none;
+    }
+    .btn-home:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Notice and State boxes */
+    .success-notice-box {
+      width: 100%;
+      background: rgba(244, 196, 48, 0.05);
+      border: 1px solid rgba(244, 196, 48, 0.15);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      box-sizing: border-box;
+    }
+    .notice-icon {
+      font-size: 1.5rem;
+    }
+    .notice-content {
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.8);
+    }
+    .notice-content div:last-child {
+      margin-top: 4px;
+      color: var(--gold);
+    }
+
+    /* Loading Spinner */
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(244,196,48,0.1);
+      border-top: 5px solid var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-card {
+      background: rgba(255, 82, 82, 0.05);
+      border: 1.5px solid rgba(255, 82, 82, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      max-width: 380px;
+      width: 100%;
+    }
+    .error-title {
+      color: #FF5252;
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="starfield"></div>
+
+  <div class="container">
+    
+    <!-- LOADING STATE -->
+    <div id="loading-state" class="loader">
+      <div class="spinner"></div>
+      <p style="font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.5px;">Retrieving Membership Card...</p>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div id="error-state" class="error-card" style="display: none;">
+      <div class="error-title">Card Not Found / ಸದಸ್ಯತ್ವ ಸಿಕ್ಕಿಲ್ಲ</div>
+      <p style="font-size:0.9rem; color:rgba(255,255,255,0.7); margin-bottom: 20px; line-height: 1.5;">
+        Unable to find a valid membership with the provided ID. Please verify the link or register as a member.
+      </p>
+      <a href="join.html" class="btn-action">✊ Register Now / ಸದಸ್ಯರಾಗಿ</a>
+    </div>
+
+    <!-- CARD CONTENT STATE -->
+    <div id="card-state" style="display: none; width:100%; flex-direction:column; align-items:center; gap:24px;">
+      
+      <!-- Membership Card mockup -->
+      <div class="membership-card pending-watermark" id="retrieved-card">
+        <div class="card-header">
+          <div class="card-logo">
+            <img src="yep_leader_seal.png" alt="YEP logo">
+            <div class="card-title-wrap">
+              <span class="card-title-main">YoungSTAR PARTY</span>
+              <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
+              <div class="card-leader-info">
+                K N Jagadish Kumar – Advocate – High Court of Delhi<br>
+                <span class="card-leader-info-kn">ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್</span>
+              </div>
+              <span class="card-title-sub">YEP KARNATAKA MEMBERSHIP CARD</span>
+            </div>
+          </div>
+          <div class="card-badge" id="retrieved-status-badge">MEMBER</div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-avatar">
+            <img id="retrieved-photo" src="yep_leader_seal.png" alt="Member Photo">
+          </div>
+          <div class="card-info">
+            <div class="card-field name" id="retrieved-name-val">Loading Name</div>
+            
+            <div class="card-details-grid">
+              <div class="card-field">
+                <div class="card-label">Member ID</div>
+                <div class="card-val card-id-highlight" id="retrieved-id-val">PENDING VERIFICATION</div>
+              </div>
+
+              <div class="card-field">
+                <div class="card-label">Mobile Phone</div>
+                <div class="card-val" id="retrieved-phone-val">N/A</div>
+              </div>
+
+              <div class="card-field">
+                <div class="card-label">District &amp; Taluk</div>
+                <div class="card-val" id="retrieved-location-val">N/A</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-seal">
+            YoungSTAR Empowerment Party · @2026<br>
+            <span>Youth Power – Our Strength – Our Future</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Verification Notice Box -->
+      <div class="success-notice-box" id="pending-notice-box" style="display: none;">
+        <div class="notice-icon">⏱️</div>
+        <div class="notice-content">
+          <div>Your membership application is currently under review by party administrators.</div>
+          <div>ನಿಮ್ಮ ಸದಸ್ಯತ್ವದ ಅರ್ಜಿಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ.</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions-box">
+        <button type="button" class="btn-action" id="download-btn">
+          📥 <span>Download Card / ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್</span>
+        </button>
+        <a href="index.html" class="btn-action btn-home">
+          🏠 <span>Return to Home / ಮುಖಪುಟಕ್ಕೆ</span>
+        </a>
+      </div>
+      
+    </div>
+
+  </div>
+
+  <!-- SUPABASE CLIENT SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // SUPABASE CONFIGURATION
+    const SUPABASE_URL = 'https://hqaimprjdejeklrtntfz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentMemberData = null;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      // 1. Parse 'id' parameter from query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const memberId = urlParams.get('id');
+
+      if (!memberId) {
+        showErrorState();
+        return;
+      }
+
+      // 2. Fetch member from Supabase by UUID
+      try {
+        const { data, error } = await supabaseClient
+          .from('members')
+          .select('*')
+          .eq('id', memberId)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!data) {
+          showErrorState();
+          return;
+        }
+
+        currentMemberData = data;
+        renderCard(data);
+        showCardState();
+      } catch (err) {
+        console.error("Failed to load member:", err);
+        showErrorState();
+      }
+    });
+
+    function showErrorState() {
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('error-state').style.display = 'block';
+    }
+
+    function showCardState() {
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('card-state').style.display = 'flex';
+    }
+
+    function renderCard(member) {
+      const cardEl = document.getElementById('retrieved-card');
+      const statusBadge = document.getElementById('retrieved-status-badge');
+      const downloadBtn = document.getElementById('download-btn');
+      const pendingNotice = document.getElementById('pending-notice-box');
+
+      // Fill in details
+      document.getElementById('retrieved-photo').src = member.photo_url || "yep_leader_seal.png";
+      document.getElementById('retrieved-name-val').textContent = member.name;
+      document.getElementById('retrieved-phone-val').textContent = member.phone;
+      
+      const district = member.district ? member.district.split('/')[0].trim() : 'N/A';
+      const taluk = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
+      document.getElementById('retrieved-location-val').textContent = `${district} · ${taluk}`;
+
+      if (member.approved) {
+        cardEl.classList.remove('pending-watermark');
+        document.getElementById('retrieved-id-val').textContent = member.member_id || `YEP-KA-${String(member.id).substring(0, 8).toUpperCase()}`;
+        document.getElementById('retrieved-id-val').style.color = 'var(--gold)';
+
+        statusBadge.style.background = 'rgba(76, 175, 80, 0.1)';
+        statusBadge.style.borderColor = '#4CAF50';
+        statusBadge.style.color = '#4CAF50';
+        statusBadge.textContent = '✓ APPROVED';
+
+        downloadBtn.disabled = false;
+        downloadBtn.onclick = () => downloadCardAsImage(member);
+        pendingNotice.style.display = 'none';
+      } else {
+        cardEl.classList.add('pending-watermark');
+        document.getElementById('retrieved-id-val').textContent = 'PENDING VERIFICATION';
+        document.getElementById('retrieved-id-val').style.color = 'rgba(255,255,255,0.4)';
+
+        statusBadge.style.background = 'rgba(255, 82, 82, 0.1)';
+        statusBadge.style.borderColor = '#FF5252';
+        statusBadge.style.color = '#FF5252';
+        statusBadge.textContent = '✕ PENDING';
+
+        // Allow download even if pending, or keep disabled. Let's allow download of card but keep it watermarked
+        downloadBtn.disabled = false;
+        downloadBtn.onclick = () => downloadCardAsImage(member);
+        pendingNotice.style.display = 'flex';
+      }
+    }
+
+    // Canvas drawing and download logic
+    function downloadCardAsImage(member) {
+      const downloadBtn = document.getElementById('download-btn');
+      const btnText = downloadBtn.querySelector('span');
+      const originalText = btnText.textContent;
+      
+      downloadBtn.disabled = true;
+      btnText.textContent = 'Generating Image... / ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...';
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 900;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      // Helper: Draw rounded rectangle
+      function drawRoundedRect(x, y, width, height, radius, fillStyle, strokeStyle, strokeWidth) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        if (fillStyle) {
+          ctx.fillStyle = fillStyle;
+          ctx.fill();
+        }
+        if (strokeStyle && strokeWidth) {
+          ctx.strokeStyle = strokeStyle;
+          ctx.lineWidth = strokeWidth;
+          ctx.stroke();
+        }
+      }
+
+      // Load images
+      const sealImg = new Image();
+      const photoImg = new Image();
+      photoImg.crossOrigin = "anonymous";
+
+      let imagesLoaded = 0;
+      function checkLoad() {
+        imagesLoaded++;
+        if (imagesLoaded === 2) {
+          drawAndDownload();
+        }
+      }
+
+      sealImg.onload = checkLoad;
+      photoImg.onload = checkLoad;
+      sealImg.onerror = () => {
+        console.error("Failed to load seal image");
+        checkLoad();
+      };
+      photoImg.onerror = () => {
+        console.error("Failed to load user photo");
+        checkLoad();
+      };
+
+      sealImg.src = "yep_leader_seal.png";
+      photoImg.src = member.photo_url ? ("/api/proxy?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
+
+      function drawAndDownload() {
+        try {
+          // 1. Draw Card Background (Yellow to Red sunset gradient)
+          const grad = ctx.createLinearGradient(0, 0, 0, 900);
+          grad.addColorStop(0, '#FFE800'); // Karnataka Flag Yellow
+          grad.addColorStop(0.35, '#FFA000'); // Amber Orange
+          grad.addColorStop(0.65, '#D84315'); // Warm Orange-Red
+          grad.addColorStop(1, '#A30000'); // Deep Crimson Red
+          
+          // Draw the main card body outline
+          drawRoundedRect(0, 0, 600, 900, 32, grad, '#F4C430', 8);
+
+          // 2. Draw Top Tricolor Band
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(32, 0);
+          ctx.lineTo(600 - 32, 0);
+          ctx.quadraticCurveTo(600, 0, 600, 32);
+          ctx.lineTo(600, 900 - 32);
+          ctx.quadraticCurveTo(600, 900, 600 - 32, 900);
+          ctx.lineTo(32, 900);
+          ctx.quadraticCurveTo(0, 900, 0, 900 - 32);
+          ctx.lineTo(0, 32);
+          ctx.quadraticCurveTo(0, 0, 32, 0);
+          ctx.closePath();
+          ctx.clip();
+
+          ctx.fillStyle = '#FF6B00'; // Saffron
+          ctx.fillRect(0, 0, 600, 4);
+          ctx.fillStyle = '#FFFFFF'; // White
+          ctx.fillRect(0, 4, 600, 4);
+          ctx.fillStyle = '#138808'; // Green
+          ctx.fillRect(0, 8, 600, 4);
+          ctx.restore();
+
+          // 3. Draw Header Layout
+          const sealSize = 150;
+          const sealX = (600 - sealSize) / 2;
+          const sealY = 28;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(300, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          ctx.fillStyle = '#0a0a10';
+          ctx.fill();
+          if (sealImg.complete && sealImg.naturalWidth) {
+            ctx.drawImage(sealImg, sealX, sealY, sealSize, sealSize);
+          }
+          ctx.restore();
+          
+          ctx.beginPath();
+          ctx.arc(300, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
+          ctx.strokeStyle = '#F4C430';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          // Header Texts
+          ctx.textAlign = "center";
+          
+          ctx.font = "bold 28px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#1a1a1a";
+          ctx.fillText("YoungSTAR PARTY", 300, 210);
+
+          ctx.font = "bold 24px 'Tiro Kannada', serif";
+          ctx.fillStyle = "#1a1a1a";
+          ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 300, 242);
+
+          // Leader Credentials
+          ctx.font = "bold 13px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#1a1a1a";
+          ctx.fillText("K N Jagadish Kumar – Advocate – High Court of Delhi", 300, 270);
+          
+          ctx.font = "bold 13px 'Tiro Kannada', serif";
+          ctx.fillStyle = "#1a1a1a";
+          ctx.fillText("ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್", 300, 290);
+
+          ctx.font = "bold 11px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#5d0000";
+          ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 300, 310);
+
+          // 4. Draw Details Plate
+          const containerX = 50;
+          const containerY = 325;
+          const containerW = 500;
+          const containerH = 460;
+          drawRoundedRect(containerX, containerY, containerW, containerH, 16, "rgba(0,0,0,0.35)", "rgba(255,255,255,0.1)", 1.5);
+
+          // User Photo (200x200px)
+          const photoSize = 200;
+          const photoX = (600 - photoSize) / 2;
+          const photoY = 345;
+          
+          drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, "rgba(0,0,0,0.3)", "rgba(255,255,255,0.15)", 3);
+          ctx.save();
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(photoX, photoY, photoSize, photoSize, 12);
+          } else {
+            ctx.rect(photoX, photoY, photoSize, photoSize);
+          }
+          ctx.closePath();
+          ctx.clip();
+          if (photoImg.complete && photoImg.naturalWidth) {
+            ctx.drawImage(photoImg, photoX, photoY, photoSize, photoSize);
+          } else {
+            ctx.fillStyle = "rgba(255,255,255,0.05)";
+            ctx.fillRect(photoX, photoY, photoSize, photoSize);
+            ctx.font = "bold 44px 'Rajdhani', sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.2)";
+            ctx.textAlign = "center";
+            ctx.fillText("YEP", 300, photoY + photoSize/2 + 16);
+          }
+          ctx.restore();
+          
+          // Re-draw photo border
+          drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, null, '#F4C430', 3);
+
+          // Member Name
+          let nameFontSize = 30;
+          ctx.font = `bold ${nameFontSize}px 'Rajdhani', sans-serif`;
+          let nameWidth = ctx.measureText(member.name).width;
+          while (nameWidth > 460 && nameFontSize > 20) {
+            nameFontSize -= 2;
+            ctx.font = `bold ${nameFontSize}px 'Rajdhani', sans-serif`;
+            nameWidth = ctx.measureText(member.name).width;
+          }
+          ctx.fillStyle = "#FFFFFF";
+          ctx.textAlign = "center";
+          ctx.fillText(member.name, 300, 575);
+
+          // Details List
+          const detailsX = 90;
+          ctx.textAlign = "left";
+
+          // Member ID
+          ctx.font = "14px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.5)";
+          ctx.fillText("MEMBER ID", detailsX, 620);
+          ctx.font = "bold 22px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#F4C430";
+          const memIdVal = member.approved 
+            ? (member.member_id || `YEP-KA-${String(member.id).substring(0, 8).toUpperCase()}`) 
+            : 'PENDING VERIFICATION';
+          ctx.fillText(memIdVal, detailsX, 642);
+
+          // Mobile Phone
+          ctx.font = "14px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.5)";
+          ctx.fillText("MOBILE PHONE", detailsX, 672);
+          ctx.font = "600 18px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.95)";
+          ctx.fillText(member.phone, detailsX, 692);
+
+          // District & Taluk
+          ctx.font = "14px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.5)";
+          ctx.fillText("DISTRICT & TALUK", detailsX, 722);
+          ctx.font = "600 18px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.95)";
+          const districtVal = member.district ? member.district.split('/')[0].trim() : 'N/A';
+          const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
+          ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 742);
+
+          // Status Stamp
+          ctx.font = "bold 14px 'Rajdhani', sans-serif";
+          const statusText = member.approved ? "✓ APPROVED" : "✕ PENDING";
+          const statusColor = member.approved ? "#4CAF50" : "#FF5252";
+          const statusBg = member.approved ? "rgba(76,175,80,0.12)" : "rgba(255,82,82,0.12)";
+          const statusWidth = ctx.measureText(statusText).width + 20;
+          const statusX = 440 - statusWidth/2;
+          const statusY = 665;
+          
+          drawRoundedRect(statusX, statusY, statusWidth, 32, 6, statusBg, statusColor, 1.5);
+          ctx.fillStyle = statusColor;
+          ctx.textAlign = "center";
+          ctx.fillText(statusText, 440, statusY + 21);
+
+          // Watermark on image if pending
+          if (!member.approved) {
+            ctx.save();
+            ctx.translate(300, 450);
+            ctx.rotate(-25 * Math.PI / 180);
+            ctx.font = "bold 44px 'Rajdhani', sans-serif";
+            ctx.fillStyle = "rgba(255, 82, 82, 0.15)";
+            ctx.textAlign = "center";
+            ctx.strokeStyle = "rgba(255, 82, 82, 0.15)";
+            ctx.lineWidth = 4;
+            
+            const wText = "PENDING VERIFICATION";
+            const wWidth = ctx.measureText(wText).width + 32;
+            
+            ctx.strokeRect(-wWidth/2, -30, wWidth, 60);
+            ctx.fillText(wText, 0, 15);
+            ctx.restore();
+          }
+
+          // 5. Draw Footer Layout
+          ctx.beginPath();
+          ctx.moveTo(50, 815);
+          ctx.lineTo(550, 815);
+          ctx.strokeStyle = "rgba(255,255,255,0.1)";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.textAlign = "center";
+          ctx.font = "bold 15px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.45)";
+          ctx.fillText("YoungSTAR Empowerment Party · @2026", 300, 846);
+          
+          ctx.font = "bold 13px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#FFEB3B";
+          ctx.fillText("Youth Power – Our Strength – Our Future", 300, 868);
+
+          // 6. Trigger Download Action
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+          const link = document.createElement('a');
+          link.download = `YEP_Member_Card_${member.name.replace(/\s+/g, '_')}.jpg`;
+          link.href = dataUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+        } catch (err) {
+          console.error("Canvas drawing failed:", err);
+          alert("Failed to generate download image: " + err.message);
+        } finally {
+          downloadBtn.disabled = false;
+          btnText.textContent = originalText;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

@@ -997,6 +997,7 @@
         <div class="step-dot active" id="dot-1">1</div>
         <div class="step-dot" id="dot-2">2</div>
         <div class="step-dot" id="dot-3">3</div>
+        <div class="step-dot" id="dot-4" style="display: none;">4</div>
       </div>
     </div>
 
@@ -1145,6 +1146,32 @@
         </div>
       </div>
 
+      <!-- STEP 4: PAYMENT -->
+      <div class="form-step" id="step-4">
+        <div class="form-group" style="text-align: center; margin-bottom: 24px;">
+          <h2 style="font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; color: var(--gold); margin-bottom: 12px;">Membership Fee Payment / ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿ</h2>
+          <p class="en" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
+            To complete your YEP membership registration, a one-time fee of <strong>₹99</strong> is required.
+          </p>
+          <p class="kn" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
+            ನಿಮ್ಮ YEP ಸದಸ್ಯತ್ವ ನೋಂದಣಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು, ಒಂದು ಬಾರಿಯ ಶುಲ್ಕ <strong>₹99</strong> ಪಾವತಿಸಬೇಕಾಗುತ್ತದೆ.
+          </p>
+          
+          <div style="background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 6px;">Total Payable Amount / ಒಟ್ಟು ಪಾವತಿಸಬೇಕಾದ ಮೊತ್ತ</div>
+            <div style="font-size: 2.5rem; font-family: 'Rajdhani', sans-serif; font-weight: 800; color: var(--gold);">₹99.00</div>
+            <div style="font-size: 0.8rem; color: #4CAF50; font-weight: 600; margin-top: 6px;">✓ Secure Encryption & Immediate Activation</div>
+          </div>
+          
+          <p class="en" style="font-size: 0.85rem; color: rgba(255,255,255,0.4);">
+            Click the submit button below to initiate secure checkout via Cards, Netbanking, or UPI.
+          </p>
+          <p class="kn" style="font-size: 0.85rem; color: rgba(255,255,255,0.4);">
+            ಕಾರ್ಡ್‌ಗಳು, ನೆಟ್‌ಬ್ಯಾಂಕಿಂಗ್ ಅಥವಾ ಯುಪಿಐ ಮೂಲಕ ಸುರಕ್ಷಿತ ಪಾವತಿಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ಕೆಳಗಿನ ಸಲ್ಲಿಸು ಬಟನ್ ಕ್ಲಿಕ್ ಮಾಡಿ.
+          </p>
+        </div>
+      </div>
+
       <!-- NAV CONTROLS -->
       <div class="nav-buttons">
         <a href="index.html" class="btn-nav back" id="btn-home" style="text-decoration: none;">
@@ -1282,6 +1309,9 @@
   </div>
 </footer>
 
+<!-- RAZORPAY SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <!-- SUPABASE CLIENT SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1335,15 +1365,45 @@
 
   /* ── INITIAL STATE CONFIGURATION ── */
   let currentStep = 1;
-  const totalSteps = 3;
+  let totalSteps = 3;
+  let paymentRequired = false;
   let localVideoStream = null;
   let capturedPhotoData = null;
 
   // Populate districts on startup
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
     populateDistricts();
     setupAadhaarFormatting();
     setupPhoneValidation();
+    
+    // Fetch dynamic configuration
+    try {
+      const { data, error } = await supabaseClient
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'payment_enabled')
+        .maybeSingle();
+      
+      if (!error && data && data.value === 'true') {
+        paymentRequired = true;
+        totalSteps = 4;
+        document.getElementById('dot-4').style.display = 'flex';
+      } else {
+        paymentRequired = false;
+        totalSteps = 3;
+        document.getElementById('dot-4').style.display = 'none';
+      }
+    } catch (err) {
+      console.error("Failed to load app settings:", err);
+      // Fallback check in mock mode (local storage)
+      const mockPay = localStorage.getItem('mock_payment_enabled') || 'true';
+      if (mockPay === 'true') {
+        paymentRequired = true;
+        totalSteps = 4;
+        document.getElementById('dot-4').style.display = 'flex';
+      }
+    }
+    
     // Auto-detect language from active classes if needed
     const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
     setLang(activeLang);
@@ -1626,6 +1686,15 @@
 
       // Village is optional, no validation checks required
     }
+    else if (currentStep === 3) {
+      if (!capturedPhotoData) {
+        const group = document.getElementById('group-photo');
+        if (group) group.classList.add('has-error');
+        const errPhoto = document.getElementById('error-photo');
+        if (errPhoto) errPhoto.style.display = 'block';
+        isValid = false;
+      }
+    }
 
     return isValid;
   }
@@ -1793,12 +1862,25 @@
   }
 
   /* ── FORM SUBMISSION & SUCCESS MODAL ── */
+  function showSuccessUI(name, phone, district, taluk, photoUrl) {
+    document.getElementById('card-photo').src = photoUrl;
+    document.getElementById('card-name-val').textContent = name;
+    document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
+    document.getElementById('card-phone-val').textContent = phone;
+    document.getElementById('card-location-val').textContent = `${district.split(' / ')[0]} · ${taluk.split(' / ')[0]}`;
+
+    // Show modal
+    const successModal = document.getElementById('success-modal');
+    successModal.classList.add('active');
+  }
+
   async function submitForm() {
     // Validate photo
     if (!capturedPhotoData) {
       const group = document.getElementById('group-photo');
-      group.classList.add('has-error');
-      document.getElementById('error-photo').style.display = 'block';
+      if (group) group.classList.add('has-error');
+      const errPhoto = document.getElementById('error-photo');
+      if (errPhoto) errPhoto.style.display = 'block';
       return;
     }
 
@@ -1849,7 +1931,6 @@
             errorMsg = json.error;
           }
         } catch (_) {
-          // If response is HTML, grab a clean snippet
           errorMsg += `: ${text.substring(0, 150).replace(/<[^>]*>/g, '').trim()}`;
         }
         throw new Error(errorMsg);
@@ -1868,44 +1949,13 @@
       return;
     }
 
-    // 2. Insert member record to Supabase
-    try {
-      const cleanAadhaar = rawAadhaar.replace(/\s+/g, '');
-      const hash = await sha256(cleanAadhaar);
-      const last4 = cleanAadhaar.slice(-4);
-      const secureAadhaarPayload = `${hash}:${last4}`;
+    const cleanAadhaar = rawAadhaar.replace(/\s+/g, '');
+    const hash = await sha256(cleanAadhaar);
+    const last4 = cleanAadhaar.slice(-4);
+    const secureAadhaarPayload = `${hash}:${last4}`;
 
-      const memberData = {
-        name: name,
-        phone: phone,
-        aadhaar: secureAadhaarPayload,
-        qualification: qualification || null,
-        state: stateVal,
-        district: district,
-        taluk: taluk,
-        village: village || null,
-        photo_url: photoUrl,
-        approved: false
-      };
-
-      const { error } = await supabaseClient
-        .from('members')
-        .insert([memberData]);
-
-      if (error) throw error;
-
-      // Populate preview card in success modal
-      document.getElementById('card-photo').src = photoUrl;
-      document.getElementById('card-name-val').textContent = name;
-      document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
-      document.getElementById('card-phone-val').textContent = phone;
-      document.getElementById('card-location-val').textContent = `${district.split(' / ')[0]} · ${taluk.split(' / ')[0]}`;
-
-      // Show modal
-      const successModal = document.getElementById('success-modal');
-      successModal.classList.add('active');
-    } catch (dbErr) {
-      // Clean up the uploaded photo from R2 since the database insert failed
+    // Helper to cleanup photo if something fails
+    async function cleanupPhoto() {
       if (photoUrl) {
         const filename = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
         try {
@@ -1913,31 +1963,189 @@
             method: 'DELETE'
           });
         } catch (cleanupErr) {
-          console.error("Failed to clean up photo from R2 on insert failure:", cleanupErr);
+          console.error("Failed to clean up photo from R2 on failure:", cleanupErr);
         }
       }
+    }
 
-      let friendlyMsg = dbErr.message || "Something went wrong.";
-      // Postgres unique_violation error code is 23505
-      if (dbErr.code === "23505") {
-        const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
-        if (dbErr.message.includes("phone")) {
-          friendlyMsg = activeLang === 'kn' 
-            ? "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
-            : "A member with this mobile number is already registered.";
-        } else if (dbErr.message.includes("aadhaar")) {
-          friendlyMsg = activeLang === 'kn' 
-            ? "ಈ ಆಧಾರ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
-            : "A member with this Aadhaar number is already registered.";
-        } else {
-          friendlyMsg = activeLang === 'kn' 
-            ? "ಈ ವಿವರಗಳೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
-            : "A member with these details is already registered.";
+    // Check if payment requirement is enabled
+    if (paymentRequired) {
+      try {
+        // Initialize Payment Gateway order
+        const checkoutRes = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: 99,
+            currency: 'INR',
+            phone: phone,
+            name: name,
+            notes: {
+              name: name,
+              phone: phone,
+              aadhaar: secureAadhaarPayload,
+              qualification: qualification || "",
+              state: stateVal,
+              district: district,
+              taluk: taluk,
+              village: village || "",
+              photo_url: photoUrl
+            }
+          })
+        });
+
+        if (!checkoutRes.ok) {
+          throw new Error(`Server failed to initialize checkout (Status ${checkoutRes.status})`);
         }
+
+        const checkoutData = await checkoutRes.json();
+        if (!checkoutData.success) {
+          throw new Error(checkoutData.error || "Order creation failed.");
+        }
+
+        // Initialize Razorpay options
+        const options = {
+          key: checkoutData.key_id,
+          amount: checkoutData.order.amount,
+          currency: checkoutData.order.currency,
+          name: "YoungSTAR Party",
+          description: "Membership Registration Fee",
+          image: "logo.png",
+          order_id: checkoutData.order.id,
+          handler: async function (paymentResponse) {
+            try {
+              // 2. Insert member record to Supabase after payment
+              const memberData = {
+                name: name,
+                phone: phone,
+                aadhaar: secureAadhaarPayload,
+                qualification: qualification || null,
+                state: stateVal,
+                district: district,
+                taluk: taluk,
+                village: village || null,
+                photo_url: photoUrl,
+                approved: false,
+                payment_status: 'paid',
+                payment_id: paymentResponse.razorpay_payment_id,
+                amount_paid: 99.00
+              };
+
+              const { error: dbError } = await supabaseClient
+                .from('members')
+                .insert([memberData]);
+
+              if (dbError) throw dbError;
+
+              // 3. Trigger WhatsApp notification via backend function
+              try {
+                await fetch('/api/send-whatsapp', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    phone: phone,
+                    name: name
+                  })
+                });
+              } catch (waErr) {
+                console.error("Failed to trigger WhatsApp message:", waErr);
+              }
+
+              showSuccessUI(name, phone, district, taluk, photoUrl);
+
+            } catch (dbErr) {
+              console.error(dbErr);
+              let friendlyMsg = dbErr.message || "Database insert failed.";
+              if (dbErr.code === "23505") {
+                const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+                friendlyMsg = activeLang === 'kn'
+                  ? "ಈ ವಿವರಗಳೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ. ಪಾವತಿ ವಿವರಗಳು: " + paymentResponse.razorpay_payment_id
+                  : "A member with these details is already registered. Payment Reference: " + paymentResponse.razorpay_payment_id;
+              } else {
+                friendlyMsg = friendlyMsg + "\nPayment Reference: " + paymentResponse.razorpay_payment_id;
+              }
+              alert("Registration Error (Database insert): " + friendlyMsg);
+            } finally {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalContent;
+            }
+          },
+          prefill: {
+            name: name,
+            contact: phone
+          },
+          theme: {
+            color: "#F4C430"
+          },
+          modal: {
+            ondismiss: function () {
+              alert("Payment cancelled. Please complete payment to finalise membership.");
+              cleanupPhoto();
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalContent;
+            }
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+      } catch (payErr) {
+        alert("Payment Error: " + payErr.message);
+        cleanupPhoto();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
       }
-      alert("Registration Error: " + friendlyMsg);
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalContent;
+    } else {
+      // Free Registration flow
+      try {
+        const memberData = {
+          name: name,
+          phone: phone,
+          aadhaar: secureAadhaarPayload,
+          qualification: qualification || null,
+          state: stateVal,
+          district: district,
+          taluk: taluk,
+          village: village || null,
+          photo_url: photoUrl,
+          approved: false,
+          payment_status: 'free',
+          payment_id: 'FREE_REGISTRATION',
+          amount_paid: 0.00
+        };
+
+        const { error: dbError } = await supabaseClient
+          .from('members')
+          .insert([memberData]);
+
+        if (dbError) throw dbError;
+
+        showSuccessUI(name, phone, district, taluk, photoUrl);
+
+      } catch (dbErr) {
+        await cleanupPhoto();
+        let friendlyMsg = dbErr.message || "Something went wrong.";
+        if (dbErr.code === "23505") {
+          const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+          if (dbErr.message.includes("phone")) {
+            friendlyMsg = activeLang === 'kn' 
+              ? "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+              : "A member with this mobile number is already registered.";
+          } else if (dbErr.message.includes("aadhaar")) {
+            friendlyMsg = activeLang === 'kn' 
+              ? "ಈ ಆಧಾರ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+              : "A member with this Aadhaar number is already registered.";
+          } else {
+            friendlyMsg = activeLang === 'kn' 
+              ? "ಈ ವಿವರಗಳೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+              : "A member with these details is already registered.";
+          }
+        }
+        alert("Registration Error: " + friendlyMsg);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
+      }
     }
   }
 

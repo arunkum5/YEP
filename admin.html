@@ -1612,6 +1612,15 @@
               </tr>
             </table>
 
+            <div class="settings-title" style="margin-top: 28px;">Membership Fee & Payments</div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding: 20px; background: rgba(255,255,255,0.02); border: 1.5px solid var(--glass-border); border-radius: 12px; max-width: 500px;">
+              <input type="checkbox" id="toggle-payments" onchange="togglePaymentRequirement(this.checked)" style="width: 22px; height: 22px; cursor: pointer; accent-color: var(--saffron);">
+              <div>
+                <label for="toggle-payments" style="font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; color: white; cursor: pointer; display: block;">Require Payment for Registration</label>
+                <span style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; display: block; margin-top: 4px;">Enable this to enforce a checkout step before member registration is finalised.</span>
+              </div>
+            </div>
+
             <div class="settings-title" style="margin-top: 20px;">SQL Table Schema setup</div>
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
               Create your database tables by pasting this code directly into your Supabase Dashboard SQL Editor:
@@ -1638,7 +1647,10 @@ CREATE TABLE IF NOT EXISTS public.members (
     village TEXT,
     photo_url TEXT,
     approved BOOLEAN DEFAULT FALSE NOT NULL,
-    member_id TEXT
+    member_id TEXT,
+    payment_status TEXT DEFAULT 'pending',
+    payment_id TEXT,
+    amount_paid NUMERIC
 );
 
 -- Enable Row Level Security (RLS)
@@ -1662,7 +1674,21 @@ CREATE POLICY "Allow public select"
 ON public.members FOR SELECT 
 USING (true);
 
--- 3. Create page_stats table for visitor & click counts
+-- Create app_settings table for dynamic toggles (payment on/off)
+CREATE TABLE IF NOT EXISTS public.app_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+-- Seed initial settings (payment enabled by default)
+INSERT INTO public.app_settings (key, value) VALUES ('payment_enabled', 'true') ON CONFLICT (key) DO NOTHING;
+
+-- Enable RLS on app_settings
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to app_settings" ON public.app_settings FOR SELECT USING (true);
+CREATE POLICY "Allow admin full access to app_settings" ON public.app_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- Create page_stats table for visitor & click counts
 CREATE TABLE IF NOT EXISTS public.page_stats (
     id TEXT PRIMARY KEY,
     count INT DEFAULT 0 NOT NULL
@@ -1802,6 +1828,14 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
           <div class="details-data-val" id="detail-village-val">Yelahanka</div>
         </div>
         <div class="details-data-item">
+          <div class="details-data-label">Payment Status</div>
+          <div class="details-data-val" id="detail-payment-status-val">Pending</div>
+        </div>
+        <div class="details-data-item">
+          <div class="details-data-label">Transaction ID</div>
+          <div class="details-data-val" id="detail-payment-id-val">N/A</div>
+        </div>
+        <div class="details-data-item">
           <div class="details-data-label">Application Date</div>
           <div class="details-data-val" id="detail-date-val">2026-06-11</div>
         </div>
@@ -1930,6 +1964,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       // Fallback mockup setup for testing
       setTimeout(() => {
         loadMockupData();
+        const mockPay = localStorage.getItem('mock_payment_enabled') || 'true';
+        document.getElementById('toggle-payments').checked = mockPay === 'true';
       }, 300);
     }
   } catch (e) {
@@ -2096,8 +2132,49 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   });
 
   /* ── DATA FETCHING & RENDERING ── */
+  async function fetchSettings() {
+    if (!supabaseClient) {
+      const mockPay = localStorage.getItem('mock_payment_enabled') || 'true';
+      document.getElementById('toggle-payments').checked = mockPay === 'true';
+      return;
+    }
+    try {
+      const { data, error } = await supabaseClient
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'payment_enabled')
+        .maybeSingle();
+
+      if (!error && data) {
+        document.getElementById('toggle-payments').checked = data.value === 'true';
+      }
+    } catch (err) {
+      console.error("Failed to load settings:", err);
+    }
+  }
+
+  async function togglePaymentRequirement(isEnabled) {
+    if (!supabaseClient) {
+      localStorage.setItem('mock_payment_enabled', isEnabled.toString());
+      alert(`[Mock Mode] Payment requirement turned ${isEnabled ? 'ON' : 'OFF'}.`);
+      return;
+    }
+    try {
+      const { error } = await supabaseClient
+        .from('app_settings')
+        .upsert({ key: 'payment_enabled', value: isEnabled.toString() });
+
+      if (error) throw error;
+      alert(`Payment requirement turned ${isEnabled ? 'ON' : 'OFF'}.`);
+    } catch (err) {
+      console.error("Failed to update settings:", err);
+      alert("Failed to update settings: " + err.message);
+    }
+  }
+
   async function fetchMembers() {
     if (!supabaseClient) return;
+    fetchSettings();
     const tbody = document.getElementById('members-list-body');
     tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Loading members from database...</td></tr>`;
 
@@ -2518,7 +2595,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       const tdContact = document.createElement('td');
       tdContact.setAttribute('data-label', 'Contact / ID');
       const yepId = member.member_id || '<span style="color:var(--text-muted)">Pending ID</span>';
-      tdContact.innerHTML = `📞 ${member.phone || 'N/A'}<br><small style="color:var(--gold); font-weight: 600;">${yepId}</small>`;
+      const payStatus = member.payment_status ? member.payment_status.toUpperCase() : 'FREE';
+      const payColor = payStatus === 'PAID' ? '#4CAF50' : (payStatus === 'PENDING' ? 'var(--saffron)' : 'var(--text-muted)');
+      tdContact.innerHTML = `📞 ${member.phone || 'N/A'}<br><small style="color:var(--gold); font-weight: 600;">${yepId}</small><br><small style="color:${payColor}; font-size: 0.72rem; font-weight: 700;">💳 ${payStatus}</small>`;
       tr.appendChild(tdContact);
 
       // 5. Aadhaar column (Masked by default)
@@ -2957,6 +3036,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
     document.getElementById('detail-aadhaar-val').textContent = displayAadhaar;
     document.getElementById('detail-village-val').textContent = member.village || 'N/A';
+    document.getElementById('detail-payment-status-val').textContent = member.payment_status ? member.payment_status.toUpperCase() : 'FREE';
+    document.getElementById('detail-payment-id-val').textContent = member.payment_id || 'N/A';
     
     const dateStr = member.created_at ? member.created_at.split('T')[0] : 'N/A';
     document.getElementById('detail-date-val').textContent = dateStr;
