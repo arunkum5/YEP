@@ -1971,7 +1971,36 @@
     // Check if payment requirement is enabled
     if (paymentRequired) {
       try {
-        // Initialize Payment Gateway order
+        // 2. Insert member record to Supabase first as 'pending'
+        const memberData = {
+          name: name,
+          phone: phone,
+          aadhaar: secureAadhaarPayload,
+          qualification: qualification || null,
+          state: stateVal,
+          district: district,
+          taluk: taluk,
+          village: village || null,
+          photo_url: photoUrl,
+          approved: false,
+          payment_status: 'pending',
+          payment_id: 'pending_checkout',
+          amount_paid: 0.00
+        };
+
+        const { data: insertData, error: dbError } = await supabaseClient
+          .from('members')
+          .insert([memberData])
+          .select();
+
+        if (dbError) throw dbError;
+        if (!insertData || insertData.length === 0) {
+          throw new Error("Failed to retrieve saved member details.");
+        }
+
+        const savedMemberUuid = insertData[0].id;
+
+        // 3. Initialize Payment Gateway order, passing the member UUID in notes
         const checkoutRes = await fetch('/api/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1981,15 +2010,9 @@
             phone: phone,
             name: name,
             notes: {
+              member_uuid: savedMemberUuid,
               name: name,
-              phone: phone,
-              aadhaar: secureAadhaarPayload,
-              qualification: qualification || "",
-              state: stateVal,
-              district: district,
-              taluk: taluk,
-              village: village || "",
-              photo_url: photoUrl
+              phone: phone
             }
           })
         });
@@ -2014,30 +2037,19 @@
           order_id: checkoutData.order.id,
           handler: async function (paymentResponse) {
             try {
-              // 2. Insert member record to Supabase after payment
-              const memberData = {
-                name: name,
-                phone: phone,
-                aadhaar: secureAadhaarPayload,
-                qualification: qualification || null,
-                state: stateVal,
-                district: district,
-                taluk: taluk,
-                village: village || null,
-                photo_url: photoUrl,
-                approved: false,
-                payment_status: 'paid',
-                payment_id: paymentResponse.razorpay_payment_id,
-                amount_paid: 99.00
-              };
-
-              const { error: dbError } = await supabaseClient
+              // 4. Update member record to 'paid' in Supabase
+              const { error: updateError } = await supabaseClient
                 .from('members')
-                .insert([memberData]);
+                .update({
+                  payment_status: 'paid',
+                  payment_id: paymentResponse.razorpay_payment_id,
+                  amount_paid: 99.00
+                })
+                .eq('id', savedMemberUuid);
 
-              if (dbError) throw dbError;
+              if (updateError) throw updateError;
 
-              // 3. Trigger WhatsApp notification via backend function
+              // 5. Trigger WhatsApp welcome message
               try {
                 await fetch('/api/send-whatsapp', {
                   method: 'POST',
@@ -2053,36 +2065,9 @@
 
               showSuccessUI(name, phone, district, taluk, photoUrl);
 
-            } catch (dbErr) {
-              console.error(dbErr);
-              if (dbErr.code === "23505") {
-                try {
-                  const { data: existingMember } = await supabaseClient
-                    .from('members')
-                    .select('id, payment_id')
-                    .eq('phone', phone)
-                    .maybeSingle();
-
-                  if (existingMember && existingMember.payment_id === paymentResponse.razorpay_payment_id) {
-                    console.log("Database entry already created by webhook. Proceeding to success UI.");
-                    showSuccessUI(name, phone, district, taluk, photoUrl);
-                    return;
-                  }
-                } catch (checkErr) {
-                  console.error("Failed to query duplicate record status:", checkErr);
-                }
-              }
-
-              let friendlyMsg = dbErr.message || "Database insert failed.";
-              if (dbErr.code === "23505") {
-                const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
-                friendlyMsg = activeLang === 'kn'
-                  ? "ಈ ವಿವರಗಳೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ. ಪಾವತಿ ವಿವರಗಳು: " + paymentResponse.razorpay_payment_id
-                  : "A member with these details is already registered. Payment Reference: " + paymentResponse.razorpay_payment_id;
-              } else {
-                friendlyMsg = friendlyMsg + "\nPayment Reference: " + paymentResponse.razorpay_payment_id;
-              }
-              alert("Registration Error (Database insert): " + friendlyMsg);
+            } catch (updateErr) {
+              console.error(updateErr);
+              alert("Payment succeeded, but failed to update status in database. Please contact support with Payment Reference: " + paymentResponse.razorpay_payment_id);
             } finally {
               submitBtn.disabled = false;
               submitBtn.innerHTML = originalContent;
@@ -2097,8 +2082,7 @@
           },
           modal: {
             ondismiss: function () {
-              alert("Payment cancelled. Please complete payment to finalise membership.");
-              cleanupPhoto();
+              alert("Checkout closed. Your registration details are saved, but your membership card will remain inactive until payment is completed.");
               submitBtn.disabled = false;
               submitBtn.innerHTML = originalContent;
             }
@@ -2109,7 +2093,24 @@
         rzp.open();
 
       } catch (payErr) {
-        alert("Payment Error: " + payErr.message);
+        let friendlyMsg = payErr.message || "Payment Error.";
+        if (payErr.code === "23505") {
+          const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
+          if (payErr.message.includes("phone")) {
+            friendlyMsg = activeLang === 'kn' 
+              ? "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+              : "A member with this mobile number is already registered.";
+          } else if (payErr.message.includes("aadhaar")) {
+            friendlyMsg = activeLang === 'kn' 
+              ? "ಈ ಆಧಾರ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+              : "A member with this Aadhaar number is already registered.";
+          } else {
+            friendlyMsg = activeLang === 'kn' 
+              ? "ಈ ವಿವರಗಳೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ." 
+              : "A member with these details is already registered.";
+          }
+        }
+        alert("Registration Error: " + friendlyMsg);
         cleanupPhoto();
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalContent;
