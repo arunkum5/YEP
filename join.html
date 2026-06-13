@@ -2048,6 +2048,7 @@
                 amount_paid: 99.00
               };
 
+              let webhookAlreadyInserted = false;
               const { error: dbError } = await supabaseClient
                 .from('members')
                 .insert([memberData]);
@@ -2063,6 +2064,7 @@
 
                   if (!verifyError && verifiedMember && verifiedMember.payment_status === 'paid') {
                     console.log("Member was already successfully inserted by webhook:", verifiedMember.id);
+                    webhookAlreadyInserted = true;
                   } else {
                     throw dbError; // Real error
                   }
@@ -2071,18 +2073,20 @@
                 }
               }
 
-              // 4. Trigger WhatsApp welcome message
-              try {
-                await fetch('/api/send-whatsapp', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    phone: phone,
-                    name: name
-                  })
-                });
-              } catch (waErr) {
-                console.error("Failed to trigger WhatsApp message:", waErr);
+              // 4. Trigger WhatsApp welcome message (only if webhook has not already done so)
+              if (!webhookAlreadyInserted) {
+                try {
+                  await fetch('/api/send-whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      phone: phone,
+                      name: name
+                    })
+                  });
+                } catch (waErr) {
+                  console.error("Failed to trigger WhatsApp message:", waErr);
+                }
               }
 
               showSuccessUI(name, phone, district, taluk, photoUrl);
