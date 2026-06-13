@@ -3,9 +3,13 @@ const crypto = require('crypto');
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hqaimprjdejeklrtntfz.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const API_BASE_URL = process.env.API_BASE_URL || 'https://4ec879a8.yep-01l.pages.dev';
 
 // Use Service Role Key if available (to bypass RLS for cleanup/deletes), otherwise fallback to Anon Key
 const adminKey = SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY;
+
+// Mock 1x1 transparent pixel JPEG
+const MOCK_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=";
 
 async function sha256(message) {
   const hash = crypto.createHash('sha256');
@@ -13,9 +17,51 @@ async function sha256(message) {
   return hash.digest('hex');
 }
 
+async function uploadPhotoToR2(phone) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: `${phone}_test_photo.jpg`,
+        image: MOCK_IMAGE
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return { success: true, url: data.photo_url, signature: data.signature };
+    } else {
+      const text = await res.text();
+      console.warn(`⚠️ R2 upload failed (Status ${res.status}): ${text}. Using fallback url.`);
+    }
+  } catch (e) {
+    console.warn(`⚠️ R2 upload exception: ${e.message}. Using fallback url.`);
+  }
+  return { success: false, url: "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev/test_photo.jpg", signature: null };
+}
+
+async function deletePhotoFromR2(url, signature) {
+  if (!signature) return;
+  const filename = url.substring(url.lastIndexOf('/') + 1);
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/upload?filename=${encodeURIComponent(filename)}&signature=${signature}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      console.log(`   - Cleanup R2 photo ${filename}: success`);
+    } else {
+      const text = await res.text();
+      console.warn(`   - Cleanup R2 photo ${filename} failed (Status ${res.status}): ${text}`);
+    }
+  } catch (e) {
+    console.warn(`   - Cleanup R2 photo exception for ${filename}:`, e.message);
+  }
+}
+
 async function runLiveTests() {
   console.log("🏁 Starting programmatic execution of Membership flow and constraint tests...");
   console.log(`📡 Supabase URL: ${SUPABASE_URL}`);
+  console.log(`📡 API Base URL: ${API_BASE_URL}`);
   if (SUPABASE_SERVICE_ROLE_KEY) {
     console.log("🔑 SUPABASE_SERVICE_ROLE_KEY detected! Bypassing Row Level Security (RLS) for cleanup.");
   } else {
@@ -52,6 +98,11 @@ async function runLiveTests() {
     }
   }
 
+  // Upload test photos for both tests
+  console.log("\n📸 Uploading mock photos to R2...");
+  const photo1 = await uploadPhotoToR2(testPhone);
+  const photo2 = await uploadPhotoToR2(pendingPhone);
+
   const memberData = {
     name: "Live Test Member",
     phone: testPhone,
@@ -61,7 +112,7 @@ async function runLiveTests() {
     district: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ",
     taluk: "Bengaluru South / ಬೆಂಗಳೂರು ದಕ್ಷಿಣ",
     village: "Test Village",
-    photo_url: "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev/test_photo.jpg",
+    photo_url: photo1.url,
     approved: false
   };
 
@@ -216,7 +267,7 @@ async function runLiveTests() {
       district: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ",
       taluk: "Bengaluru South / ಬೆಂಗಳೂರು ದಕ್ಷಿಣ",
       village: "Test Village",
-      photo_url: "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev/test_photo.jpg",
+      photo_url: photo2.url,
       approved: false,
       payment_status: 'paid',
       payment_id: 'pay_test_retry_success',
@@ -258,7 +309,7 @@ async function runLiveTests() {
       district: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ",
       taluk: "Bengaluru South / ಬೆಂಗಳೂರು ದಕ್ಷಿಣ",
       village: "Test Village",
-      photo_url: "https://pub-3525e3b961a54cb992d074fd3b03afb9.r2.dev/test_photo.jpg",
+      photo_url: photo2.url,
       approved: false
     };
 
@@ -302,7 +353,7 @@ async function runLiveTests() {
     console.error("❌ Test 1.6 Exception:", err.message);
   }
 
-  // --- CLEANUP: Delete the test members ---
+  // --- CLEANUP: Delete the test members and their R2 files ---
   console.log("\n🧹 Cleaning up test registrations from live database (zero residues)...");
   let cleanupPassed = true;
   for (const phone of [testPhone, pendingPhone, "9448610198"]) {
@@ -341,6 +392,10 @@ async function runLiveTests() {
       cleanupPassed = false;
     }
   }
+
+  console.log("\n🧹 Cleaning up test photos from R2...");
+  await deletePhotoFromR2(photo1.url, photo1.signature);
+  await deletePhotoFromR2(photo2.url, photo2.signature);
 
   console.log("\n📋 --- Live Database Verification Summary ---");
   console.log(`Test 1.1 (Register new member): ${test1Passed ? "PASS" : "FAIL"}`);
