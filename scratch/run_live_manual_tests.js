@@ -68,18 +68,24 @@ async function runLiveTests() {
     console.warn("⚠️ SUPABASE_SERVICE_ROLE_KEY not detected. Cleanup/Updates might fail due to database RLS.");
   }
 
-  const testPhone = "9448610199";
-  const testAadhaar = "999999999999";
+  // Generate a random 6-digit suffix for every test run (guarantees uniqueness)
+  const randomSuffix = Math.floor(100000 + Math.random() * 900000);
+  
+  const testPhone = `9000${randomSuffix}`; // e.g. 9000123456
+  const testAadhaar = `999999${randomSuffix}`;
   const testAadhaarHash = await sha256(testAadhaar);
-  const secureAadhaarPayload = `${testAadhaarHash}:9999`;
+  const secureAadhaarPayload = `${testAadhaarHash}:${testAadhaar.slice(-4)}`;
 
-  const pendingPhone = "9448610190";
-  const pendingAadhaarHash = await sha256("888888888888");
-  const securePendingAadhaar = `${pendingAadhaarHash}:8888`;
+  const pendingPhone = `9001${randomSuffix}`; // e.g. 9001123456
+  const pendingAadhaar = `888888${randomSuffix}`;
+  const pendingAadhaarHash = await sha256(pendingAadhaar);
+  const securePendingAadhaar = `${pendingAadhaarHash}:${pendingAadhaar.slice(-4)}`;
+
+  const duplicatePhone = `9002${randomSuffix}`;
 
   // --- STARTUP CLEANUP: Remove leftover records ---
   console.log("\n🧹 Performing startup cleanup to ensure fresh state...");
-  for (const phone of [testPhone, pendingPhone, "9448610198"]) {
+  for (const phone of [testPhone, pendingPhone, duplicatePhone]) {
     try {
       const cleanupRes = await fetch(`${SUPABASE_URL}/rest/v1/members?phone=eq.${phone}`, {
         method: 'DELETE',
@@ -192,7 +198,7 @@ async function runLiveTests() {
     const duplicateAadhaarData = {
       ...memberData,
       name: "Duplicate Aadhaar Member",
-      phone: "9448610198" // Different Phone
+      phone: duplicatePhone // Different Phone
     };
 
     const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
@@ -356,7 +362,7 @@ async function runLiveTests() {
   // --- CLEANUP: Delete the test members and their R2 files ---
   console.log("\n🧹 Cleaning up test registrations from live database (zero residues)...");
   let cleanupPassed = true;
-  for (const phone of [testPhone, pendingPhone, "9448610198"]) {
+  for (const phone of [testPhone, pendingPhone, duplicatePhone]) {
     try {
       const cleanupRes = await fetch(`${SUPABASE_URL}/rest/v1/members?phone=eq.${phone}`, {
         method: 'DELETE',
