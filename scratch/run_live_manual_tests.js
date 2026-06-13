@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hqaimprjdejeklrtntfz.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYWltcHJqZGVqZWtscnRudGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODk5MzksImV4cCI6MjA5Njc2NTkzOX0.HgeoS1c8B0oK67PnXzr3q_nsRDLaBAB1XGRg1O0rk1I';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const API_BASE_URL = process.env.API_BASE_URL || 'https://4ec879a8.yep-01l.pages.dev';
+const API_BASE_URL = process.env.API_BASE_URL || 'https://test.yep-01l.pages.dev';
 
 // Use Service Role Key if available (to bypass RLS for cleanup/deletes), otherwise fallback to Anon Key
 const adminKey = SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY;
