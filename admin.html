@@ -2102,6 +2102,20 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   </div>
 </div>
 
+<!-- CUSTOM ACTION CONFIRMATION MODAL -->
+<div class="details-modal-overlay" id="confirm-action-modal" onclick="closeConfirmModal(false)">
+  <div class="details-modal-content" onclick="event.stopPropagation()" style="grid-template-columns: 1fr; max-width: 420px; padding: 36px 24px; text-align: center; border: 2px solid var(--gold); background: linear-gradient(135deg, rgba(28,28,46,0.98), rgba(10,10,16,1));">
+    <button class="btn-close-details" onclick="closeConfirmModal(false)">✕</button>
+    <div style="font-size: 2.8rem; margin-bottom: 12px; filter: drop-shadow(0 0 8px rgba(244,196,48,0.25));">❓</div>
+    <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.45rem; color: var(--gold); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">Please Confirm</h3>
+    <p id="confirm-modal-message" style="font-size: 0.95rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin-bottom: 24px; font-weight: 500;"></p>
+    <div style="display: flex; gap: 12px; justify-content: center;">
+      <button type="button" class="btn-submit" id="confirm-modal-btn-yes" onclick="closeConfirmModal(true)" style="background:#4CAF50; color:white; flex:1; margin-top:0; font-weight:700; height:42px; border-radius:6px; font-family:'Rajdhani',sans-serif; text-transform:uppercase; letter-spacing:0.5px; border:none; cursor:pointer;">Confirm</button>
+      <button type="button" class="btn-submit" onclick="closeConfirmModal(false)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:white; flex:1; margin-top:0; height:42px; border-radius:6px; font-family:'Rajdhani',sans-serif; text-transform:uppercase; letter-spacing:0.5px; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- SUPABASE CLIENT SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -2136,6 +2150,30 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // --- CUSTOM CONFIRM MODAL CONTROLLERS ---
+  let confirmResolveCallback = null;
+
+  function showConfirmModal(message, yesLabel = "Confirm") {
+    return new Promise((resolve) => {
+      document.getElementById('confirm-modal-message').textContent = message;
+      document.getElementById('confirm-modal-btn-yes').textContent = yesLabel;
+      
+      const modal = document.getElementById('confirm-action-modal');
+      modal.classList.add('active');
+      
+      confirmResolveCallback = resolve;
+    });
+  }
+
+  function closeConfirmModal(result) {
+    const modal = document.getElementById('confirm-action-modal');
+    modal.classList.remove('active');
+    if (confirmResolveCallback) {
+      confirmResolveCallback(result);
+      confirmResolveCallback = null;
+    }
   }
 
   // Initialize Supabase if credentials are provided
@@ -2384,7 +2422,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     
     // If turning OFF (unchecked), show warning prompt
     if (!isChecked) {
-      const confirmOff = confirm("This will make membership registration completely FREE (bypassing Razorpay). Are you sure you want to disable the payment requirement?");
+      const confirmOff = await showConfirmModal("This will make membership registration completely FREE (bypassing Razorpay). Are you sure you want to disable the payment requirement?", "Yes, Disable");
       if (!confirmOff) {
         // Revert checkbox state to checked
         checkboxEl.checked = true;
@@ -3077,7 +3115,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   }
 
   async function handleBulkApprove() {
-    if (!confirm(`Are you sure you want to approve ${selectedIds.length} selected members?`)) return;
+    const confirmed = await showConfirmModal(`Are you sure you want to approve ${selectedIds.length} selected members?`, "Yes, Approve");
+    if (!confirmed) return;
 
     if (!supabaseClient) {
       // Mock bulk approval
@@ -3143,7 +3182,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   }
 
   async function handleBulkDelete() {
-    if (!confirm(`WARNING: Are you sure you want to permanently delete the ${selectedIds.length} selected member applications? This action is irreversible.`)) return;
+    const confirmed = await showConfirmModal(`WARNING: Are you sure you want to permanently delete the ${selectedIds.length} selected member applications? This action is irreversible.`, "Yes, Delete");
+    if (!confirmed) return;
 
     if (!supabaseClient) {
       // Mock bulk delete
@@ -3192,7 +3232,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
   /* ── ADMIN ACTIONS (SINGLE ITEMS) ── */
   async function handleApproveMember(id) {
-    if (!confirm("Are you sure you want to approve this member? This will generate their ID Card.")) return;
+    const confirmed = await showConfirmModal("Are you sure you want to approve this member? This will generate their ID Card.", "Yes, Approve");
+    if (!confirmed) return;
 
     if (!supabaseClient) {
       // Mock approval
@@ -3239,7 +3280,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   }
 
   async function handleDeleteMember(id) {
-    if (!confirm("Are you sure you want to permanently delete this member registration?")) return;
+    const confirmed = await showConfirmModal("Are you sure you want to permanently delete this member registration?", "Yes, Delete");
+    if (!confirmed) return;
 
     if (!supabaseClient) {
       // Mock delete
@@ -3279,7 +3321,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   }
 
   async function purgeTestData() {
-    if (!confirm("Are you sure you want to scan the database and delete all test user registrations (names containing 'Test' or phone starting with '900' / '800')? This action is irreversible.")) return;
+    const confirmed = await showConfirmModal("Are you sure you want to scan the database and delete all test user registrations (names containing 'Test' or phone starting with '900' / '800')? This action is irreversible.", "Yes, Purge");
+    if (!confirmed) return;
 
     const statusEl = document.getElementById('purge-status');
     const btnPurge = document.getElementById('btn-purge-test-data');
