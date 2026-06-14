@@ -93,9 +93,30 @@ async function runLiveTests() {
   const customAmountAadhaarHash = await sha256(customAmountAadhaar);
   const secureCustomAmountAadhaar = `${customAmountAadhaarHash}:${customAmountAadhaar.slice(-4)}`;
 
+  // Configuration Permutations Test Variables
+  const case21Phone = `8001${randomSuffix}`;
+  const case21Aadhaar = `110111${randomSuffix}`;
+  const secureCase21Aadhaar = `${await sha256(case21Aadhaar)}:${case21Aadhaar.slice(-4)}`;
+
+  const case22Phone = `8002${randomSuffix}`;
+  const case22Aadhaar = `110222${randomSuffix}`;
+  const secureCase22Aadhaar = `${await sha256(case22Aadhaar)}:${case22Aadhaar.slice(-4)}`;
+
+  const case23Phone = `8003${randomSuffix}`;
+  const case23Aadhaar = `110333${randomSuffix}`;
+  const secureCase23Aadhaar = `${await sha256(case23Aadhaar)}:${case23Aadhaar.slice(-4)}`;
+
+  const case24Phone = `8004${randomSuffix}`;
+  const case24Aadhaar = `110444${randomSuffix}`;
+  const secureCase24Aadhaar = `${await sha256(case24Aadhaar)}:${case24Aadhaar.slice(-4)}`;
+
+  const case25Phone = `8005${randomSuffix}`;
+  const case25Aadhaar = `110555${randomSuffix}`;
+  const secureCase25Aadhaar = `${await sha256(case25Aadhaar)}:${case25Aadhaar.slice(-4)}`;
+
   // --- STARTUP CLEANUP: Remove leftover records ---
   console.log("\n🧹 Performing startup cleanup to ensure fresh state...");
-  for (const phone of [testPhone, pendingPhone, duplicatePhone, freePhone, customAmountPhone]) {
+  for (const phone of [testPhone, pendingPhone, duplicatePhone, freePhone, customAmountPhone, case21Phone, case22Phone, case23Phone, case24Phone, case25Phone]) {
     try {
       const cleanupRes = await fetch(`${SUPABASE_URL}/rest/v1/members?phone=eq.${phone}`, {
         method: 'DELETE',
@@ -140,6 +161,12 @@ async function runLiveTests() {
   let test6Passed = false;
   let test7Passed = false;
   let test8Passed = false;
+
+  let test21Passed = false;
+  let test22Passed = false;
+  let test23Passed = false;
+  let test24Passed = false;
+  let test25Passed = false;
 
   // --- TEST case 1.1: Register Member (expect success) ---
   console.log("\n🧪 Test Case 1.1: Register new member (direct insert)...");
@@ -454,10 +481,269 @@ async function runLiveTests() {
     console.error("❌ Test 1.8 Exception:", err.message);
   }
 
+  // --- HELPERS FOR PERMUTATION TESTS ---
+  async function setAppSetting(key, value) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_settings`, {
+        method: 'POST',
+        headers: {
+          'apikey': adminKey,
+          'Authorization': `Bearer ${adminKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({ key, value })
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        console.warn(`   ⚠️ Failed to set app setting ${key}=${value}: ${text}`);
+      }
+    } catch (e) {
+      console.error(`   ⚠️ Exception setting app setting ${key}=${value}:`, e.message);
+    }
+  }
+
+  async function simulateCheckout(amount, phone, name) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/create-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: amount,
+          currency: 'INR',
+          phone: phone,
+          name: name
+        })
+      });
+      return res;
+    } catch (e) {
+      console.error("   Simulation checkout request failed:", e.message);
+      return null;
+    }
+  }
+
+  // --- TEST Case 2.1: payment_enabled = 'true', membership_fee = '1000' ---
+  console.log("\n🧪 Test Case 2.1: Payment ON (Require Payment) & Fee ₹1000...");
+  try {
+    await setAppSetting('payment_enabled', 'true');
+    await setAppSetting('membership_fee', '1000');
+    
+    // Simulate checkout creation
+    const checkoutRes = await simulateCheckout(1000, case21Phone, "Case 2.1 Member");
+    if (checkoutRes && checkoutRes.ok) {
+      const checkoutData = await checkoutRes.json();
+      if (checkoutData.success && checkoutData.order.amount === 100000) {
+        console.log("   ✅ Checkout created successfully with 100000 paise (₹1000).");
+        
+        // Insert record representing paid status
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({
+            name: "Case 2.1 Paid Member",
+            phone: case21Phone,
+            aadhaar: secureCase21Aadhaar,
+            qualification: "SSLC",
+            state: "Karnataka",
+            district: "Mysuru / ಮೈಸೂರು",
+            taluk: "Mysuru / ಮೈಸೂರು",
+            photo_url: photo1.url,
+            approved: false,
+            payment_status: 'paid',
+            payment_id: 'pay_mock_case_2_1',
+            amount_paid: 1000
+          })
+        });
+
+        if (res.ok) {
+          console.log("   ✅ Member inserted successfully with status 'paid' and ₹1000.");
+          test21Passed = true;
+        } else {
+          console.error("   ❌ Member insertion failed:", await res.text());
+        }
+      } else {
+        console.error("   ❌ Checkout data mismatch:", checkoutData);
+      }
+    } else {
+      console.error("   ❌ Checkout creation failed status:", checkoutRes ? checkoutRes.status : "No response");
+    }
+  } catch (err) {
+    console.error("   ❌ Test 2.1 Exception:", err.message);
+  }
+
+  // --- TEST Case 2.2: payment_enabled = 'true', membership_fee = '500' ---
+  console.log("\n🧪 Test Case 2.2: Payment ON (Require Payment) & Fee ₹500...");
+  try {
+    await setAppSetting('payment_enabled', 'true');
+    await setAppSetting('membership_fee', '500');
+    
+    // Simulate checkout creation
+    const checkoutRes = await simulateCheckout(500, case22Phone, "Case 2.2 Member");
+    if (checkoutRes && checkoutRes.ok) {
+      const checkoutData = await checkoutRes.json();
+      if (checkoutData.success && checkoutData.order.amount === 50000) {
+        console.log("   ✅ Checkout created successfully with 50000 paise (₹500).");
+        
+        // Insert record representing paid status
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({
+            name: "Case 2.2 Paid Member",
+            phone: case22Phone,
+            aadhaar: secureCase22Aadhaar,
+            qualification: "PUC",
+            state: "Karnataka",
+            district: "Udupi / ಉಡುಪಿ",
+            taluk: "Karkala / ಕಾರ್ಕಳ",
+            photo_url: photo1.url,
+            approved: false,
+            payment_status: 'paid',
+            payment_id: 'pay_mock_case_2_2',
+            amount_paid: 500
+          })
+        });
+
+        if (res.ok) {
+          console.log("   ✅ Member inserted successfully with status 'paid' and ₹500.");
+          test22Passed = true;
+        } else {
+          console.error("   ❌ Member insertion failed:", await res.text());
+        }
+      } else {
+        console.error("   ❌ Checkout data mismatch:", checkoutData);
+      }
+    } else {
+      console.error("   ❌ Checkout creation failed status:", checkoutRes ? checkoutRes.status : "No response");
+    }
+  } catch (err) {
+    console.error("   ❌ Test 2.2 Exception:", err.message);
+  }
+
+  // --- TEST Case 2.3: payment_enabled = 'false', membership_fee = '1000' ---
+  console.log("\n🧪 Test Case 2.3: Payment OFF (Membership Free) & Fee ₹1000 (Fee bypassed)...");
+  try {
+    await setAppSetting('payment_enabled', 'false');
+    await setAppSetting('membership_fee', '1000');
+    
+    // In free mode, the client bypasses Razorpay entirely and does a direct insert.
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        name: "Case 2.3 Free Member",
+        phone: case23Phone,
+        aadhaar: secureCase23Aadhaar,
+        qualification: "Graduate",
+        state: "Karnataka",
+        district: "Mysuru / ಮೈಸೂರು",
+        taluk: "Nanjangud / ನಂಜನಗೂಡು",
+        photo_url: photo1.url,
+        approved: false,
+        payment_status: 'free',
+        payment_id: 'FREE_REGISTRATION',
+        amount_paid: 0
+      })
+    });
+
+    if (res.ok) {
+      console.log("   ✅ Member inserted successfully with status 'free' and ₹0.");
+      test23Passed = true;
+    } else {
+      console.error("   ❌ Member insertion failed:", await res.text());
+    }
+  } catch (err) {
+    console.error("   ❌ Test 2.3 Exception:", err.message);
+  }
+
+  // --- TEST Case 2.4: payment_enabled = 'false', membership_fee = '500' ---
+  console.log("\n🧪 Test Case 2.4: Payment OFF (Membership Free) & Fee ₹500 (Fee bypassed)...");
+  try {
+    await setAppSetting('payment_enabled', 'false');
+    await setAppSetting('membership_fee', '500');
+    
+    // In free mode, direct insert with 'free' and 0
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        name: "Case 2.4 Free Member",
+        phone: case24Phone,
+        aadhaar: secureCase24Aadhaar,
+        qualification: "Post Graduate",
+        state: "Karnataka",
+        district: "Tumakuru / ತುಮಕೂರು",
+        taluk: "Gubbi / ಗುಬ್ಬಿ",
+        photo_url: photo1.url,
+        approved: false,
+        payment_status: 'free',
+        payment_id: 'FREE_REGISTRATION',
+        amount_paid: 0
+      })
+    });
+
+    if (res.ok) {
+      console.log("   ✅ Member inserted successfully with status 'free' and ₹0.");
+      test24Passed = true;
+    } else {
+      console.error("   ❌ Member insertion failed:", await res.text());
+    }
+  } catch (err) {
+    console.error("   ❌ Test 2.4 Exception:", err.message);
+  }
+
+  // --- TEST Case 2.5: payment_enabled = 'true', membership_fee = '0' ---
+  console.log("\n🧪 Test Case 2.5: Payment ON (Require Payment) & Fee ₹0 (Expect Failure)...");
+  try {
+    await setAppSetting('payment_enabled', 'true');
+    await setAppSetting('membership_fee', '0');
+    
+    // Call create-checkout with amount 0. This must fail because ₹0 is invalid.
+    const checkoutRes = await simulateCheckout(0, case25Phone, "Case 2.5 Member");
+    if (checkoutRes && checkoutRes.status === 400) {
+      const checkoutData = await checkoutRes.json();
+      if (!checkoutData.success && checkoutData.error.includes("Missing amount")) {
+        console.log(`   ✅ Checkout creation successfully rejected as expected (Status 400): ${checkoutData.error}`);
+        test25Passed = true;
+      } else {
+        console.error("   ❌ Checkout response success flag was true or error message mismatch:", checkoutData);
+      }
+    } else {
+      console.error("   ❌ Checkout creation response status was not 400:", checkoutRes ? checkoutRes.status : "No response");
+    }
+  } catch (err) {
+    console.error("   ❌ Test 2.5 Exception:", err.message);
+  }
+
+  // Restore Default Settings
+  console.log("\n⚙️ Restoring default Supabase app settings...");
+  await setAppSetting('payment_enabled', 'true');
+  await setAppSetting('membership_fee', '1000');
+
   // --- CLEANUP: Delete the test members and their R2 files ---
   console.log("\n🧹 Cleaning up test registrations from live database (zero residues)...");
   let cleanupPassed = true;
-  for (const phone of [testPhone, pendingPhone, duplicatePhone, freePhone, customAmountPhone]) {
+  for (const phone of [testPhone, pendingPhone, duplicatePhone, freePhone, customAmountPhone, case21Phone, case22Phone, case23Phone, case24Phone, case25Phone]) {
     try {
       const cleanupRes = await fetch(`${SUPABASE_URL}/rest/v1/members?phone=eq.${phone}`, {
         method: 'DELETE',
@@ -507,9 +793,15 @@ async function runLiveTests() {
   console.log(`Test 1.6 (Block duplicate on paid member): ${test6Passed ? "PASS" : "FAIL"}`);
   console.log(`Test 1.7 (Register free status member): ${test7Passed ? "PASS" : "FAIL"}`);
   console.log(`Test 1.8 (Register custom payment amount): ${test8Passed ? "PASS" : "FAIL"}`);
+
+  console.log(`Test 2.1 (Payment ON, Fee 1000): ${test21Passed ? "PASS" : "FAIL"}`);
+  console.log(`Test 2.2 (Payment ON, Fee 500): ${test22Passed ? "PASS" : "FAIL"}`);
+  console.log(`Test 2.3 (Payment OFF, Fee 1000): ${test23Passed ? "PASS" : "FAIL"}`);
+  console.log(`Test 2.4 (Payment OFF, Fee 500): ${test24Passed ? "PASS" : "FAIL"}`);
+  console.log(`Test 2.5 (Payment ON, Fee 0): ${test25Passed ? "PASS" : "FAIL"}`);
   console.log(`Cleanup Verification (0 residues): ${cleanupPassed ? "PASS" : "FAIL"}`);
   
-  if (test1Passed && test2Passed && test3Passed && test4Passed && test5Passed && test6Passed && test7Passed && test8Passed && cleanupPassed) {
+  if (test1Passed && test2Passed && test3Passed && test4Passed && test5Passed && test6Passed && test7Passed && test8Passed && test21Passed && test22Passed && test23Passed && test24Passed && test25Passed && cleanupPassed) {
     console.log("\n🎉 ALL LIVE DATABASE CONSTRAINT TESTS AND CLEANUPS PASSED SUCCESSFULLY! 🎉\n");
   } else {
     console.error("\n❌ SOME LIVE DATABASE CONSTRAINT TESTS OR CLEANUPS FAILED!\n");

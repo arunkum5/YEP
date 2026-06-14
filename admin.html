@@ -2069,6 +2069,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   let paymentsCurrentPage = 1;
   const paymentsItemsPerPage = 10;
   let filteredPayments = [];
+  let lastSavedMembershipFee = 1000;
 
   // Selected registration rows
   let selectedIds = [];
@@ -2289,6 +2290,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       const toggleEl = document.getElementById('payments-toggle-payments');
       if (toggleEl) toggleEl.checked = mockPay === 'true';
       const mockFee = localStorage.getItem('mock_membership_fee') || '1000';
+      lastSavedMembershipFee = parseInt(mockFee, 10) || 1000;
       const feeEl = document.getElementById('payments-input-fee');
       if (feeEl) feeEl.value = mockFee;
       return;
@@ -2314,9 +2316,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         .maybeSingle();
 
       if (!feeError && feeData) {
+        lastSavedMembershipFee = parseInt(feeData.value, 10) || 1000;
         const feeEl = document.getElementById('payments-input-fee');
         if (feeEl) feeEl.value = feeData.value;
       } else {
+        lastSavedMembershipFee = 1000;
         const feeEl = document.getElementById('payments-input-fee');
         if (feeEl) feeEl.value = '1000';
       }
@@ -2373,13 +2377,16 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const feeInput = document.getElementById('payments-input-fee');
     const feeValue = parseInt(feeInput.value, 10);
     
-    if (isNaN(feeValue) || feeValue < 1) {
-      alert("Please enter a valid membership fee amount (minimum ₹1).");
+    // Enforce range: ₹1 to ₹1,00,000
+    if (isNaN(feeValue) || feeValue < 1 || feeValue > 100000) {
+      alert("Please enter a valid membership fee amount (range: ₹1 to ₹1,00,000).");
+      feeInput.value = lastSavedMembershipFee;
       return;
     }
 
     if (!supabaseClient) {
       localStorage.setItem('mock_membership_fee', feeValue.toString());
+      lastSavedMembershipFee = feeValue;
       alert(`[Mock Mode] Membership fee saved as ₹${feeValue}.`);
       return;
     }
@@ -2390,10 +2397,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         .upsert({ key: 'membership_fee', value: feeValue.toString() });
 
       if (error) throw error;
+      lastSavedMembershipFee = feeValue;
       alert(`Membership fee successfully updated to ₹${feeValue}.`);
     } catch (err) {
       console.error("Failed to update membership fee setting:", err);
       alert("Failed to save membership fee: " + err.message);
+      feeInput.value = lastSavedMembershipFee;
     }
   }
 
