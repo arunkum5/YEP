@@ -2339,7 +2339,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       }
     } catch (err) {
       console.error("Error reading database: ", err);
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #ff5252;">Failed to load data. Ensure RLS table permissions are active.</td></tr>`;
+      const errDetail = err.message || (typeof err === 'object' ? JSON.stringify(err) : err);
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #ff5252;">
+        Failed to load data. Ensure RLS table permissions are active.<br>
+        <small style="color: rgba(255,82,82,0.75); font-family: monospace; display: block; margin-top: 10px; font-size: 0.82rem;">Error Details: ${errDetail}</small>
+      </td></tr>`;
     }
   }
 
