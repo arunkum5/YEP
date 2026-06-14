@@ -1440,6 +1440,54 @@
   .password-toggle-btn:hover {
     color: var(--gold);
   }
+
+  /* Toast Notification */
+  .toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .toast-message {
+    pointer-events: auto;
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(120%);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+    opacity: 0;
+  }
+  .toast-message.active {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .toast-message.success {
+    border-left: 4px solid var(--green);
+  }
+  .toast-message.error {
+    border-left: 4px solid #f44336;
+  }
+  .toast-message.info {
+    border-left: 4px solid var(--gold);
+  }
+  .toast-icon {
+    font-size: 1.15rem;
+  }
 </style>
 </head>
 <body>
@@ -2434,7 +2482,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   async function togglePaymentRequirement(isEnabled) {
     if (!supabaseClient) {
       localStorage.setItem('mock_payment_enabled', isEnabled.toString());
-      alert(`[Mock Mode] Payment requirement turned ${isEnabled ? 'ON' : 'OFF'}.`);
+      showToast(`[Mock Mode] Payment requirement turned ${isEnabled ? 'ON' : 'OFF'}.`, 'info');
       return true;
     }
     try {
@@ -2443,11 +2491,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         .upsert({ key: 'payment_enabled', value: isEnabled.toString() });
 
       if (error) throw error;
-      alert(`Payment requirement turned ${isEnabled ? 'ON' : 'OFF'}.`);
+      showToast(`Payment requirement turned ${isEnabled ? 'ON' : 'OFF'}.`, 'success');
       return true;
     } catch (err) {
       console.error("Failed to update settings:", err);
-      alert("Failed to update settings: " + err.message);
+      showToast("Failed to update settings: " + err.message, 'error');
       return false;
     }
   }
@@ -2458,7 +2506,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     
     // Enforce range: ₹1 to ₹1,00,000
     if (isNaN(feeValue) || feeValue < 1 || feeValue > 100000) {
-      alert("Please enter a valid membership fee amount (range: ₹1 to ₹1,00,000).");
+      showToast("Please enter a valid membership fee amount (range: ₹1 to ₹1,00,000).", 'error');
       feeInput.value = lastSavedMembershipFee;
       return;
     }
@@ -2466,7 +2514,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     if (!supabaseClient) {
       localStorage.setItem('mock_membership_fee', feeValue.toString());
       lastSavedMembershipFee = feeValue;
-      alert(`[Mock Mode] Membership fee saved as ₹${feeValue}.`);
+      showToast(`[Mock Mode] Membership fee saved as ₹${feeValue}.`, 'info');
       return;
     }
 
@@ -2477,10 +2525,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
       if (error) throw error;
       lastSavedMembershipFee = feeValue;
-      alert(`Membership fee successfully updated to ₹${feeValue}.`);
+      showToast(`Membership fee successfully updated to ₹${feeValue}.`, 'success');
     } catch (err) {
       console.error("Failed to update membership fee setting:", err);
-      alert("Failed to save membership fee: " + err.message);
+      showToast("Failed to save membership fee: " + err.message, 'error');
       feeInput.value = lastSavedMembershipFee;
     }
   }
@@ -4365,6 +4413,40 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
     // 3. Apply filters and render table
     applyPaymentsFilters();
+  }
+
+  function showToast(message, type = 'success') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-message ${type}`;
+    
+    let icon = '🔔';
+    if (type === 'success') icon = '✅';
+    else if (type === 'error') icon = '❌';
+    else if (type === 'info') icon = 'ℹ️';
+    
+    toast.innerHTML = `
+      <span class="toast-icon">${icon}</span>
+      <span class="toast-text">${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Trigger slide-in
+    setTimeout(() => toast.classList.add('active'), 50);
+    
+    // Auto-remove after 3.5s
+    setTimeout(() => {
+      toast.classList.remove('active');
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
   }
 
   </script>
