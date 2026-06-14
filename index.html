@@ -2266,7 +2266,7 @@
           YoungSTAR Empowerment Party · @2026<br>
           <span>Youth Power – Our Strength – Our Future</span>
         </div>
-        <div class="card-validity" id="retrieved-validity-val">Issued: --/--/---- · Valid: 1 Year</div>
+        <div class="card-validity" id="retrieved-validity-val">Issued: --/--/---- · Validity: 1 Year</div>
       </div>
     </div>
 
@@ -2500,7 +2500,7 @@
     const mm = String(createdDate.getMonth() + 1).padStart(2, '0');
     const yyyy = createdDate.getFullYear();
     const formattedDate = `${dd}/${mm}/${yyyy}`;
-    document.getElementById('retrieved-validity-val').textContent = `Issued: ${formattedDate} · Valid: 1 Year`;
+    document.getElementById('retrieved-validity-val').textContent = `Issued: ${formattedDate} · Validity: 1 Year`;
     
     // Set approval status
     const downloadBtn = document.getElementById('retrieved-download-btn');
@@ -2802,7 +2802,7 @@
         const mm = String(createdDate.getMonth() + 1).padStart(2, '0');
         const yyyy = createdDate.getFullYear();
         const formattedDate = `${dd}/${mm}/${yyyy}`;
-        const valText = `Issued: ${formattedDate} | Valid: 1 Year`;
+        const valText = `Issued: ${formattedDate} | Validity: 1 Year`;
         ctx.font = "600 12px 'Rajdhani', sans-serif";
         const valWidth = ctx.measureText(valText).width + 16;
         drawRoundedRect(300 - valWidth/2, 866, valWidth, 20, 4, "rgba(255,255,255,0.08)", "rgba(255,255,255,0.15)", 1);
