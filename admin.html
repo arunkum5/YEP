@@ -1731,6 +1731,9 @@
             </select>
           </div>
           <button onclick="resetPaymentsFilters()" style="padding: 10px 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">Reset</button>
+          <button onclick="exportPaymentsToCSV()" style="padding: 10px 18px; background: var(--green); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;">
+            📥 Export CSV
+          </button>
         </div>
 
         <!-- Payments Table Card -->
@@ -3508,6 +3511,39 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", `YEP_Members_Export_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function exportPaymentsToCSV() {
+    if (filteredPayments.length === 0) {
+      alert("No active payment rows to export.");
+      return;
+    }
+
+    const headers = ['Applicant Name', 'Phone', 'Payment Status', 'Transaction ID', 'Amount Paid', 'Transaction Date'];
+    const rows = filteredPayments.map(m => {
+      const payStatus = m.payment_status ? m.payment_status.toUpperCase() : 'PENDING';
+      const amtPaid = m.amount_paid !== null && m.amount_paid !== undefined ? `₹${m.amount_paid}` : (payStatus === 'PAID' ? '₹1000' : '₹0');
+      return [
+        m.name || '',
+        m.phone || '',
+        payStatus,
+        m.payment_id || 'N/A',
+        amtPaid,
+        m.created_at ? m.created_at.replace('T', ' ').substring(0, 19) : ''
+      ];
+    });
+
+    // Construct CSV content
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += [headers.join(','), ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""')}"`).join(','))].join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `YEP_Payments_Export_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
