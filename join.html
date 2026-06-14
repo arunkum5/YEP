@@ -484,10 +484,12 @@
     font-family: 'Rajdhani', sans-serif;
     font-size: 2.2rem;
     font-weight: 900;
-    color: rgba(255, 82, 82, 0.15);
+    color: rgba(255, 30, 30, 0.9);
     white-space: nowrap;
     pointer-events: none;
-    border: 4px dashed rgba(255, 82, 82, 0.15);
+    border: 4px dashed rgba(255, 30, 30, 0.9);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
     padding: 8px 16px;
     letter-spacing: 2px;
     border-radius: 8px;
@@ -1497,9 +1499,10 @@
     <!-- Success Notice Message -->
     <div class="success-notice-box" style="margin-top:0;">
       <div class="notice-icon">⏱️</div>
-      <div class="notice-content">
-        <div class="notice-text-en">Under Review</div>
-        <div class="notice-text-kn">ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ</div>
+      <div class="notice-content" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+        <span class="notice-text-en" style="font-weight: 700; color: white;">Under Review</span>
+        <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">/</span>
+        <span class="notice-text-kn" style="margin-top: 0; display: inline; font-weight: 700;">ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ</span>
       </div>
     </div>
 
