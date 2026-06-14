@@ -204,11 +204,29 @@
       background: rgba(0,0,0,0.3);
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       flex-shrink: 0;
+      position: relative;
     }
     .card-avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+    .photo-status-watermark {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 0;
+      color: white;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(255, 82, 82, 0.9); /* Pending red */
+      border-top: 1px solid rgba(255,255,255,0.15);
+      z-index: 5;
     }
     .card-info {
       display: flex;
@@ -452,6 +470,7 @@
         <div class="card-body">
           <div class="card-avatar">
             <img id="retrieved-photo" src="yep_leader_seal.png" alt="Member Photo">
+            <div class="photo-status-watermark" id="retrieved-status-watermark">PENDING</div>
           </div>
           <div class="card-info">
             <div class="card-field name" id="retrieved-name-val">Loading Name</div>
@@ -562,7 +581,6 @@
 
     function renderCard(member) {
       const cardEl = document.getElementById('retrieved-card');
-      const statusBadge = document.getElementById('retrieved-status-badge');
       const downloadBtn = document.getElementById('download-btn');
       const pendingNotice = document.getElementById('pending-notice-box');
 
@@ -583,15 +601,15 @@
       const formattedDate = `${dd}/${mm}/${yyyy}`;
       document.getElementById('retrieved-validity-val').textContent = `Issued: ${formattedDate} · Valid: 1 Year`;
 
+      const statusWatermark = document.getElementById('retrieved-status-watermark');
+
       if (member.approved) {
         cardEl.classList.remove('pending-watermark');
         document.getElementById('retrieved-id-val').textContent = member.member_id || `YEP-KA-${String(member.id).substring(0, 8).toUpperCase()}`;
         document.getElementById('retrieved-id-val').style.color = 'var(--gold)';
 
-        statusBadge.style.background = 'rgba(76, 175, 80, 0.1)';
-        statusBadge.style.borderColor = '#4CAF50';
-        statusBadge.style.color = '#4CAF50';
-        statusBadge.textContent = '✓ APPROVED';
+        statusWatermark.style.background = 'rgba(76, 175, 80, 0.9)';
+        statusWatermark.textContent = '✓ APPROVED';
 
         downloadBtn.disabled = false;
         downloadBtn.onclick = () => downloadCardAsImage(member);
@@ -601,12 +619,9 @@
         document.getElementById('retrieved-id-val').textContent = 'PENDING VERIFICATION';
         document.getElementById('retrieved-id-val').style.color = 'rgba(255,255,255,0.4)';
 
-        statusBadge.style.background = 'rgba(255, 82, 82, 0.1)';
-        statusBadge.style.borderColor = '#FF5252';
-        statusBadge.style.color = '#FF5252';
-        statusBadge.textContent = '✕ PENDING';
+        statusWatermark.style.background = 'rgba(255, 82, 82, 0.9)';
+        statusWatermark.textContent = '✕ PENDING';
 
-        // Allow download even if pending, or keep disabled. Let's allow download of card but keep it watermarked
         downloadBtn.disabled = false;
         downloadBtn.onclick = () => downloadCardAsImage(member);
         pendingNotice.style.display = 'flex';
@@ -793,6 +808,15 @@
             ctx.textAlign = "center";
             ctx.fillText("YEP", 300, photoY + photoSize/2 + 16);
           }
+
+          // Draw status banner at the bottom of the photo container (inside clip)
+          ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.95)" : "rgba(255, 82, 82, 0.95)";
+          ctx.fillRect(photoX, photoY + photoSize - 30, photoSize, 30);
+          ctx.font = "bold 13px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#FFFFFF";
+          ctx.textAlign = "center";
+          ctx.fillText(member.approved ? "APPROVED" : "PENDING", 300, photoY + photoSize - 11);
+
           ctx.restore();
           
           // Re-draw photo border
@@ -844,19 +868,7 @@
           const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
           ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 767); // Shifted down
  
-          // Status Stamp
-          ctx.font = "bold 14px 'Rajdhani', sans-serif";
-          const statusText = member.approved ? "✓ APPROVED" : "✕ PENDING";
-          const statusColor = member.approved ? "#4CAF50" : "#FF5252";
-          const statusBg = member.approved ? "rgba(76,175,80,0.12)" : "rgba(255,82,82,0.12)";
-          const statusWidth = ctx.measureText(statusText).width + 20;
-          const statusX = 440 - statusWidth/2;
-          const statusY = 690; // Shifted down
-          
-          drawRoundedRect(statusX, statusY, statusWidth, 32, 6, statusBg, statusColor, 1.5);
-          ctx.fillStyle = statusColor;
-          ctx.textAlign = "center";
-          ctx.fillText(statusText, 440, statusY + 21);
+
 
           // Watermark on image if pending
           if (!member.approved) {
