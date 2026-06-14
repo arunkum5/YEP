@@ -1427,67 +1427,73 @@
 
 <!-- SUCCESS CARD MODAL -->
 <div class="modal-overlay" id="success-modal">
-  <div class="membership-card pending-watermark" id="membership-id-card">
-    <div class="card-header">
-      <div class="card-logo">
-        <img src="yep_leader_seal.png" alt="YEP logo">
-        <div class="card-title-wrap">
-          <span class="card-title-main">YoungSTAR PARTY</span>
-          <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
-          <span class="card-title-sub">YEP KARNATAKA</span>
-        </div>
-      </div>
-      <div class="card-badge">MEMBER</div>
-    </div>
-
-    <div class="card-body">
-      <div class="card-avatar">
-        <img id="card-photo" src="" alt="Member Photo">
-      </div>
-      <div class="card-info">
-        <div class="card-field name" id="card-name-val">Loading Name</div>
-        
-        <div class="card-details-grid">
-          <div class="card-field">
-            <div class="card-label">Member ID</div>
-            <div class="card-val card-id-highlight" id="card-id-val" style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</div>
-          </div>
-
-          <div class="card-field">
-            <div class="card-label">Mobile Phone</div>
-            <div class="card-val" id="card-phone-val">N/A</div>
-          </div>
-
-          <div class="card-field">
-            <div class="card-label">District &amp; Taluk</div>
-            <div class="card-val" id="card-location-val">Bengaluru · South</div>
+  <div style="width:100%; max-width:440px; display:flex; flex-direction:column; align-items:center; gap:20px; margin: auto;">
+    <div class="membership-card pending-watermark" id="membership-id-card" style="width:100%;">
+      <div class="card-header">
+        <div class="card-logo">
+          <img src="yep_leader_seal.png" alt="YEP logo">
+          <div class="card-title-wrap">
+            <span class="card-title-main">YoungSTAR PARTY</span>
+            <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
+            <div class="card-leader-info">
+              K N Jagadish Kumar – Advocate – High Court of Delhi<br>
+              <span class="card-leader-info-kn">ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್</span>
+            </div>
+            <span class="card-title-sub">YEP KARNATAKA MEMBERSHIP CARD</span>
           </div>
         </div>
+        <div class="card-badge">MEMBER</div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-avatar">
+          <img id="card-photo" src="" alt="Member Photo">
+        </div>
+        <div class="card-info">
+          <div class="card-field name" id="card-name-val">Loading Name</div>
+          
+          <div class="card-details-grid">
+            <div class="card-field">
+              <div class="card-label">Member ID</div>
+              <div class="card-val card-id-highlight" id="card-id-val" style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</div>
+            </div>
+
+            <div class="card-field">
+              <div class="card-label">Mobile Phone</div>
+              <div class="card-val" id="card-phone-val">N/A</div>
+            </div>
+
+            <div class="card-field">
+              <div class="card-label">District &amp; Taluk</div>
+              <div class="card-val" id="card-location-val">Bengaluru · South</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="card-seal">
+          YoungSTAR Empowerment Party · @2026<br>
+          <span>Youth Power – Our Strength – Our Future</span>
+        </div>
+        <div class="card-validity" id="card-validity-val">Issued: --/--/---- · Valid: 1 Year</div>
       </div>
     </div>
 
-    <div class="card-footer">
-      <div class="card-seal">
-        YoungSTAR Empowerment Party · @2026<br>
-        <span>Youth Power – Our Strength – Our Future</span>
+    <!-- Success Notice Message -->
+    <div class="success-notice-box" style="margin-top:0;">
+      <div class="notice-icon">⏱️</div>
+      <div class="notice-content">
+        <div class="notice-text-en">Under Review</div>
+        <div class="notice-text-kn">ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ</div>
       </div>
-      <div class="card-validity" id="card-validity-val">Issued: --/--/---- · Valid: 1 Year</div>
     </div>
-  </div>
 
-  <!-- Success Notice Message -->
-  <div class="success-notice-box">
-    <div class="notice-icon">⏱️</div>
-    <div class="notice-content">
-      <div class="notice-text-en">Under review. Once approved (usually within 24 hours), you can download your official YEP ID card.</div>
-      <div class="notice-text-kn">ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ. ಅನುಮೋದನೆಯ ನಂತರ (ಸಾಮಾನ್ಯವಾಗಿ 24 ಗಂಟೆಗಳಲ್ಲಿ), ನಿಮ್ಮ ಅಧಿಕೃತ YEP ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಬಹುದು.</div>
+    <div class="modal-actions" style="margin-top:0;">
+      <a href="index.html" class="modal-btn home">
+        🏠 <span class="en">Return to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
+      </a>
     </div>
-  </div>
-
-  <div class="modal-actions">
-    <a href="index.html" class="modal-btn home">
-      🏠 <span class="en">Return to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
-    </a>
   </div>
 </div>
 
