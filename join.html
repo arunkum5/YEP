@@ -1150,16 +1150,16 @@
       <div class="form-step" id="step-4">
         <div class="form-group" style="text-align: center; margin-bottom: 24px;">
           <h2 style="font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; color: var(--gold); margin-bottom: 12px;">Membership Fee Payment / ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿ</h2>
-          <p class="en" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
+          <p class="en" id="fee-desc-en" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
             To complete your YEP membership registration, a one-time fee of <strong>₹1000</strong> is required.
           </p>
-          <p class="kn" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
+          <p class="kn" id="fee-desc-kn" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
             ನಿಮ್ಮ YEP ಸದಸ್ಯತ್ವ ನೋಂದಣಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು, ಒಂದು ಬಾರಿಯ ಶುಲ್ಕ <strong>₹1000</strong> ಪಾವತಿಸಬೇಕಾಗುತ್ತದೆ.
           </p>
           
           <div style="background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
             <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 6px;">Total Payable Amount / ಒಟ್ಟು ಪಾವತಿಸಬೇಕಾದ ಮೊತ್ತ</div>
-            <div style="font-size: 2.5rem; font-family: 'Rajdhani', sans-serif; font-weight: 800; color: var(--gold);">₹1000.00</div>
+            <div id="fee-amount-display" style="font-size: 2.5rem; font-family: 'Rajdhani', sans-serif; font-weight: 800; color: var(--gold);">₹1000.00</div>
             <div style="font-size: 0.8rem; color: #4CAF50; font-weight: 600; margin-top: 6px;">✓ Secure Encryption & Immediate Activation</div>
           </div>
           
@@ -1367,8 +1367,25 @@
   let currentStep = 1;
   let totalSteps = 3;
   let paymentRequired = false;
+  let membershipFee = 1000;
   let localVideoStream = null;
   let capturedPhotoData = null;
+
+  function updateMembershipFeeUI(fee) {
+    const descEn = document.getElementById('fee-desc-en');
+    const descKn = document.getElementById('fee-desc-kn');
+    const displayVal = document.getElementById('fee-amount-display');
+    
+    if (descEn) {
+      descEn.innerHTML = `To complete your YEP membership registration, a one-time fee of <strong>₹${fee}</strong> is required.`;
+    }
+    if (descKn) {
+      descKn.innerHTML = `ನಿಮ್ಮ YEP ಸದಸ್ಯತ್ವ ನೋಂದಣಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು, ಒಂದು ಬಾರಿಯ ಶುಲ್ಕ <strong>₹${fee}</strong> ಪಾವತಿಸಬೇಕಾಗುತ್ತದೆ.`;
+    }
+    if (displayVal) {
+      displayVal.textContent = `₹${fee.toFixed(2)}`;
+    }
+  }
 
   // Populate districts on startup
   window.addEventListener('DOMContentLoaded', async () => {
@@ -1380,18 +1397,30 @@
     try {
       const { data, error } = await supabaseClient
         .from('app_settings')
-        .select('value')
-        .eq('key', 'payment_enabled')
-        .maybeSingle();
+        .select('key, value');
       
-      if (!error && data && data.value === 'true') {
-        paymentRequired = true;
-        totalSteps = 4;
-        document.getElementById('dot-4').style.display = 'flex';
-      } else {
-        paymentRequired = false;
-        totalSteps = 3;
-        document.getElementById('dot-4').style.display = 'none';
+      if (!error && data) {
+        // Evaluate payment enabled toggle
+        const paySetting = data.find(item => item.key === 'payment_enabled');
+        if (paySetting && paySetting.value === 'true') {
+          paymentRequired = true;
+          totalSteps = 4;
+          document.getElementById('dot-4').style.display = 'flex';
+        } else {
+          paymentRequired = false;
+          totalSteps = 3;
+          document.getElementById('dot-4').style.display = 'none';
+        }
+
+        // Evaluate membership fee setting
+        const feeSetting = data.find(item => item.key === 'membership_fee');
+        if (feeSetting) {
+          const loadedFee = parseInt(feeSetting.value, 10);
+          if (!isNaN(loadedFee) && loadedFee > 0) {
+            membershipFee = loadedFee;
+            updateMembershipFeeUI(membershipFee);
+          }
+        }
       }
     } catch (err) {
       console.error("Failed to load app settings:", err);
@@ -1401,6 +1430,12 @@
         paymentRequired = true;
         totalSteps = 4;
         document.getElementById('dot-4').style.display = 'flex';
+      }
+      const mockFee = localStorage.getItem('mock_membership_fee') || '1000';
+      const parsedMockFee = parseInt(mockFee, 10);
+      if (!isNaN(parsedMockFee) && parsedMockFee > 0) {
+        membershipFee = parsedMockFee;
+        updateMembershipFeeUI(membershipFee);
       }
     }
     
@@ -1993,7 +2028,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: 1000,
+            amount: membershipFee,
             currency: 'INR',
             phone: phone,
             name: name,
@@ -2045,7 +2080,7 @@
                 approved: false,
                 payment_status: 'paid',
                 payment_id: paymentResponse.razorpay_payment_id,
-                amount_paid: 1000.00
+                amount_paid: membershipFee
               };
 
               let webhookAlreadyInserted = false;
