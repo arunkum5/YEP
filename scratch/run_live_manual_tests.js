@@ -83,9 +83,19 @@ async function runLiveTests() {
 
   const duplicatePhone = `9002${randomSuffix}`;
 
+  const freePhone = `9003${randomSuffix}`;
+  const freeAadhaar = `777777${randomSuffix}`;
+  const freeAadhaarHash = await sha256(freeAadhaar);
+  const secureFreeAadhaar = `${freeAadhaarHash}:${freeAadhaar.slice(-4)}`;
+
+  const customAmountPhone = `9004${randomSuffix}`;
+  const customAmountAadhaar = `666666${randomSuffix}`;
+  const customAmountAadhaarHash = await sha256(customAmountAadhaar);
+  const secureCustomAmountAadhaar = `${customAmountAadhaarHash}:${customAmountAadhaar.slice(-4)}`;
+
   // --- STARTUP CLEANUP: Remove leftover records ---
   console.log("\n🧹 Performing startup cleanup to ensure fresh state...");
-  for (const phone of [testPhone, pendingPhone, duplicatePhone]) {
+  for (const phone of [testPhone, pendingPhone, duplicatePhone, freePhone, customAmountPhone]) {
     try {
       const cleanupRes = await fetch(`${SUPABASE_URL}/rest/v1/members?phone=eq.${phone}`, {
         method: 'DELETE',
@@ -128,6 +138,8 @@ async function runLiveTests() {
   let test4Passed = false;
   let test5Passed = false;
   let test6Passed = false;
+  let test7Passed = false;
+  let test8Passed = false;
 
   // --- TEST case 1.1: Register Member (expect success) ---
   console.log("\n🧪 Test Case 1.1: Register new member (direct insert)...");
@@ -359,10 +371,93 @@ async function runLiveTests() {
     console.error("❌ Test 1.6 Exception:", err.message);
   }
 
+  // --- TEST case 1.7: Register member with 'free' status ---
+  console.log("\n🧪 Test Case 1.7: Register free member (payment_status: 'free')...");
+  try {
+    const freeMemberData = {
+      name: "Free Test Member",
+      phone: freePhone,
+      aadhaar: secureFreeAadhaar,
+      qualification: "Primary School",
+      state: "Karnataka",
+      district: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ",
+      taluk: "Bengaluru South / ಬೆಂಗಳೂರು ದಕ್ಷಿಣ",
+      village: "Free Village",
+      photo_url: photo1.url,
+      approved: false,
+      payment_status: 'free',
+      amount_paid: null
+    };
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(freeMemberData)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      console.log("✅ Free registration success! Record inserted:", data);
+      test7Passed = true;
+    } else {
+      const errText = await res.text();
+      console.error(`❌ Free registration insert failed (Status ${res.status}):`, errText);
+    }
+  } catch (err) {
+    console.error("❌ Test 1.7 Exception:", err.message);
+  }
+
+  // --- TEST case 1.8: Register member with custom payment amount ---
+  console.log("\n🧪 Test Case 1.8: Register member with custom payment amount (e.g. ₹1500.00)...");
+  try {
+    const customAmtData = {
+      name: "Custom Amount Member",
+      phone: customAmountPhone,
+      aadhaar: secureCustomAmountAadhaar,
+      qualification: "Postgraduate",
+      state: "Karnataka",
+      district: "Bengaluru Urban / ಬೆಂಗಳೂರು ನಗರ",
+      taluk: "Bengaluru South / ಬೆಂಗಳೂರು ದಕ್ಷಿಣ",
+      village: "Custom Village",
+      photo_url: photo2.url,
+      approved: false,
+      payment_status: 'paid',
+      payment_id: 'pay_test_custom_amount_1500',
+      amount_paid: 1500.00
+    };
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(customAmtData)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      console.log("✅ Custom amount registration success! Record inserted:", data);
+      test8Passed = true;
+    } else {
+      const errText = await res.text();
+      console.error(`❌ Custom amount registration insert failed (Status ${res.status}):`, errText);
+    }
+  } catch (err) {
+    console.error("❌ Test 1.8 Exception:", err.message);
+  }
+
   // --- CLEANUP: Delete the test members and their R2 files ---
   console.log("\n🧹 Cleaning up test registrations from live database (zero residues)...");
   let cleanupPassed = true;
-  for (const phone of [testPhone, pendingPhone, duplicatePhone]) {
+  for (const phone of [testPhone, pendingPhone, duplicatePhone, freePhone, customAmountPhone]) {
     try {
       const cleanupRes = await fetch(`${SUPABASE_URL}/rest/v1/members?phone=eq.${phone}`, {
         method: 'DELETE',
@@ -410,9 +505,11 @@ async function runLiveTests() {
   console.log(`Test 1.4 (Clean DB on payment failure): ${test4Passed ? "PASS" : "FAIL"}`);
   console.log(`Test 1.5 (Succeed retry of same user): ${test5Passed ? "PASS" : "FAIL"}`);
   console.log(`Test 1.6 (Block duplicate on paid member): ${test6Passed ? "PASS" : "FAIL"}`);
+  console.log(`Test 1.7 (Register free status member): ${test7Passed ? "PASS" : "FAIL"}`);
+  console.log(`Test 1.8 (Register custom payment amount): ${test8Passed ? "PASS" : "FAIL"}`);
   console.log(`Cleanup Verification (0 residues): ${cleanupPassed ? "PASS" : "FAIL"}`);
   
-  if (test1Passed && test2Passed && test3Passed && test4Passed && test5Passed && test6Passed && cleanupPassed) {
+  if (test1Passed && test2Passed && test3Passed && test4Passed && test5Passed && test6Passed && test7Passed && test8Passed && cleanupPassed) {
     console.log("\n🎉 ALL LIVE DATABASE CONSTRAINT TESTS AND CLEANUPS PASSED SUCCESSFULLY! 🎉\n");
   } else {
     console.error("\n❌ SOME LIVE DATABASE CONSTRAINT TESTS OR CLEANUPS FAILED!\n");
