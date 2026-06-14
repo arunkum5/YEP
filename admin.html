@@ -1230,6 +1230,7 @@
   /* Responsive styling */
   @media (max-width: 992px) {
     .charts-grid, .overview-logs-grid { grid-template-columns: 1fr; }
+    .payments-top-grid { grid-template-columns: 1fr !important; }
   }
   @media (max-width: 768px) {
     .sidebar { transform: translateX(-260px); }
@@ -1424,6 +1425,9 @@
       <button class="nav-item" id="tab-members" onclick="switchTab('members')">
         <span class="nav-icon">👥</span> Database / ನೋಂದಣಿಗಳು
       </button>
+      <button class="nav-item" id="tab-payments" onclick="switchTab('payments')">
+        <span class="nav-icon">💳</span> Payments / ಪಾವತಿಗಳು
+      </button>
       <button class="nav-item" id="tab-settings" onclick="switchTab('settings')">
         <span class="nav-icon">⚙️</span> DB Settings / ಸೆಟ್ಟಿಂಗ್ಸ್
       </button>
@@ -1581,11 +1585,89 @@
         </div>
 
         <!-- Pagination Controls -->
-        <div class="pagination">
-          <div class="pagination-info" id="pagination-status">Showing 0-0 of 0</div>
-          <div class="pagination-btns">
-            <button class="btn-page" id="btn-prev" onclick="changePage(-1)" disabled>Previous</button>
-            <button class="btn-page" id="btn-next" onclick="changePage(1)" disabled>Next</button>
+             <!-- ── PAYMENTS & REVENUE PANEL ── -->
+      <section class="panel-section" id="panel-payments" style="display: none;">
+        <!-- Top Metrics & Settings Grid -->
+        <div class="payments-top-grid" style="display: grid; grid-template-columns: 2fr 1.2fr; gap: 24px; margin-bottom: 30px;">
+          <!-- Column 1: Metrics -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div class="metric-card revenue" style="border-top: 4px solid var(--gold); background: rgba(255, 255, 255, 0.02); border-radius: 12px; padding: 20px; text-align: center;">
+              <div class="metric-val" id="payments-revenue-val" style="font-family: 'Rajdhani', sans-serif; font-size: 2.8rem; font-weight: 700; color: var(--gold); text-shadow: 0 0 20px rgba(244, 196, 48, 0.2);">₹0</div>
+              <div class="metric-label" style="font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-top: 8px;">Total Revenue / ಒಟ್ಟು ಆದಾಯ</div>
+            </div>
+            <div class="metric-card approved" style="border-top: 4px solid var(--green); background: rgba(255, 255, 255, 0.02); border-radius: 12px; padding: 20px; text-align: center;">
+              <div class="metric-val" id="payments-paid-count-val" style="font-family: 'Rajdhani', sans-serif; font-size: 2.8rem; font-weight: 700; color: var(--green); text-shadow: 0 0 20px rgba(19, 136, 8, 0.2);">0</div>
+              <div class="metric-label" style="font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-top: 8px;">Paid Transactions / ಪಾವತಿಸಿದವರು</div>
+            </div>
+            <div class="metric-card pending" style="border-top: 4px solid var(--saffron); background: rgba(255, 255, 255, 0.02); border-radius: 12px; padding: 20px; text-align: center;">
+              <div class="metric-val" id="payments-free-count-val" style="font-family: 'Rajdhani', sans-serif; font-size: 2.8rem; font-weight: 700; color: var(--saffron); text-shadow: 0 0 20px rgba(255, 107, 0, 0.2);">0</div>
+              <div class="metric-label" style="font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-top: 8px;">Free / Manual / ಉಚಿತ</div>
+            </div>
+          </div>
+          
+          <!-- Column 2: Fee settings and toggle -->
+          <div class="settings-card" style="margin: 0; background: rgba(255, 255, 255, 0.02); border: 1.5px solid var(--glass-border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div class="settings-title" style="margin-top: 0; font-size: 1.2rem; font-weight: 700; color: var(--gold); font-family: 'Rajdhani', sans-serif; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Fee Settings / ಮೊತ್ತ ಸೆಟ್ಟಿಂಗ್ಸ್</div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <input type="checkbox" id="payments-toggle-payments" onchange="togglePaymentRequirement(this.checked)" style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--saffron); margin-top: 2px;">
+              <div>
+                <label for="payments-toggle-payments" style="font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; color: white; cursor: pointer;">Require Payment</label>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; line-height: 1.3;">Require Razorpay checkout before signing up.</span>
+              </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+              <label for="payments-input-fee" style="font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; color: white;">Membership Fee (₹)</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" id="payments-input-fee" placeholder="1000" min="1" style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 8px 12px; color: white; font-family: 'Rajdhani', sans-serif; font-size: 1rem; flex: 1;">
+                <button onclick="saveMembershipFeeSetting()" style="background: var(--saffron); border: none; border-radius: 6px; padding: 0 14px; color: black; font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter and Search Area for Payments -->
+        <div class="search-filter-card" style="margin-bottom: 24px; padding: 20px; background: rgba(255, 255, 255, 0.01); border: 1.5px solid var(--glass-border); border-radius: 12px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+          <div style="flex: 1; min-width: 250px; position: relative;">
+            <input type="text" id="payments-search-input" placeholder="Search by name, phone, or transaction ID..." oninput="applyPaymentsFilters()" style="width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: white; font-size: 0.9rem;">
+          </div>
+          <div style="width: 180px;">
+            <select id="payments-status-filter" onchange="applyPaymentsFilters()" style="width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: white; font-size: 0.9rem; cursor: pointer;">
+              <option value="all">All Payment Statuses</option>
+              <option value="paid">PAID</option>
+              <option value="free">FREE</option>
+              <option value="pending">PENDING</option>
+            </select>
+          </div>
+          <button onclick="resetPaymentsFilters()" style="padding: 10px 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">Reset</button>
+        </div>
+
+        <!-- Payments Table Card -->
+        <div class="table-card" style="background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 12px; overflow: hidden; margin-bottom: 24px;">
+          <table class="members-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--glass-border);">
+                <th style="padding: 16px 20px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Applicant</th>
+                <th style="padding: 16px 20px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Contact Phone</th>
+                <th style="padding: 16px 20px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Payment Status</th>
+                <th style="padding: 16px 20px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Transaction ID</th>
+                <th style="padding: 16px 20px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; text-align: right;">Amount</th>
+                <th style="padding: 16px 20px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Transaction Date & Time</th>
+              </tr>
+            </thead>
+            <tbody id="payments-list-body">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No transaction logs loaded.</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- Payments Pagination Area -->
+          <div class="table-pagination" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--glass-border);">
+            <div class="pagination-info" id="payments-pagination-status" style="font-size: 0.85rem; color: var(--text-muted);">Showing 0-0 of 0</div>
+            <div class="pagination-btns" style="display: flex; gap: 8px;">
+              <button class="btn-page" id="payments-btn-prev" onclick="changePaymentsPage(-1)" disabled style="padding: 6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; color: white; cursor: pointer;">Previous</button>
+              <button class="btn-page" id="payments-btn-next" onclick="changePaymentsPage(1)" disabled style="padding: 6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; color: white; cursor: pointer;">Next</button>
+            </div>
           </div>
         </div>
       </section>
@@ -1606,7 +1688,7 @@
                 <p id="db-status-desc">Supabase key configuration is not active. Connect to a live database by defining URL and anon API key in <code>admin.html</code>.</p>
               </div>
             </div>
-
+ 
             <table class="db-env-table">
               <tr>
                 <td class="db-env-label">Supabase URL:</td>
@@ -1617,25 +1699,6 @@
                 <td class="db-env-val" id="settings-env-key">Not Configured</td>
               </tr>
             </table>
-
-            <div class="settings-title" style="margin-top: 28px;">Membership Fee & Payments</div>
-            <div style="display: flex; flex-direction: column; gap: 20px; max-width: 500px; padding: 20px; background: rgba(255,255,255,0.02); border: 1.5px solid var(--glass-border); border-radius: 12px; margin-bottom: 24px;">
-              <div style="display: flex; align-items: center; gap: 14px;">
-                <input type="checkbox" id="toggle-payments" onchange="togglePaymentRequirement(this.checked)" style="width: 22px; height: 22px; cursor: pointer; accent-color: var(--saffron);">
-                <div>
-                  <label for="toggle-payments" style="font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 1.15rem; color: white; cursor: pointer; display: block;">Require Payment for Registration</label>
-                  <span style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; display: block; margin-top: 4px;">Enable this to enforce a checkout step before member registration is finalised.</span>
-                </div>
-              </div>
-              <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 16px; display: flex; flex-direction: column; gap: 8px;">
-                <label for="input-membership-fee" style="font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; color: white; display: block;">Membership Fee (INR)</label>
-                <div style="display: flex; gap: 10px;">
-                  <input type="number" id="input-membership-fee" placeholder="1000" min="1" style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 10px 14px; color: white; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; flex: 1;">
-                  <button onclick="saveMembershipFeeSetting()" style="background: var(--saffron); border: none; border-radius: 8px; padding: 0 20px; color: black; font-weight: 700; font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer; transition: all 0.2s;">Save Fee</button>
-                </div>
-                <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Updates the registration fee dynamically for all new applicants.</span>
-              </div>
-            </div>
 
             <div class="settings-title" style="margin-top: 20px;">SQL Table Schema setup</div>
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
@@ -1942,6 +2005,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   let currentPage = 1;
   const itemsPerPage = 20;
 
+  // Payments & Revenue Tab state
+  let paymentsCurrentPage = 1;
+  const paymentsItemsPerPage = 10;
+  let filteredPayments = [];
+
   // Selected registration rows
   let selectedIds = [];
   // Active detail member object
@@ -1984,7 +2052,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       setTimeout(() => {
         loadMockupData();
         const mockPay = localStorage.getItem('mock_payment_enabled') || 'true';
-        document.getElementById('toggle-payments').checked = mockPay === 'true';
+        const toggleBtn = document.getElementById('payments-toggle-payments');
+        if (toggleBtn) toggleBtn.checked = mockPay === 'true';
       }, 300);
     }
   } catch (e) {
@@ -2125,6 +2194,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const titles = {
       overview: 'Dashboard Overview',
       members: 'Members Database',
+      payments: 'Payments & Revenue',
       settings: 'Database Settings'
     };
     document.getElementById('page-title').textContent = titles[tabId];
@@ -2132,6 +2202,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     // Trigger re-render of graphs if opening overview tab
     if (tabId === 'overview') {
       renderVisualAnalytics();
+    } else if (tabId === 'payments') {
+      renderPaymentsTab();
     }
   }
 
@@ -2154,9 +2226,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   async function fetchSettings() {
     if (!supabaseClient) {
       const mockPay = localStorage.getItem('mock_payment_enabled') || 'true';
-      document.getElementById('toggle-payments').checked = mockPay === 'true';
+      const toggleEl = document.getElementById('payments-toggle-payments');
+      if (toggleEl) toggleEl.checked = mockPay === 'true';
       const mockFee = localStorage.getItem('mock_membership_fee') || '1000';
-      document.getElementById('input-membership-fee').value = mockFee;
+      const feeEl = document.getElementById('payments-input-fee');
+      if (feeEl) feeEl.value = mockFee;
       return;
     }
     try {
@@ -2168,7 +2242,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         .maybeSingle();
 
       if (!payError && payData) {
-        document.getElementById('toggle-payments').checked = payData.value === 'true';
+        const toggleEl = document.getElementById('payments-toggle-payments');
+        if (toggleEl) toggleEl.checked = payData.value === 'true';
       }
 
       // Fetch membership fee setting
@@ -2179,9 +2254,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         .maybeSingle();
 
       if (!feeError && feeData) {
-        document.getElementById('input-membership-fee').value = feeData.value;
+        const feeEl = document.getElementById('payments-input-fee');
+        if (feeEl) feeEl.value = feeData.value;
       } else {
-        document.getElementById('input-membership-fee').value = '1000';
+        const feeEl = document.getElementById('payments-input-fee');
+        if (feeEl) feeEl.value = '1000';
       }
     } catch (err) {
       console.error("Failed to load settings:", err);
@@ -2254,6 +2331,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       updateMetrics();
       applyFilters();
       renderVisualAnalytics();
+
+      // Sync payments tab as well if open
+      const paymentsPane = document.getElementById('panel-payments');
+      if (paymentsPane && paymentsPane.style.display !== 'none') {
+        renderPaymentsTab();
+      }
     } catch (err) {
       console.error("Error reading database: ", err);
       tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #ff5252;">Failed to load data. Ensure RLS table permissions are active.</td></tr>`;
@@ -3818,6 +3901,146 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       errorEl.textContent = "Network error. Please try again.";
       errorEl.style.display = 'block';
     }
+  }
+
+  /* ── PAYMENTS & REVENUE TAB CONTROLLERS ── */
+  function applyPaymentsFilters() {
+    const searchQuery = document.getElementById('payments-search-input').value.toLowerCase().trim();
+    const statusFilter = document.getElementById('payments-status-filter').value;
+
+    filteredPayments = allMembers.filter(member => {
+      // 1. Search Query filter (matches Name, Phone, or Payment ID)
+      const matchesSearch = searchQuery === '' || 
+        (member.name || '').toLowerCase().includes(searchQuery) ||
+        (member.phone || '').includes(searchQuery) ||
+        (member.payment_id || '').toLowerCase().includes(searchQuery);
+
+      // 2. Status Filter
+      const payStatus = member.payment_status ? member.payment_status.toLowerCase() : 'pending';
+      const matchesStatus = statusFilter === 'all' || payStatus === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    paymentsCurrentPage = 1;
+    renderPaymentsTable();
+  }
+
+  function resetPaymentsFilters() {
+    document.getElementById('payments-search-input').value = '';
+    document.getElementById('payments-status-filter').value = 'all';
+    applyPaymentsFilters();
+  }
+
+  function changePaymentsPage(direction) {
+    paymentsCurrentPage += direction;
+    renderPaymentsTable();
+  }
+
+  function renderPaymentsTable() {
+    const tbody = document.getElementById('payments-list-body');
+    tbody.innerHTML = '';
+
+    if (filteredPayments.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No payment records found.</td></tr>`;
+      updatePaymentsPagination(0);
+      return;
+    }
+
+    const startIndex = (paymentsCurrentPage - 1) * paymentsItemsPerPage;
+    const endIndex = Math.min(startIndex + paymentsItemsPerPage, filteredPayments.length);
+    const pageItems = filteredPayments.slice(startIndex, endIndex);
+
+    pageItems.forEach(member => {
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+
+      // 1. Applicant cell (Name & Photo)
+      const tdApplicant = document.createElement('td');
+      tdApplicant.style.padding = '12px 20px';
+      tdApplicant.innerHTML = `<strong>${member.name || 'Unnamed'}</strong><br><small style="color: var(--text-secondary);">${member.qualification || 'None'}</small>`;
+      tr.appendChild(tdApplicant);
+
+      // 2. Phone cell
+      const tdPhone = document.createElement('td');
+      tdPhone.style.padding = '12px 20px';
+      tdPhone.textContent = member.phone || 'N/A';
+      tr.appendChild(tdPhone);
+
+      // 3. Status cell
+      const tdStatus = document.createElement('td');
+      tdStatus.style.padding = '12px 20px';
+      const payStatus = member.payment_status ? member.payment_status.toUpperCase() : 'PENDING';
+      const badgeClass = payStatus === 'PAID' ? 'approved' : (payStatus === 'PENDING' ? 'pending' : 'free-badge');
+      
+      // Inline styling helper for custom free-badge
+      const badgeStyle = payStatus === 'FREE' ? 'background: rgba(244,196,48,0.1); border: 1px solid var(--gold); color: var(--gold);' : '';
+      tdStatus.innerHTML = `<span class="badge ${badgeClass}" style="${badgeStyle}">${payStatus}</span>`;
+      tr.appendChild(tdStatus);
+
+      // 4. Transaction ID cell
+      const tdTxId = document.createElement('td');
+      tdTxId.style.padding = '12px 20px';
+      tdTxId.textContent = member.payment_id || 'N/A';
+      tr.appendChild(tdTxId);
+
+      // 5. Amount Paid cell
+      const tdAmount = document.createElement('td');
+      tdAmount.style.padding = '12px 20px';
+      tdAmount.style.textAlign = 'right';
+      tdAmount.style.fontWeight = 'bold';
+      const amt = Number(member.amount_paid);
+      tdAmount.textContent = isNaN(amt) || amt === 0 ? '—' : `₹${amt.toLocaleString('en-IN')}`;
+      tr.appendChild(tdAmount);
+
+      // 6. Transaction Date cell
+      const tdDate = document.createElement('td');
+      tdDate.style.padding = '12px 20px';
+      let dateStr = 'N/A';
+      if (member.created_at) {
+        const createdDate = new Date(member.created_at);
+        dateStr = createdDate.toLocaleString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+      }
+      tdDate.textContent = dateStr;
+      tr.appendChild(tdDate);
+
+      tbody.appendChild(tr);
+    });
+
+    updatePaymentsPagination(filteredPayments.length);
+  }
+
+  function updatePaymentsPagination(totalItems) {
+    const startIndex = totalItems === 0 ? 0 : (paymentsCurrentPage - 1) * paymentsItemsPerPage + 1;
+    const endIndex = Math.min(paymentsCurrentPage * paymentsItemsPerPage, totalItems);
+    
+    document.getElementById('payments-pagination-status').textContent = `Showing ${startIndex}-${endIndex} of ${totalItems}`;
+    document.getElementById('payments-btn-prev').disabled = paymentsCurrentPage === 1;
+    document.getElementById('payments-btn-next').disabled = endIndex >= totalItems;
+  }
+
+  function renderPaymentsTab() {
+    // 1. Calculate and render metrics
+    const paidMembers = allMembers.filter(m => m.payment_status === 'paid');
+    const totalRev = paidMembers.reduce((sum, m) => sum + (Number(m.amount_paid) || 0), 0);
+    const freeCount = allMembers.filter(m => m.payment_status === 'free').length;
+
+    document.getElementById('payments-revenue-val').textContent = `₹${totalRev.toLocaleString('en-IN')}`;
+    document.getElementById('payments-paid-count-val').textContent = paidMembers.length;
+    document.getElementById('payments-free-count-val').textContent = freeCount;
+
+    // 2. Fetch and apply settings to inputs
+    fetchSettings();
+
+    // 3. Apply filters and render table
+    applyPaymentsFilters();
   }
 
   </script>
