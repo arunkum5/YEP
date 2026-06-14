@@ -2370,7 +2370,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
   }
 
   async function saveMembershipFeeSetting() {
-    const feeInput = document.getElementById('input-membership-fee');
+    const feeInput = document.getElementById('payments-input-fee');
     const feeValue = parseInt(feeInput.value, 10);
     
     if (isNaN(feeValue) || feeValue < 1) {
