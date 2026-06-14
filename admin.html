@@ -1285,8 +1285,8 @@
     .content-wrapper { padding: 16px 12px; width: 100%; overflow-x: hidden; box-sizing: border-box; }
     .metrics-grid { grid-template-columns: 1fr; gap: 16px; }
     .overview-logs-grid { gap: 16px; }
-    .controls-panel { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
-    .search-input-wrap, .filter-select-wrap { min-width: 100% !important; }
+    .controls-panel, .search-filter-card { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+    .search-input-wrap, .filter-select-wrap, .search-filter-card > div, .search-filter-card > button { min-width: 100% !important; width: 100% !important; }
     .action-buttons-wrap { margin-left: 0; margin-top: 6px; width: 100%; justify-content: space-between; flex-direction: column; gap: 8px; }
     .btn-panel-action { width: 100%; justify-content: center; }
     
@@ -1529,6 +1529,10 @@
           <div class="metric-card revenue">
             <div class="metric-val" id="metric-revenue">₹0</div>
             <div class="metric-label">Total Revenue / ಒಟ್ಟು ಆದಾಯ</div>
+            <div style="display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.8rem; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif;">
+              <span>Paid: <strong id="metric-paid-count" style="color: var(--green);">0</strong></span>
+              <span>Free: <strong id="metric-free-count" style="color: var(--gold);">0</strong></span>
+            </div>
           </div>
         </div>
 
@@ -1698,7 +1702,7 @@
         </div>
 
         <!-- Payments Table Card -->
-        <div class="table-card" style="background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 12px; overflow: hidden; margin-bottom: 24px;">
+        <div class="table-card" style="background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 12px; overflow: hidden; overflow-x: auto; margin-bottom: 24px;">
           <table class="members-table" style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead>
               <tr style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--glass-border);">
@@ -2447,10 +2451,15 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     document.getElementById('metric-pending').textContent = allMembers.filter(m => !m.approved).length;
     document.getElementById('metric-approved').textContent = allMembers.filter(m => m.approved).length;
 
-    const totalRevenue = allMembers
-      .filter(m => m.payment_status === 'paid' && m.amount_paid)
-      .reduce((sum, m) => sum + Number(m.amount_paid), 0);
+    const paidMembers = allMembers.filter(m => m.payment_status === 'paid');
+    const freeMembers = allMembers.filter(m => m.payment_status === 'free');
+
+    const totalRevenue = paidMembers
+      .reduce((sum, m) => sum + Number(m.amount_paid || 0), 0);
+    
     document.getElementById('metric-revenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
+    document.getElementById('metric-paid-count').textContent = paidMembers.length;
+    document.getElementById('metric-free-count').textContent = freeMembers.length;
   }
 
   /* ── ANALYTICS CHARTS GENERATION ── */
