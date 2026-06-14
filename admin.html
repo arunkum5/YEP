@@ -1067,8 +1067,8 @@
     gap: 8px;
   }
   .card-logo img {
-    width: 120px;
-    height: 120px;
+    width: 156px;
+    height: 156px;
     object-fit: cover;
     border-radius: 50%;
     border: 3px solid var(--gold);
@@ -1104,9 +1104,9 @@
   }
   .card-leader-info {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #1a1a1a;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #000000;
     line-height: 1.35;
     margin-top: 5px;
     margin-bottom: 2px;
@@ -1114,9 +1114,11 @@
   }
   .card-leader-info-kn {
     font-family: 'Tiro Kannada', serif;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
+    font-weight: 700;
     display: block;
     margin-top: 2px;
+    color: #000000;
   }
   .card-badge {
     margin-top: 8px;
@@ -1229,6 +1231,20 @@
     font-size: 0.7rem;
     display: block;
     margin-top: 2px;
+  }
+  .card-validity {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: inline-block;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
 
   /* Details Grid */
@@ -1951,6 +1967,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             YoungSTAR Empowerment Party · @2026<br>
             <span>Youth Power – Our Strength – Our Future</span>
           </div>
+          <div class="card-validity" id="detail-card-validity-val">Issued: --/--/---- · Valid: 1 Year</div>
           <div class="card-badge" id="detail-card-status-stamp" style="background:rgba(19, 136, 8, 0.1);border-color:var(--green);color:var(--green)">VERIFIED</div>
         </div>
       </div>
@@ -3265,6 +3282,14 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const talukName = (member.taluk || 'N/A').split(' / ')[0];
     cardLocation.textContent = `${distName} · ${talukName}`;
 
+    // Set validity date dynamically
+    const createdDate = member.created_at ? new Date(member.created_at) : new Date();
+    const dd = String(createdDate.getDate()).padStart(2, '0');
+    const mm = String(createdDate.getMonth() + 1).padStart(2, '0');
+    const yyyy = createdDate.getFullYear();
+    const formattedDate = `${dd}/${mm}/${yyyy}`;
+    document.getElementById('detail-card-validity-val').textContent = `Issued: ${formattedDate} · Valid: 1 Year`;
+
     if (member.approved) {
       cardEl.classList.remove('pending-watermark');
       cardId.textContent = member.member_id;
@@ -3633,10 +3658,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         ctx.restore();
 
         // 3. Draw Header Layout
-        // Centered Seal Emblem Logo (150px diameter)
-        const sealSize = 150;
-        const sealX = (600 - sealSize) / 2; // 225
-        const sealY = 28;
+        // Centered Seal Emblem Logo (195px diameter)
+        const sealSize = 195; // Increased by 30%
+        const sealX = (600 - sealSize) / 2;
+        const sealY = 16;
         ctx.save();
         ctx.beginPath();
         ctx.arc(300, sealY + sealSize/2, sealSize/2, 0, Math.PI * 2);
@@ -3660,37 +3685,37 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         
         ctx.font = "bold 28px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#1a1a1a";
-        ctx.fillText("YoungSTAR PARTY", 300, 210);
+        ctx.fillText("YoungSTAR PARTY", 300, 236);
 
         ctx.font = "bold 24px 'Tiro Kannada', serif";
         ctx.fillStyle = "#1a1a1a";
-        ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 300, 242);
+        ctx.fillText("ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ", 300, 268);
 
         // Leader Credentials
-        ctx.font = "bold 13px 'Rajdhani', sans-serif";
-        ctx.fillStyle = "#1a1a1a";
-        ctx.fillText("K N Jagadish Kumar – Advocate – High Court of Delhi", 300, 270);
+        ctx.font = "bold 16px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#000000";
+        ctx.fillText("K N Jagadish Kumar – Advocate – High Court of Delhi", 300, 296);
         
-        ctx.font = "bold 13px 'Tiro Kannada', serif";
-        ctx.fillStyle = "#1a1a1a";
-        ctx.fillText("ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್", 300, 290);
+        ctx.font = "bold 15px 'Tiro Kannada', serif";
+        ctx.fillStyle = "#000000";
+        ctx.fillText("ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್", 300, 316);
 
         ctx.font = "bold 11px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#5d0000";
-        ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 300, 310);
+        ctx.fillText("YEP KARNATAKA MEMBERSHIP CARD", 300, 336);
 
         // 4. Draw Body Layout
         // Glassmorphic Details Card Plate
         const containerX = 50;
-        const containerY = 325;
+        const containerY = 350;
         const containerW = 500;
-        const containerH = 460;
+        const containerH = 435; // Adjusted to leave enough bottom gap
         drawRoundedRect(containerX, containerY, containerW, containerH, 16, "rgba(0,0,0,0.35)", "rgba(255,255,255,0.1)", 1.5);
 
         // Centered Avatar Photo (200x200px)
         const photoSize = 200;
         const photoX = (600 - photoSize) / 2; // 200
-        const photoY = 345;
+        const photoY = 370; // Shifted down
         
         drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, "rgba(0,0,0,0.3)", "rgba(255,255,255,0.15)", 3);
         ctx.save();
@@ -3728,7 +3753,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         }
         ctx.fillStyle = "#FFFFFF";
         ctx.textAlign = "center";
-        ctx.fillText(member.name, 300, 575);
+        ctx.fillText(member.name, 300, 600); // Shifted down
 
         // Left-aligned Member Info Fields
         const detailsX = 90;
@@ -3737,29 +3762,29 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         // Member ID
         ctx.font = "14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fillText("MEMBER ID", detailsX, 620);
+        ctx.fillText("MEMBER ID", detailsX, 645); // Shifted down
         ctx.font = "bold 22px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#F4C430";
         const memIdVal = member.member_id || `YEP-KA-${String(member.id).padStart(4, '0')}`;
-        ctx.fillText(memIdVal, detailsX, 642);
+        ctx.fillText(memIdVal, detailsX, 667); // Shifted down
 
         // Mobile Phone
         ctx.font = "14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fillText("MOBILE PHONE", detailsX, 672);
+        ctx.fillText("MOBILE PHONE", detailsX, 697); // Shifted down
         ctx.font = "600 18px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.95)";
-        ctx.fillText(member.phone, detailsX, 692);
+        ctx.fillText(member.phone, detailsX, 717); // Shifted down
 
         // District & Taluk
         ctx.font = "14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.fillText("DISTRICT & TALUK", detailsX, 722);
+        ctx.fillText("DISTRICT & TALUK", detailsX, 747); // Shifted down
         ctx.font = "600 18px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.95)";
         const districtVal = member.district ? member.district.split('/')[0].trim() : 'N/A';
         const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
-        ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 742);
+        ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 767); // Shifted down
 
         // Status Stamp on Right Side of the Details Box (Dynamic APPROVED vs PENDING)
         ctx.font = "bold 14px 'Rajdhani', sans-serif";
@@ -3768,7 +3793,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         const statusBg = member.approved ? "rgba(76,175,80,0.12)" : "rgba(255,82,82,0.12)";
         const statusWidth = ctx.measureText(statusText).width + 20;
         const statusX = 440 - statusWidth/2;
-        const statusY = 665;
+        const statusY = 690; // Shifted down
         
         drawRoundedRect(statusX, statusY, statusWidth, 32, 6, statusBg, statusColor, 1.5);
         ctx.fillStyle = statusColor;
@@ -3805,13 +3830,26 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
         // Footer Text Center
         ctx.textAlign = "center";
-        ctx.font = "bold 15px 'Rajdhani', sans-serif";
+        ctx.font = "bold 14px 'Rajdhani', sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.45)";
-        ctx.fillText("YoungSTAR Empowerment Party · @2026", 300, 846);
+        ctx.fillText("YoungSTAR Empowerment Party · @2026", 300, 836);
         
-        ctx.font = "bold 13px 'Rajdhani', sans-serif";
+        ctx.font = "bold 12px 'Rajdhani', sans-serif";
         ctx.fillStyle = "#FFEB3B";
-        ctx.fillText("Youth Power – Our Strength – Our Future", 300, 868);
+        ctx.fillText("Youth Power – Our Strength – Our Future", 300, 854);
+
+        // Draw validity badge
+        const createdDate = member.created_at ? new Date(member.created_at) : new Date();
+        const dd = String(createdDate.getDate()).padStart(2, '0');
+        const mm = String(createdDate.getMonth() + 1).padStart(2, '0');
+        const yyyy = createdDate.getFullYear();
+        const formattedDate = `${dd}/${mm}/${yyyy}`;
+        const valText = `Issued: ${formattedDate} | Valid: 1 Year`;
+        ctx.font = "600 12px 'Rajdhani', sans-serif";
+        const valWidth = ctx.measureText(valText).width + 16;
+        drawRoundedRect(300 - valWidth/2, 866, valWidth, 20, 4, "rgba(255,255,255,0.08)", "rgba(255,255,255,0.15)", 1);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+        ctx.fillText(valText, 300, 880);
 
         // 6. Trigger Download Action
         const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
