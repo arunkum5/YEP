@@ -1052,22 +1052,7 @@
     border-radius: 6px;
     z-index: 10;
   }
-  .membership-card.approved-watermark::after {
-    content: 'APPROVED';
-    position: absolute; top: 55%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-25deg);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: rgba(76, 175, 80, 0.15);
-    white-space: nowrap;
-    pointer-events: none;
-    border: 4px dashed rgba(76, 175, 80, 0.15);
-    padding: 8px 16px;
-    letter-spacing: 2px;
-    border-radius: 8px;
-    z-index: 10;
-  }
+  /* approved-watermark removed */
 
   .card-header {
     display: flex;
@@ -1981,6 +1966,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             <img id="detail-card-avatar" src="leader_profile.jpg" alt="Card Photo">
           </div>
           <div class="card-info">
+            <div class="card-provisional" style="font-size: 0.62rem; color: #ffbc00; font-weight: 800; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: -4px; margin-bottom: 2px; width: 100%;">Provisional digital copy. Physical card to be issued</div>
             <div class="card-field name" id="detail-card-name-val">Abhishek Gowda</div>
             
             <div class="card-details-grid">
@@ -3459,11 +3445,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
     if (member.approved) {
       cardEl.classList.remove('pending-watermark');
-      cardEl.classList.add('approved-watermark');
       cardId.textContent = member.member_id;
     } else {
       cardEl.classList.add('pending-watermark');
-      cardEl.classList.remove('approved-watermark');
       cardId.innerHTML = '<span style="color:var(--text-muted)">PENDING APPROVAL</span>';
     }
 
@@ -3943,6 +3927,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         
         // Re-draw photo border
         drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, null, '#F4C430', 3);
+
+        // Provisional text
+        ctx.font = "bold 10px 'Rajdhani', sans-serif";
+        ctx.fillStyle = "#FFC107";
+        ctx.textAlign = "center";
+        ctx.fillText("Provisional digital copy. Physical card to be issued", 300, 582);
 
         // Member Name (with dynamic auto-scale for long names)
         let nameFontSize = 30;

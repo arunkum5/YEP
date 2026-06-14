@@ -101,22 +101,7 @@
       border-radius: 6px;
       z-index: 10;
     }
-    .membership-card.approved-watermark::after {
-      content: 'APPROVED';
-      position: absolute; top: 55%; left: 50%;
-      transform: translate(-50%, -50%) rotate(-25deg);
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: rgba(76, 175, 80, 0.15);
-      white-space: nowrap;
-      pointer-events: none;
-      border: 4px dashed rgba(76, 175, 80, 0.15);
-      padding: 8px 16px;
-      letter-spacing: 2px;
-      border-radius: 8px;
-      z-index: 10;
-    }
+    /* approved-watermark removed */
     
     .card-header {
       display: flex;
@@ -472,6 +457,7 @@
             <img id="retrieved-photo" src="yep_leader_seal.png" alt="Member Photo">
           </div>
           <div class="card-info">
+            <div class="card-provisional" style="font-size: 0.62rem; color: #ffbc00; font-weight: 800; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: -4px; margin-bottom: 2px; width: 100%;">Provisional digital copy. Physical card to be issued</div>
             <div class="card-field name" id="retrieved-name-val">Loading Name</div>
             
             <div class="card-details-grid">
@@ -602,7 +588,6 @@
 
       if (member.approved) {
         cardEl.classList.remove('pending-watermark');
-        cardEl.classList.add('approved-watermark');
         document.getElementById('retrieved-id-val').textContent = member.member_id || `YEP-KA-${String(member.id).substring(0, 8).toUpperCase()}`;
         document.getElementById('retrieved-id-val').style.color = 'var(--gold)';
 
@@ -611,7 +596,6 @@
         pendingNotice.style.display = 'none';
       } else {
         cardEl.classList.add('pending-watermark');
-        cardEl.classList.remove('approved-watermark');
         document.getElementById('retrieved-id-val').textContent = 'PENDING VERIFICATION';
         document.getElementById('retrieved-id-val').style.color = 'rgba(255,255,255,0.4)';
 
@@ -807,6 +791,12 @@
           // Re-draw photo border
           drawRoundedRect(photoX, photoY, photoSize, photoSize, 12, null, '#F4C430', 3);
  
+          // Provisional text
+          ctx.font = "bold 10px 'Rajdhani', sans-serif";
+          ctx.fillStyle = "#FFC107";
+          ctx.textAlign = "center";
+          ctx.fillText("Provisional digital copy. Physical card to be issued", 300, 582);
+
           // Member Name
           let nameFontSize = 30;
           ctx.font = `bold ${nameFontSize}px 'Rajdhani', sans-serif`;
