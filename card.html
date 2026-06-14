@@ -458,7 +458,7 @@
           </div>
           <div class="card-info">
             <div class="card-provisional" style="font-size: 0.62rem; color: #ffbc00; font-weight: 800; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: -4px; margin-bottom: 2px; width: 100%;">Provisional digital copy. Physical card to be issued</div>
-            <div class="card-field name" id="retrieved-name-val">Loading Name</div>
+            <div class="card-field name" id="retrieved-name-val" style="padding-top: 4px;">Loading Name</div>
             
             <div class="card-details-grid">
               <div class="card-field">
@@ -795,7 +795,7 @@
           ctx.font = "bold 10px 'Rajdhani', sans-serif";
           ctx.fillStyle = "#FFC107";
           ctx.textAlign = "center";
-          ctx.fillText("Provisional digital copy. Physical card to be issued", 300, 582);
+          ctx.fillText("Provisional digital copy. Physical card to be issued", 300, 575);
 
           // Member Name
           let nameFontSize = 30;
@@ -808,7 +808,7 @@
           }
           ctx.fillStyle = "#FFFFFF";
           ctx.textAlign = "center";
-          ctx.fillText(member.name, 300, 600); // Shifted down
+          ctx.fillText(member.name, 300, 608); // Shifted down
  
           // Details List
           const detailsX = 90;
