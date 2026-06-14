@@ -1050,6 +1050,22 @@
     border-radius: 8px;
     z-index: 10;
   }
+  .membership-card.approved-watermark::after {
+    content: 'APPROVED';
+    position: absolute; top: 55%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(76, 175, 80, 0.15);
+    white-space: nowrap;
+    pointer-events: none;
+    border: 4px dashed rgba(76, 175, 80, 0.15);
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    z-index: 10;
+  }
 
   .card-header {
     display: flex;
@@ -1155,29 +1171,11 @@
     background: rgba(0,0,0,0.3);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     flex-shrink: 0;
-    position: relative;
   }
   .card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .photo-status-watermark {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 3px 0;
-    color: white;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: rgba(255, 82, 82, 0.9); /* Pending red */
-    border-top: 1px solid rgba(255,255,255,0.15);
-    z-index: 5;
   }
   .card-info {
     display: flex;
@@ -1957,7 +1955,6 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         <div class="card-body">
           <div class="card-avatar">
             <img id="detail-card-avatar" src="leader_profile.jpg" alt="Card Photo">
-            <div class="photo-status-watermark" id="detail-card-status-watermark">PENDING</div>
           </div>
           <div class="card-info">
             <div class="card-field name" id="detail-card-name-val">Abhishek Gowda</div>
@@ -3290,12 +3287,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     const cardId = document.getElementById('detail-card-id-val');
     const cardPhone = document.getElementById('detail-card-phone-val');
     const cardLocation = document.getElementById('detail-card-location-val');
-    const cardStatusWatermark = document.getElementById('detail-card-status-watermark');
 
     cardAvatar.src = member.photo_url || 'leader_profile.jpg';
     cardName.textContent = member.name || 'Unnamed';
     cardPhone.textContent = member.phone || 'N/A';
-    
+
     const distName = (member.district || 'N/A').split(' / ')[0];
     const talukName = (member.taluk || 'N/A').split(' / ')[0];
     cardLocation.textContent = `${distName} · ${talukName}`;
@@ -3310,18 +3306,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
     if (member.approved) {
       cardEl.classList.remove('pending-watermark');
+      cardEl.classList.add('approved-watermark');
       cardId.textContent = member.member_id;
-      if (cardStatusWatermark) {
-        cardStatusWatermark.style.background = 'rgba(76, 175, 80, 0.9)';
-        cardStatusWatermark.textContent = '✓ APPROVED';
-      }
     } else {
       cardEl.classList.add('pending-watermark');
+      cardEl.classList.remove('approved-watermark');
       cardId.innerHTML = '<span style="color:var(--text-muted)">PENDING APPROVAL</span>';
-      if (cardStatusWatermark) {
-        cardStatusWatermark.style.background = 'rgba(255, 82, 82, 0.9)';
-        cardStatusWatermark.textContent = '✕ PENDING';
-      }
     }
 
     // Fill table fields
@@ -3756,14 +3746,6 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
           ctx.fillText("YEP", 300, photoY + photoSize/2 + 16);
         }
 
-        // Draw status banner at the bottom of the photo container (inside clip)
-        ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.95)" : "rgba(255, 82, 82, 0.95)";
-        ctx.fillRect(photoX, photoY + photoSize - 30, photoSize, 30);
-        ctx.font = "bold 13px 'Rajdhani', sans-serif";
-        ctx.fillStyle = "#FFFFFF";
-        ctx.textAlign = "center";
-        ctx.fillText(member.approved ? "APPROVED" : "PENDING", 300, photoY + photoSize - 11);
-
         ctx.restore();
         
         // Re-draw photo border
@@ -3815,24 +3797,32 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
         // Status Stamp has been replaced by the watermark overlay on the photo to save space
 
-        // Watermark if pending approval
-        if (!member.approved) {
-          ctx.save();
-          ctx.translate(300, 480);
-          ctx.rotate(-25 * Math.PI / 180);
-          ctx.font = "bold 44px 'Rajdhani', sans-serif";
+        // Watermark on image (APPROVED or PENDING APPROVAL)
+        ctx.save();
+        ctx.translate(300, 480);
+        ctx.rotate(-25 * Math.PI / 180);
+        ctx.font = "bold 44px 'Rajdhani', sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([8, 8]);
+
+        if (member.approved) {
+          ctx.fillStyle = "rgba(76, 175, 80, 0.12)";
+          ctx.strokeStyle = "rgba(76, 175, 80, 0.12)";
+          const wText = "APPROVED";
+          const wWidth = ctx.measureText(wText).width + 32;
+          ctx.strokeRect(-wWidth/2, -35, wWidth, 70);
+          ctx.fillText(wText, 0, 0);
+        } else {
           ctx.fillStyle = "rgba(255, 82, 82, 0.12)";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
           ctx.strokeStyle = "rgba(255, 82, 82, 0.12)";
-          ctx.lineWidth = 3;
-          
-          // Draw dashed box
-          ctx.setLineDash([8, 8]);
-          ctx.strokeRect(-210, -35, 420, 70);
-          ctx.fillText("PENDING APPROVAL", 0, 0);
-          ctx.restore();
+          const wText = "PENDING APPROVAL";
+          const wWidth = ctx.measureText(wText).width + 32;
+          ctx.strokeRect(-wWidth/2, -35, wWidth, 70);
+          ctx.fillText(wText, 0, 0);
         }
+        ctx.restore();
 
         // 5. Draw Footer Layout
         // Separator line

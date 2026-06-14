@@ -99,6 +99,22 @@
       border-radius: 8px;
       z-index: 10;
     }
+    .membership-card.approved-watermark::after {
+      content: 'APPROVED';
+      position: absolute; top: 55%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: rgba(76, 175, 80, 0.15);
+      white-space: nowrap;
+      pointer-events: none;
+      border: 4px dashed rgba(76, 175, 80, 0.15);
+      padding: 8px 16px;
+      letter-spacing: 2px;
+      border-radius: 8px;
+      z-index: 10;
+    }
     
     .card-header {
       display: flex;
@@ -204,29 +220,11 @@
       background: rgba(0,0,0,0.3);
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       flex-shrink: 0;
-      position: relative;
     }
     .card-avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-    .photo-status-watermark {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 3px 0;
-      color: white;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: rgba(255, 82, 82, 0.9); /* Pending red */
-      border-top: 1px solid rgba(255,255,255,0.15);
-      z-index: 5;
     }
     .card-info {
       display: flex;
@@ -470,7 +468,6 @@
         <div class="card-body">
           <div class="card-avatar">
             <img id="retrieved-photo" src="yep_leader_seal.png" alt="Member Photo">
-            <div class="photo-status-watermark" id="retrieved-status-watermark">PENDING</div>
           </div>
           <div class="card-info">
             <div class="card-field name" id="retrieved-name-val">Loading Name</div>
@@ -601,26 +598,20 @@
       const formattedDate = `${dd}/${mm}/${yyyy}`;
       document.getElementById('retrieved-validity-val').textContent = `Issued: ${formattedDate} · Valid: 1 Year`;
 
-      const statusWatermark = document.getElementById('retrieved-status-watermark');
-
       if (member.approved) {
         cardEl.classList.remove('pending-watermark');
+        cardEl.classList.add('approved-watermark');
         document.getElementById('retrieved-id-val').textContent = member.member_id || `YEP-KA-${String(member.id).substring(0, 8).toUpperCase()}`;
         document.getElementById('retrieved-id-val').style.color = 'var(--gold)';
-
-        statusWatermark.style.background = 'rgba(76, 175, 80, 0.9)';
-        statusWatermark.textContent = '✓ APPROVED';
 
         downloadBtn.disabled = false;
         downloadBtn.onclick = () => downloadCardAsImage(member);
         pendingNotice.style.display = 'none';
       } else {
         cardEl.classList.add('pending-watermark');
+        cardEl.classList.remove('approved-watermark');
         document.getElementById('retrieved-id-val').textContent = 'PENDING VERIFICATION';
         document.getElementById('retrieved-id-val').style.color = 'rgba(255,255,255,0.4)';
-
-        statusWatermark.style.background = 'rgba(255, 82, 82, 0.9)';
-        statusWatermark.textContent = '✕ PENDING';
 
         downloadBtn.disabled = false;
         downloadBtn.onclick = () => downloadCardAsImage(member);
@@ -809,14 +800,6 @@
             ctx.fillText("YEP", 300, photoY + photoSize/2 + 16);
           }
 
-          // Draw status banner at the bottom of the photo container (inside clip)
-          ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.95)" : "rgba(255, 82, 82, 0.95)";
-          ctx.fillRect(photoX, photoY + photoSize - 30, photoSize, 30);
-          ctx.font = "bold 13px 'Rajdhani', sans-serif";
-          ctx.fillStyle = "#FFFFFF";
-          ctx.textAlign = "center";
-          ctx.fillText(member.approved ? "APPROVED" : "PENDING", 300, photoY + photoSize - 11);
-
           ctx.restore();
           
           // Re-draw photo border
@@ -870,24 +853,22 @@
  
 
 
-          // Watermark on image if pending
-          if (!member.approved) {
-            ctx.save();
-            ctx.translate(300, 450);
-            ctx.rotate(-25 * Math.PI / 180);
-            ctx.font = "bold 44px 'Rajdhani', sans-serif";
-            ctx.fillStyle = "rgba(255, 82, 82, 0.15)";
-            ctx.textAlign = "center";
-            ctx.strokeStyle = "rgba(255, 82, 82, 0.15)";
-            ctx.lineWidth = 4;
-            
-            const wText = "PENDING VERIFICATION";
-            const wWidth = ctx.measureText(wText).width + 32;
-            
-            ctx.strokeRect(-wWidth/2, -30, wWidth, 60);
-            ctx.fillText(wText, 0, 15);
-            ctx.restore();
-          }
+          // Watermark on image (APPROVED or PENDING VERIFICATION)
+          ctx.save();
+          ctx.translate(300, 450);
+          ctx.rotate(-25 * Math.PI / 180);
+          ctx.font = "bold 44px 'Rajdhani', sans-serif";
+          ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 82, 82, 0.15)";
+          ctx.textAlign = "center";
+          ctx.strokeStyle = member.approved ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 82, 82, 0.15)";
+          ctx.lineWidth = 4;
+          
+          const wText = member.approved ? "APPROVED" : "PENDING VERIFICATION";
+          const wWidth = ctx.measureText(wText).width + 32;
+          
+          ctx.strokeRect(-wWidth/2, -30, wWidth, 60);
+          ctx.fillText(wText, 0, 15);
+          ctx.restore();
 
           // 5. Draw Footer Layout
           ctx.beginPath();

@@ -929,6 +929,22 @@
     border-radius: 8px;
     z-index: 10;
   }
+  .membership-card.approved-watermark::after {
+    content: 'APPROVED';
+    position: absolute; top: 55%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(76, 175, 80, 0.15);
+    white-space: nowrap;
+    pointer-events: none;
+    border: 4px dashed rgba(76, 175, 80, 0.15);
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    z-index: 10;
+  }
 
   .card-header {
     display: flex;
@@ -1034,29 +1050,11 @@
     background: rgba(0,0,0,0.3);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     flex-shrink: 0;
-    position: relative;
   }
   .card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .photo-status-watermark {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 3px 0;
-    color: white;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: rgba(255, 82, 82, 0.9); /* Pending red */
-    border-top: 1px solid rgba(255,255,255,0.15);
-    z-index: 5;
   }
   .card-info {
     display: flex;
@@ -1649,7 +1647,7 @@
     <a href="javascript:void(0)" id="pwa-desktop-btn" class="nav-download-btn pwa-install-btn" style="display: none; background: var(--saffron); border-color: var(--saffron); margin-left: 10px; margin-right: 10px;">
       📲 <span class="en">Install App</span><span class="kn">ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್</span>
     </a>
-    <a href="admin.html" class="nav-admin-btn">
+    <a href="admin.html" target="_blank" class="nav-admin-btn">
       🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
     </a>
     <!-- MOBILE HAMBURGER TOGGLE -->
@@ -1668,7 +1666,7 @@
     <a href="javascript:void(0)" onclick="toggleMobileMenu(); openSearchCardModal();" class="mobile-drawer-btn download">
       🔍 <span class="en">Download ID Card</span><span class="kn">ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್</span>
     </a>
-    <a href="admin.html" class="mobile-drawer-btn admin" onclick="toggleMobileMenu()">
+    <a href="admin.html" target="_blank" class="mobile-drawer-btn admin" onclick="toggleMobileMenu()">
       🔐 <span class="en">Admin Login</span><span class="kn">ಅಡ್ಮಿನ್ ಲಾಗಿನ್</span>
     </a>
     <a href="javascript:void(0)" id="pwa-mobile-btn" class="mobile-drawer-btn pwa-install-btn" style="display: none; background: var(--saffron); border-color: var(--saffron);">
@@ -1982,7 +1980,7 @@
         by <a href="https://www.trustwork.co.in" target="_blank">www.trustwork.co.in</a> | 
         <a href="tel:+919353010107">+91 93530 10107</a> | 
         <a href="mailto:support@trustwork.co.in">support@trustwork.co.in</a> | 
-        <a href="admin.html" style="color:var(--gold);font-weight:600;">Admin Panel</a>
+        <a href="admin.html" target="_blank" style="color:var(--gold);font-weight:600;">Admin Panel</a>
       </div>
     </div>
   </div>
@@ -2241,7 +2239,6 @@
       <div class="card-body">
         <div class="card-avatar">
           <img id="retrieved-photo" src="" alt="Member Photo">
-          <div class="photo-status-watermark" id="retrieved-status-watermark">PENDING</div>
         </div>
         <div class="card-info">
           <div class="card-field name" id="retrieved-name-val">Loading Name</div>
@@ -2287,9 +2284,6 @@
     <div class="modal-actions" style="margin-top:0;">
       <button type="button" class="modal-btn" id="retrieved-download-btn" style="background:#4CAF50; color:white; font-weight:700; width:100%; display:none;">
         📥 <span class="en">Download ID Card</span><span class="kn">ID ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</span>
-      </button>
-      <button type="button" class="modal-btn home" onclick="resetSearchForm()" style="width:100%;">
-        🔍 <span class="en">Search Another Number</span><span class="kn">ಮತ್ತೊಂದು ಸಂಖ್ಯೆಯನ್ನು ಹುಡುಕಿ</span>
       </button>
       <button type="button" class="modal-btn" onclick="closeSearchCardModal()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white; width:100%;">
         ✕ <span class="en">Close</span><span class="kn">ಮುಚ್ಚಿ</span>
@@ -2512,15 +2506,11 @@
     const downloadBtn = document.getElementById('retrieved-download-btn');
     const noticeBox = document.getElementById('retrieved-notice-box');
     
-    const statusWatermark = document.getElementById('retrieved-status-watermark');
-
     if (member.approved) {
       cardEl.classList.remove('pending-watermark');
+      cardEl.classList.add('approved-watermark');
       document.getElementById('retrieved-id-val').textContent = member.member_id || `YEP-KA-${String(member.id).padStart(4, '0')}`;
       document.getElementById('retrieved-id-val').style.color = 'var(--gold)';
-      
-      statusWatermark.style.background = 'rgba(76, 175, 80, 0.9)';
-      statusWatermark.textContent = '✓ APPROVED';
       
       downloadBtn.style.display = 'flex';
       noticeBox.style.display = 'none';
@@ -2529,11 +2519,9 @@
       downloadBtn.onclick = () => downloadCardAsImage(member);
     } else {
       cardEl.classList.add('pending-watermark');
+      cardEl.classList.remove('approved-watermark');
       document.getElementById('retrieved-id-val').textContent = 'PENDING VERIFICATION';
       document.getElementById('retrieved-id-val').style.color = 'rgba(255,255,255,0.4)';
-      
-      statusWatermark.style.background = 'rgba(255, 82, 82, 0.9)';
-      statusWatermark.textContent = '✕ PENDING';
       
       downloadBtn.style.display = 'none';
       noticeBox.style.display = 'flex';
@@ -2721,14 +2709,6 @@
           ctx.fillText("YEP", 300, photoY + photoSize/2 + 16);
         }
 
-        // Draw status banner at the bottom of the photo container (inside clip)
-        ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.95)" : "rgba(255, 82, 82, 0.95)";
-        ctx.fillRect(photoX, photoY + photoSize - 30, photoSize, 30);
-        ctx.font = "bold 13px 'Rajdhani', sans-serif";
-        ctx.fillStyle = "#FFFFFF";
-        ctx.textAlign = "center";
-        ctx.fillText(member.approved ? "APPROVED" : "PENDING", 300, photoY + photoSize - 11);
-
         ctx.restore();
         
         // Re-draw photo border
@@ -2777,6 +2757,23 @@
         const districtVal = member.district ? member.district.split('/')[0].trim() : 'N/A';
         const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
         ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 767); // Shifted down
+
+        // Watermark on image (APPROVED or PENDING VERIFICATION)
+        ctx.save();
+        ctx.translate(300, 450);
+        ctx.rotate(-25 * Math.PI / 180);
+        ctx.font = "bold 44px 'Rajdhani', sans-serif";
+        ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 82, 82, 0.15)";
+        ctx.textAlign = "center";
+        ctx.strokeStyle = member.approved ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 82, 82, 0.15)";
+        ctx.lineWidth = 4;
+        
+        const wText = member.approved ? "APPROVED" : "PENDING VERIFICATION";
+        const wWidth = ctx.measureText(wText).width + 32;
+        
+        ctx.strokeRect(-wWidth/2, -30, wWidth, 60);
+        ctx.fillText(wText, 0, 15);
+        ctx.restore();
 
 
 

@@ -493,6 +493,22 @@
     border-radius: 8px;
     z-index: 10;
   }
+  .membership-card.approved-watermark::after {
+    content: 'APPROVED';
+    position: absolute; top: 55%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(76, 175, 80, 0.15);
+    white-space: nowrap;
+    pointer-events: none;
+    border: 4px dashed rgba(76, 175, 80, 0.15);
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    z-index: 10;
+  }
 
   .card-header {
     display: flex;
@@ -598,29 +614,11 @@
     background: rgba(0,0,0,0.3);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     flex-shrink: 0;
-    position: relative;
   }
   .card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .photo-status-watermark {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 3px 0;
-    color: white;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: rgba(255, 82, 82, 0.9); /* Pending red */
-    border-top: 1px solid rgba(255,255,255,0.15);
-    z-index: 5;
   }
   .card-info {
     display: flex;
@@ -1451,7 +1449,6 @@
     <div class="card-body">
       <div class="card-avatar">
         <img id="card-photo" src="" alt="Member Photo">
-        <div class="photo-status-watermark" id="card-status-watermark">PENDING</div>
       </div>
       <div class="card-info">
         <div class="card-field name" id="card-name-val">Loading Name</div>
