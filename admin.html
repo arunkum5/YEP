@@ -1035,21 +1035,21 @@
     background: linear-gradient(to right, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
   }
   .membership-card.pending-watermark::after {
-    content: 'PENDING APPROVAL';
+    content: 'Pending for verification';
     position: absolute; top: 55%; left: 50%;
     transform: translate(-50%, -50%) rotate(-25deg);
     font-family: 'Rajdhani', sans-serif;
-    font-size: 2.2rem;
+    font-size: 1.1rem;
     font-weight: 900;
     color: rgba(255, 30, 30, 0.9);
     white-space: nowrap;
     pointer-events: none;
-    border: 4px dashed rgba(255, 30, 30, 0.9);
+    border: 2px dashed rgba(255, 30, 30, 0.9);
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-    padding: 8px 16px;
-    letter-spacing: 2px;
-    border-radius: 8px;
+    padding: 6px 12px;
+    letter-spacing: 1px;
+    border-radius: 6px;
     z-index: 10;
   }
   .membership-card.approved-watermark::after {
