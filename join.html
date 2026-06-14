@@ -281,6 +281,11 @@
     gap: 16px;
     margin: 20px 0;
   }
+  .form-group.has-error .photo-preview-box {
+    border-color: #FF5252;
+    box-shadow: 0 0 15px rgba(255, 82, 82, 0.5);
+    background: rgba(255, 82, 82, 0.1);
+  }
   .photo-preview-box {
     width: 160px;
     height: 160px;
@@ -292,6 +297,7 @@
     overflow: hidden;
     position: relative;
     background: rgba(0,0,0,0.2);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   }
   .photo-preview-box img {
     width: 100%;
@@ -836,6 +842,150 @@
     text-align: center;
     position: relative;
   }
+
+  /* WhatsApp Consent Box */
+  .whatsapp-consent-box {
+    background: rgba(37, 211, 102, 0.06);
+    border: 1px solid rgba(37, 211, 102, 0.25);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 20px auto 10px auto;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+  .whatsapp-icon-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(37, 211, 102, 0.15);
+    border-radius: 50%;
+  }
+  .whatsapp-svg {
+    width: 24px;
+    height: 24px;
+  }
+  .consent-texts {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .consent-texts p {
+    margin: 0;
+  }
+  .consent-texts p.kn {
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .consent-texts .terms-link {
+    color: var(--gold);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .consent-texts .terms-link:hover {
+    color: var(--saffron);
+  }
+
+  /* Terms Modal Specific Styles */
+  .terms-modal-content {
+    background: rgba(28, 28, 46, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1.5px solid rgba(244, 196, 48, 0.35);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 460px;
+    padding: 24px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    position: relative;
+    color: #f0f0f5;
+    animation: modalContentPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  }
+  @keyframes modalContentPop {
+    from { opacity: 0; transform: scale(0.9) translateY(15px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .terms-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+  }
+  .terms-modal-header h3 {
+    margin: 0;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem;
+    color: var(--saffron);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .terms-modal-header h3 .kn {
+    font-size: 1.0rem;
+    color: var(--gold);
+    font-family: 'Outfit', sans-serif;
+  }
+  .close-modal-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .close-modal-btn:hover {
+    color: #FF5252;
+  }
+  .terms-modal-body {
+    max-height: 320px;
+    overflow-y: auto;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    padding-right: 8px;
+  }
+  /* Custom Scrollbar for Modal Body */
+  .terms-modal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .terms-modal-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+  .terms-modal-body::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
+  }
+  .terms-modal-body strong {
+    color: var(--gold);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.05rem;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .terms-modal-body ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .terms-modal-body li {
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .terms-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 14px;
+  }
   .terms-link-wrap {
     position: relative;
     display: inline-block;
@@ -1193,36 +1343,59 @@
 
       <!-- TERMS DISCLAIMER -->
       <div class="terms-disclaimer" id="terms-disclaimer" style="display: none;">
-        <span class="en">By submitting, you agree to our </span>
-        <span class="kn">ಸಲ್ಲಿಸುವ ಮೂಲಕ, ನೀವು ನಮ್ಮ </span>
-        <span class="terms-link-wrap">
-          <span class="terms-link en">Terms & Conditions</span>
-          <span class="terms-link kn">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು</span>
-          <span class="tooltip-box">
-            <div class="en">
-              <strong>Membership Rules:</strong>
-              <ul>
-                <li>Do not misuse the official YoungSTAR Party membership card.</li>
-                <li>The party leadership reserves the right to cancel or suspend membership at any time.</li>
-                <li>Adhere to the core values, ethics, and code of conduct of the party.</li>
-                <li>Membership does not confer any official executive authority within the party.</li>
-              </ul>
-            </div>
-            <div class="kn">
-              <strong>ಸದಸ್ಯತ್ವ ನಿಯಮಗಳು:</strong>
-              <ul>
-                <li>ಅಧಿಕೃತ ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಅನ್ನು ದುರುಪಯೋಗಪಡಿಸಿಕೊಳ್ಳಬೇಡಿ.</li>
-                <li>ಪಕ್ಷದ ನಾಯಕತ್ವವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಸದಸ್ಯತ್ವವನ್ನು ರದ್ದುಗೊಳಿಸುವ ಹಕ್ಕನ್ನು ಹೊಂದಿದೆ.</li>
-                <li>ಪಕ್ಷದ ನೈತಿಕ ಮೌಲ್ಯಗಳು ಮತ್ತು ನೀತಿ ಸಂಹಿತೆಗೆ ಬದ್ಧರಾಗಿರಬೇಕು.</li>
-                <li>ಸದಸ್ಯತ್ವವು ಪಕ್ಷದ ಯಾವುದೇ ಅಧಿಕೃತ ಆಡಳಿತಾತ್ಮಕ ಅಧಿಕಾರವನ್ನು ನೀಡುವುದಿಲ್ಲ.</li>
-              </ul>
-            </div>
-          </span>
-        </span>
-        <span class="en">.</span>
-        <span class="kn">ಒಪ್ಪುತ್ತೀರಿ.</span>
+        <div class="whatsapp-consent-box">
+          <div class="whatsapp-icon-wrap">
+            <svg class="whatsapp-svg" viewBox="0 0 24 24">
+              <path fill="#25D366" d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.347a9.945 9.945 0 0 0 4.88 1.277h.005c5.505 0 9.99-4.478 9.99-9.985 0-2.667-1.037-5.176-2.923-7.062A9.925 9.925 0 0 0 12.012 2zm5.72 14.12c-.25.7-1.44 1.372-2 1.428-.56.057-1.296.287-3.807-.73-3.21-1.302-5.225-4.578-5.385-4.793-.16-.215-1.296-1.724-1.296-3.29 0-1.566.817-2.337 1.108-2.65.29-.312.64-.39.85-.39.22 0 .43.01.62.02.2.01.46-.08.72.54.26.63.9 2.19.98 2.35.08.16.13.35.03.55-.1.2-.15.3-.3.48-.15.17-.32.39-.46.52-.16.16-.33.33-.14.65.19.32.85 1.4 1.83 2.27.98.87 1.81 1.14 2.07 1.27.26.13.41.11.56-.06.15-.17.65-.75.82-.96.17-.21.34-.18.57-.09.24.09 1.51.71 1.77.84.26.13.43.2.49.31.06.11.06.66-.19 1.36z"/>
+            </svg>
+          </div>
+          <div class="consent-texts">
+            <p class="en">By submitting, you agree to our <span class="terms-link" onclick="openTermsModal()">Terms & Conditions</span> and consent to receive updates and messages on WhatsApp.</p>
+            <p class="kn">ಸಲ್ಲಿಸುವ ಮೂಲಕ, ನೀವು ನಮ್ಮ <span class="terms-link" onclick="openTermsModal()">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು</span> ಒಪ್ಪುತ್ತೀರಿ ಮತ್ತು ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ನವೀಕರಣಗಳು ಹಾಗೂ ಸಂದೇಶಗಳನ್ನು ಸ್ವೀಕರಿಸಲು ಸಮ್ಮತಿಸುತ್ತೀರಿ.</p>
+          </div>
+        </div>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- TERMS & CONDITIONS MODAL -->
+<div class="modal-overlay" id="terms-modal" onclick="closeTermsModal()">
+  <div class="terms-modal-content" onclick="event.stopPropagation()">
+    <div class="terms-modal-header">
+      <h3>
+        <span class="en">Terms & Conditions</span>
+        <span class="kn">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು</span>
+      </h3>
+      <button type="button" class="close-modal-btn" onclick="closeTermsModal()">✕</button>
+    </div>
+    <div class="terms-modal-body">
+      <div class="en">
+        <strong>Membership Rules & Consent:</strong>
+        <ul>
+          <li>Do not misuse the official YoungSTAR Party membership card.</li>
+          <li>The party leadership reserves the right to cancel or suspend membership at any time.</li>
+          <li>Adhere to the core values, ethics, and code of conduct of the party.</li>
+          <li>Membership does not confer any official executive authority within the party.</li>
+          <li style="color: var(--gold); font-weight: 600;">Agreed and accept to receive WhatsApp messages and updates from the YoungSTAR Party.</li>
+        </ul>
+      </div>
+      <div class="kn" style="margin-top: 15px;">
+        <strong>ಸದಸ್ಯತ್ವ ನಿಯಮಗಳು ಮತ್ತು ಒಪ್ಪಿಗೆ:</strong>
+        <ul>
+          <li>ಅಧಿಕೃತ ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಅನ್ನು ದುರುಪಯೋಗಪಡಿಸಿಕೊಳ್ಳಬೇಡಿ.</li>
+          <li>ಪಕ್ಷದ ನಾಯಕತ್ವವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಸದಸ್ಯತ್ವವನ್ನು ರದ್ದುಗೊಳಿಸುವ ಹಕ್ಕನ್ನು ಹೊಂದಿದೆ.</li>
+          <li>ಪಕ್ಷದ ನೈತಿಕ ಮೌಲ್ಯಗಳು ಮತ್ತು ನೀತಿ ಸಂಹಿತೆಗೆ ಬದ್ಧರಾಗಿರಬೇಕು.</li>
+          <li>ಸದಸ್ಯತ್ವವು ಪಕ್ಷದ ಯಾವುದೇ ಅಧಿಕೃತ ಆಡಳಿತಾತ್ಮಕ ಅಧಿಕಾರವನ್ನು ನೀಡುವುದಲ್ಲ.</li>
+          <li style="color: var(--gold); font-weight: 600;">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷದಿಂದ ವಾಟ್ಸಾಪ್ ಸಂದೇಶಗಳು ಮತ್ತು ನವೀಕರಣಗಳನ್ನು ಸ್ವೀಕರಿಸಲು ಒಪ್ಪಿಕೊಂಡಿದ್ದೇನೆ.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="terms-modal-footer">
+      <button type="button" class="modal-btn home" onclick="closeTermsModal()" style="min-width: 100px; padding: 10px 20px; font-size: 0.95rem; justify-content: center; height: auto;">
+        <span class="en">Close</span><span class="kn">ಮುಚ್ಚಿ</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1894,6 +2067,16 @@
     group.classList.remove('has-error');
     group.classList.add('has-success');
     document.getElementById('error-photo').style.display = 'none';
+  }
+
+  function openTermsModal() {
+    const modal = document.getElementById('terms-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeTermsModal() {
+    const modal = document.getElementById('terms-modal');
+    if (modal) modal.classList.remove('active');
   }
 
   /* ── FORM SUBMISSION & SUCCESS MODAL ── */
