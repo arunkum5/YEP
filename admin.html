@@ -1886,6 +1886,21 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             </div>
           </div>
+
+          <!-- Database Cleanup Utilities Card -->
+          <div class="settings-card" style="border-color: rgba(255, 82, 82, 0.2);">
+            <div class="settings-title" style="color: #FF5252; border-color: rgba(255, 82, 82, 0.2);">Database Cleanup Utilities</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+              Running tests repeatedly can accumulate mock records in the database. Use this utility to bulk purge test registrations (with names containing "Test" or phone numbers starting with "900" or "800") and their photos from the live database.
+            </p>
+            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+              <button class="nav-cta" id="btn-purge-test-data" onclick="purgeTestData()" style="background: #FF5252; color: white; font-weight: 700; border: none; height: auto; padding: 12px 24px; cursor: pointer; border-radius: 6px; font-family: 'Rajdhani', sans-serif; transition: background 0.2s;" onmouseover="this.style.background='#ff3333'" onmouseout="this.style.background='#FF5252'">
+                🔥 Purge Test Data
+              </button>
+              <div id="purge-status" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;"></div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -3257,6 +3272,92 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       fetchMembers();
     } catch (err) {
       alert("Error deleting member: " + err.message);
+    }
+  }
+
+  async function purgeTestData() {
+    if (!confirm("Are you sure you want to scan the database and delete all test user registrations (names containing 'Test' or phone starting with '900' / '800')? This action is irreversible.")) return;
+
+    const statusEl = document.getElementById('purge-status');
+    const btnPurge = document.getElementById('btn-purge-test-data');
+    btnPurge.disabled = true;
+    statusEl.textContent = "Scanning database for test records...";
+    statusEl.style.color = "var(--gold)";
+
+    if (!supabaseClient) {
+      // Mock mode purge
+      const initialCount = allMembers.length;
+      allMembers = allMembers.filter(m => {
+        const name = (m.name || '').toLowerCase();
+        const phone = (m.phone || '');
+        const isTestPhone = phone.startsWith('9000') || phone.startsWith('9001') || phone.startsWith('9002') || phone.startsWith('9003') || phone.startsWith('9004') ||
+                            phone.startsWith('8001') || phone.startsWith('8002') || phone.startsWith('8003') || phone.startsWith('8004') || phone.startsWith('8005');
+        const isTestName = name.includes('live test') || name.includes('paid test') || name.includes('free test') || name.includes('custom amount') || name.includes('duplicate');
+        return !(isTestPhone || isTestName);
+      });
+      const deletedCount = initialCount - allMembers.length;
+      updateMetrics();
+      applyFilters();
+      renderVisualAnalytics();
+      statusEl.textContent = `Success! Purged ${deletedCount} mock test records from local memory.`;
+      statusEl.style.color = "var(--green)";
+      btnPurge.disabled = false;
+      return;
+    }
+
+    try {
+      // 1. Fetch all members
+      const { data: members, error: fetchErr } = await supabaseClient
+        .from('members')
+        .select('id, name, phone, photo_url');
+
+      if (fetchErr) throw fetchErr;
+
+      // 2. Filter test users
+      const testMembers = members.filter(m => {
+        const name = (m.name || '').toLowerCase();
+        const phone = (m.phone || '');
+        const isTestPhone = phone.startsWith('9000') || phone.startsWith('9001') || phone.startsWith('9002') || phone.startsWith('9003') || phone.startsWith('9004') ||
+                            phone.startsWith('8001') || phone.startsWith('8002') || phone.startsWith('8003') || phone.startsWith('8004') || phone.startsWith('8005');
+        const isTestName = name.includes('live test') || name.includes('paid test') || name.includes('free test') || name.includes('custom amount') || name.includes('duplicate');
+        return isTestPhone || isTestName;
+      });
+
+      if (testMembers.length === 0) {
+        statusEl.textContent = "No test records found in the live database.";
+        statusEl.style.color = "var(--text-secondary)";
+        btnPurge.disabled = false;
+        return;
+      }
+
+      statusEl.textContent = `Deleting ${testMembers.length} test photos from R2...`;
+
+      // 3. Delete their R2 photos
+      for (const m of testMembers) {
+        if (m.photo_url) {
+          await deleteR2Photo(m.photo_url);
+        }
+      }
+
+      statusEl.textContent = `Purging ${testMembers.length} records from Supabase...`;
+
+      // 4. Delete their database rows
+      const idsToDelete = testMembers.map(m => m.id);
+      const { error: deleteErr } = await supabaseClient
+        .from('members')
+        .delete()
+        .in('id', idsToDelete);
+
+      if (deleteErr) throw deleteErr;
+
+      statusEl.textContent = `Success! Purged ${testMembers.length} test records and photos.`;
+      statusEl.style.color = "var(--green)";
+      fetchMembers();
+    } catch (err) {
+      statusEl.textContent = "Purge failed: " + err.message;
+      statusEl.style.color = "#FF5252";
+    } finally {
+      btnPurge.disabled = false;
     }
   }
 
