@@ -940,6 +940,18 @@
     color: #f0f0f5;
     animation: modalContentPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
   }
+  .modal-card {
+    background: linear-gradient(135deg, rgba(28,28,46,0.95), rgba(10,10,16,0.98));
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 440px;
+    padding: 30px 24px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(244,196,48,0.15);
+    animation: modalContentPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  }
   @keyframes modalContentPop {
     from { opacity: 0; transform: scale(0.9) translateY(15px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
@@ -1497,6 +1509,21 @@
   </div>
 </div>
 
+<!-- CUSTOM ALERT MODAL -->
+<div class="modal-overlay" id="custom-alert-modal" onclick="closeCustomAlert()">
+  <div class="modal-card" style="max-width: 400px; text-align: center; border: 2px solid #FF5252; background: linear-gradient(135deg, rgba(38,18,18,0.96), rgba(10,5,5,0.98));" onclick="event.stopPropagation()">
+    <div style="font-size: 2.8rem; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(255,82,82,0.35));">⚠️</div>
+    <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; color: #FF5252; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+      <span class="en">Registration Warning</span>
+      <span class="kn">ನೋಂದಣಿ ಎಚ್ಚರಿಕೆ</span>
+    </h3>
+    <p id="custom-alert-message" style="font-size: 0.95rem; color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 24px; font-weight: 500;"></p>
+    <button type="button" class="modal-btn" onclick="closeCustomAlert()" style="background:#FF5252; color:white; width:100%; font-weight:700; border:none; padding:12px; border-radius:8px; font-family:'Rajdhani',sans-serif; text-transform:uppercase; letter-spacing:1px; cursor:pointer;">
+      <span class="en">OK</span><span class="kn">ಸರಿ</span>
+    </button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-bottom-inner">
@@ -1963,22 +1990,21 @@
 
   function handleFileInput(e) {
     const file = e.target.files[0];
+    const fileInput = document.getElementById('file-input');
     if (!file) return;
 
     // Check file format (Allow only JPEG, JPG, PNG)
     const validMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    const fileExtension = file.name.split('.').pop().toLowerCase();
-    const validExtensions = ['jpeg', 'jpg', 'png'];
-
-    if (!validMimeTypes.includes(file.type) && !validExtensions.includes(fileExtension)) {
-      alert("Invalid file format. Please upload a JPEG, JPG, or PNG image.");
+    
+    if (!validMimeTypes.includes(file.type)) {
+      showCustomAlert("Invalid file format. Please upload a JPEG, JPG, or PNG image.");
       resetPhotoPreview();
       return;
     }
 
-    // Check file size (max 10MB to accommodate high-res mobile photos while preventing malicious bloat)
+    // Check file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      alert("Selected photo is too large. Please select a photo smaller than 10MB.");
+      showCustomAlert("Selected photo is too large. Please select a photo smaller than 10MB.");
       resetPhotoPreview();
       return;
     }
@@ -2018,9 +2044,8 @@
       // Clean up object URL to free memory
       URL.revokeObjectURL(objectUrl);
     };
-    img.onerror = (err) => {
-      console.error("Image load error:", err);
-      alert("Unable to process this image format. Please select a standard JPEG/PNG photo.");
+    img.onerror = () => {
+      showCustomAlert("Unable to process this image format. Please select a standard JPEG/PNG photo.");
       resetPhotoPreview();
       URL.revokeObjectURL(objectUrl);
     };
@@ -2039,11 +2064,11 @@
         })
         .catch(err => {
           console.error("Camera access error: ", err);
-          alert("Unable to access camera. Please select the Upload Image option instead.");
+          showCustomAlert("Unable to access camera. Please select the Upload Image option instead.");
           closeCamera();
         });
     } else {
-      alert("Camera API is not supported in this browser. Please use the Upload Image option.");
+      showCustomAlert("Camera API is not supported in this browser. Please use the Upload Image option.");
       closeCamera();
     }
   }
@@ -2200,7 +2225,7 @@
       photoUrl = uploadResult.photo_url;
       photoSignature = uploadResult.signature;
     } catch (uploadErr) {
-      alert("Registration Error (Image upload): " + uploadErr.message);
+      showCustomAlert("Registration Error (Image upload): " + uploadErr.message);
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalContent;
       return;
@@ -2350,7 +2375,7 @@
 
             } catch (updateErr) {
               console.error(updateErr);
-              alert("Payment succeeded, but failed to update status in database. Please contact support with Payment Reference: " + paymentResponse.razorpay_payment_id);
+              showCustomAlert("Payment succeeded, but failed to update status in database. Please contact support with Payment Reference: " + paymentResponse.razorpay_payment_id);
             } finally {
               submitBtn.disabled = false;
               submitBtn.innerHTML = originalContent;
@@ -2365,7 +2390,7 @@
           },
           modal: {
             ondismiss: function () {
-              alert("Checkout closed. Your registration details were not saved. Please try again to complete your registration.");
+              showCustomAlert("Checkout closed. Your registration details were not saved. Please try again to complete your registration.");
               submitBtn.disabled = false;
               submitBtn.innerHTML = originalContent;
             }
@@ -2393,7 +2418,7 @@
               : "A member with these details is already registered.";
           }
         }
-        alert("Registration Error: " + friendlyMsg);
+        showCustomAlert("Registration Error: " + friendlyMsg);
         cleanupPhoto();
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalContent;
@@ -2444,11 +2469,23 @@
               : "A member with these details is already registered.";
           }
         }
-        alert("Registration Error: " + friendlyMsg);
+        showCustomAlert("Registration Error: " + friendlyMsg);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalContent;
       }
     }
+  }
+
+  function showCustomAlert(message) {
+    const msgEl = document.getElementById('custom-alert-message');
+    if (msgEl) msgEl.textContent = message;
+    const modal = document.getElementById('custom-alert-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeCustomAlert() {
+    const modal = document.getElementById('custom-alert-modal');
+    if (modal) modal.classList.remove('active');
   }
 
   // Service Worker Registration
