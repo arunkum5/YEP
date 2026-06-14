@@ -2748,24 +2748,23 @@
         const talukVal = member.taluk ? member.taluk.split('/')[0].trim() : 'N/A';
         ctx.fillText(`${districtVal} · ${talukVal}`, detailsX, 767); // Shifted down
 
-        // Watermark on image (APPROVED or PENDING VERIFICATION)
-        ctx.save();
-        ctx.translate(300, 450);
-        ctx.rotate(-25 * Math.PI / 180);
-        ctx.font = "bold 44px 'Rajdhani', sans-serif";
-        ctx.fillStyle = member.approved ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 82, 82, 0.15)";
-        ctx.textAlign = "center";
-        ctx.strokeStyle = member.approved ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 82, 82, 0.15)";
-        ctx.lineWidth = 4;
-        
-        const wText = member.approved ? "APPROVED" : "PENDING VERIFICATION";
-        const wWidth = ctx.measureText(wText).width + 32;
-        
-        ctx.strokeRect(-wWidth/2, -30, wWidth, 60);
-        ctx.fillText(wText, 0, 15);
-        ctx.restore();
-
-
+        // Watermark on image (Only if PENDING VERIFICATION)
+        if (!member.approved) {
+          ctx.save();
+          ctx.translate(300, 470);
+          ctx.rotate(-25 * Math.PI / 180);
+          ctx.font = "bold 20px 'Rajdhani', sans-serif";
+          ctx.textAlign = "center";
+          
+          const wText = "Pending for verification";
+          const wWidth = ctx.measureText(wText).width + 24;
+          
+          // Draw white sticker background first
+          drawRoundedRect(-wWidth/2, -20, wWidth, 36, 6, "rgba(255, 255, 255, 0.95)", "rgba(255, 30, 30, 0.9)", 2);
+          ctx.fillStyle = "rgba(255, 30, 30, 0.9)";
+          ctx.fillText(wText, 0, 6);
+          ctx.restore();
+        }
 
         // 5. Draw Footer Layout
         // Separator line

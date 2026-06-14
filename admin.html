@@ -4023,32 +4023,24 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 
         // Status Stamp has been replaced by the watermark overlay on the photo to save space
 
-        // Watermark on image (APPROVED or PENDING APPROVAL)
-        ctx.save();
-        ctx.translate(300, 480);
-        ctx.rotate(-25 * Math.PI / 180);
-        ctx.font = "bold 44px 'Rajdhani', sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.lineWidth = 3;
-        ctx.setLineDash([8, 8]);
-
-        if (member.approved) {
-          ctx.fillStyle = "rgba(76, 175, 80, 0.12)";
-          ctx.strokeStyle = "rgba(76, 175, 80, 0.12)";
-          const wText = "APPROVED";
-          const wWidth = ctx.measureText(wText).width + 32;
-          ctx.strokeRect(-wWidth/2, -35, wWidth, 70);
+        // Watermark on image (Only if PENDING APPROVAL)
+        if (!member.approved) {
+          ctx.save();
+          ctx.translate(300, 480);
+          ctx.rotate(-25 * Math.PI / 180);
+          ctx.font = "bold 20px 'Rajdhani', sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          
+          const wText = "Pending for verification";
+          const wWidth = ctx.measureText(wText).width + 24;
+          
+          // Draw white sticker background first
+          drawRoundedRect(-wWidth/2, -18, wWidth, 36, 6, "rgba(255, 255, 255, 0.95)", "rgba(255, 30, 30, 0.9)", 2);
+          ctx.fillStyle = "rgba(255, 30, 30, 0.9)";
           ctx.fillText(wText, 0, 0);
-        } else {
-          ctx.fillStyle = "rgba(255, 82, 82, 0.12)";
-          ctx.strokeStyle = "rgba(255, 82, 82, 0.12)";
-          const wText = "PENDING APPROVAL";
-          const wWidth = ctx.measureText(wText).width + 32;
-          ctx.strokeRect(-wWidth/2, -35, wWidth, 70);
-          ctx.fillText(wText, 0, 0);
+          ctx.restore();
         }
-        ctx.restore();
 
         // 5. Draw Footer Layout
         // Separator line
