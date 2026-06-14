@@ -1151,15 +1151,15 @@
         <div class="form-group" style="text-align: center; margin-bottom: 24px;">
           <h2 style="font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; color: var(--gold); margin-bottom: 12px;">Membership Fee Payment / ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿ</h2>
           <p class="en" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
-            To complete your YEP membership registration, a one-time fee of <strong>₹99</strong> is required.
+            To complete your YEP membership registration, a one-time fee of <strong>₹1000</strong> is required.
           </p>
           <p class="kn" style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 6px;">
-            ನಿಮ್ಮ YEP ಸದಸ್ಯತ್ವ ನೋಂದಣಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು, ಒಂದು ಬಾರಿಯ ಶುಲ್ಕ <strong>₹99</strong> ಪಾವತಿಸಬೇಕಾಗುತ್ತದೆ.
+            ನಿಮ್ಮ YEP ಸದಸ್ಯತ್ವ ನೋಂದಣಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು, ಒಂದು ಬಾರಿಯ ಶುಲ್ಕ <strong>₹1000</strong> ಪಾವತಿಸಬೇಕಾಗುತ್ತದೆ.
           </p>
           
           <div style="background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
             <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 6px;">Total Payable Amount / ಒಟ್ಟು ಪಾವತಿಸಬೇಕಾದ ಮೊತ್ತ</div>
-            <div style="font-size: 2.5rem; font-family: 'Rajdhani', sans-serif; font-weight: 800; color: var(--gold);">₹99.00</div>
+            <div style="font-size: 2.5rem; font-family: 'Rajdhani', sans-serif; font-weight: 800; color: var(--gold);">₹1000.00</div>
             <div style="font-size: 0.8rem; color: #4CAF50; font-weight: 600; margin-top: 6px;">✓ Secure Encryption & Immediate Activation</div>
           </div>
           
@@ -1993,7 +1993,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: 99,
+            amount: 1000,
             currency: 'INR',
             phone: phone,
             name: name,
@@ -2045,7 +2045,7 @@
                 approved: false,
                 payment_status: 'paid',
                 payment_id: paymentResponse.razorpay_payment_id,
-                amount_paid: 99.00
+                amount_paid: 1000.00
               };
 
               let webhookAlreadyInserted = false;

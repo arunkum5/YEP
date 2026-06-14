@@ -277,7 +277,7 @@ async function runLiveTests() {
       approved: false,
       payment_status: 'paid',
       payment_id: 'pay_test_retry_success',
-      amount_paid: 99.00
+      amount_paid: 1000.00
     };
 
     const res = await fetch(`${SUPABASE_URL}/rest/v1/members`, {

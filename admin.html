@@ -331,7 +331,7 @@
   /* ── OVERVIEW TAB ── */
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
     margin-bottom: 40px;
   }
@@ -347,9 +347,11 @@
   }
   .metric-card.pending { border-top-color: var(--saffron); }
   .metric-card.approved { border-top-color: var(--green); }
+  .metric-card.revenue { border-top-color: var(--gold); }
   .metric-val { font-family: 'Rajdhani', sans-serif; font-size: 2.6rem; font-weight: 700; color: white; line-height: 1; }
   .metric-card.pending .metric-val { color: var(--saffron); text-shadow: 0 0 20px rgba(255, 107, 0, 0.2); }
   .metric-card.approved .metric-val { color: var(--green); text-shadow: 0 0 20px rgba(19, 136, 8, 0.2); }
+  .metric-card.revenue .metric-val { color: var(--gold); text-shadow: 0 0 20px rgba(244, 196, 48, 0.2); }
   .metric-card .metric-val { text-shadow: 0 0 20px rgba(244, 196, 48, 0.2); }
   .metric-label { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-top: 8px; }
 
@@ -1476,6 +1478,10 @@
             <div class="metric-val" id="metric-approved">0</div>
             <div class="metric-label">Approved Members / ಅನುಮೋದಿತರು</div>
           </div>
+          <div class="metric-card revenue">
+            <div class="metric-val" id="metric-revenue">₹0</div>
+            <div class="metric-label">Total Revenue / ಒಟ್ಟು ಆದಾಯ</div>
+          </div>
         </div>
 
         <!-- Custom Visual Analytics Grid -->
@@ -1740,7 +1746,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
 </div>
 
 <!-- MEMBER DETAILS INTERACTIVE MODAL -->
-<div class="details-modal-overlay" id="details-modal">
+<div class="details-modal-overlay" id="details-modal" onclick="closeDetailsModal()">
   <div class="details-modal-content" onclick="event.stopPropagation()">
     <button class="btn-close-details" onclick="closeDetailsModal()">✕</button>
     
@@ -1757,6 +1763,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
         <button class="btn-modal-action approve" id="detail-btn-approve" onclick="handleApproveSingleInModal()">✊ Approve Member</button>
         <button class="btn-modal-action download" id="detail-btn-download" onclick="handleDownloadSingleInModal()">📥 Download ID Card</button>
         <button class="btn-modal-action delete" onclick="handleDeleteSingleInModal()">✕ Delete Registration</button>
+        <button class="btn-modal-action close" onclick="closeDetailsModal()" style="margin-top: 10px; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15);">↩ Back / Close</button>
+      </div>
       </div>
     </div>
 
@@ -1836,8 +1844,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
           <div class="details-data-val" id="detail-payment-id-val">N/A</div>
         </div>
         <div class="details-data-item">
-          <div class="details-data-label">Application Date</div>
-          <div class="details-data-val" id="detail-date-val">2026-06-11</div>
+          <div class="details-data-label">Registration Date & Time</div>
+          <div class="details-data-val" id="detail-date-val">2026-06-11 12:00 PM</div>
         </div>
       </div>
     </div>
@@ -2215,6 +2223,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     document.getElementById('metric-total').textContent = allMembers.length;
     document.getElementById('metric-pending').textContent = allMembers.filter(m => !m.approved).length;
     document.getElementById('metric-approved').textContent = allMembers.filter(m => m.approved).length;
+
+    const totalRevenue = allMembers
+      .filter(m => m.payment_status === 'paid' && m.amount_paid)
+      .reduce((sum, m) => sum + Number(m.amount_paid), 0);
+    document.getElementById('metric-revenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
   }
 
   /* ── ANALYTICS CHARTS GENERATION ── */
@@ -3039,7 +3052,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     document.getElementById('detail-payment-status-val').textContent = member.payment_status ? member.payment_status.toUpperCase() : 'FREE';
     document.getElementById('detail-payment-id-val').textContent = member.payment_id || 'N/A';
     
-    const dateStr = member.created_at ? member.created_at.split('T')[0] : 'N/A';
+    let dateStr = 'N/A';
+    if (member.created_at) {
+      const createdDate = new Date(member.created_at);
+      dateStr = createdDate.toLocaleString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
     document.getElementById('detail-date-val').textContent = dateStr;
 
     // Show modal overlay
