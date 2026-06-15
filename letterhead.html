@@ -327,6 +327,26 @@
       outline: none;
     }
 
+    /* Subject Field Bar */
+    .letter-subject-row {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .editable-subject {
+      border-bottom: 1px dashed rgba(0,0,0,0.25);
+      flex: 1;
+      outline: none;
+      padding-bottom: 2px;
+      font-weight: 700;
+    }
+
     /* Document Body content */
     .letter-body {
       flex: 1;
@@ -567,9 +587,14 @@
       </div>
     </div>
 
+    <!-- Subject Field -->
+    <div class="letter-subject-row">
+      <span>SUB:</span>
+      <div class="editable-subject" contenteditable="true" id="letter-subject">Official YoungSTAR Party Communication</div>
+    </div>
+
     <!-- Editable Body content area -->
     <div class="letter-body" contenteditable="true" id="letter-text-body">
-      <div class="subject-line">SUB: </div>
       <p class="paragraph">To Whom It May Concern,</p>
       <p class="paragraph">
         This is an official communication from the office of the President, YoungSTAR Party (YEP) Karnataka. This template can be fully customized, edited, or replaced directly from your browser. Click anywhere in this body section to start typing your content.
@@ -640,8 +665,8 @@
       if (confirm("Are you sure you want to reset the letter text body to the default template?")) {
         document.getElementById('letter-ref-no').textContent = "";
         document.getElementById('letter-date').textContent = "";
+        document.getElementById('letter-subject').textContent = "Official YoungSTAR Party Communication";
         document.getElementById('letter-text-body').innerHTML = `
-          <div class="subject-line">SUB: </div>
           <p class="paragraph">To Whom It May Concern,</p>
           <p class="paragraph">
             This is an official communication from the office of the President, YoungSTAR Party (YEP) Karnataka. This template can be fully customized, edited, or replaced directly from your browser. Click anywhere in this body section to start typing your content.
