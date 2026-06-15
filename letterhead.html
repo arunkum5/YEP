@@ -152,10 +152,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 2px solid var(--gold);
       padding-bottom: 12px;
       margin-bottom: 15px;
       position: relative;
+    }
+    .letterhead-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #F4C430 50%, #D32F2F 50%);
     }
 
     /* Seal Logo Wrapper */
