@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yep-cache-v3';
+const CACHE_NAME = 'yep-cache-v4';
 const ASSETS_TO_CACHE = [
   './',
   './join',
