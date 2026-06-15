@@ -455,6 +455,10 @@
 
     /* PRINT LAYOUT ADJUSTMENTS */
     @media print {
+      @page {
+        margin: 0; /* Removes browser default print headers (title, date) and footers (URL, page numbers) */
+      }
+
       body {
         background-color: var(--white) !important;
         padding: 0 !important;
