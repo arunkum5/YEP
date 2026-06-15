@@ -463,7 +463,7 @@
         <div class="leader-credentials-kn">ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್</div>
         
         <div class="contact-details">
-          Phone: +91 98455 00932 &middot; Email: contact@youngstarparty.org &middot; Web: youngstarparty.org
+          📞 +91 98455 00932 &middot; ✉️ contact@youngstarparty.org &middot; 🌐 youngstarparty.org
         </div>
       </div>
 
@@ -482,17 +482,17 @@
     <div class="letter-meta-row">
       <div class="meta-ref-block">
         <span>Ref No:</span>
-        <div class="editable-meta" contenteditable="true" id="letter-ref-no">YEP-KA-2026-REF-001</div>
+        <div class="editable-meta" contenteditable="true" id="letter-ref-no"></div>
       </div>
       <div class="meta-date-block">
         <span>Date:</span>
-        <div class="editable-meta" contenteditable="true" id="letter-date">--/--/----</div>
+        <div class="editable-meta" contenteditable="true" id="letter-date"></div>
       </div>
     </div>
 
     <!-- Editable Body content area -->
     <div class="letter-body" contenteditable="true" id="letter-text-body">
-      <div class="subject-line">SUB: Official YoungSTAR Party Communication</div>
+      <div class="subject-line">SUB: </div>
       <p class="paragraph">To Whom It May Concern,</p>
       <p class="paragraph">
         This is an official communication from the office of the President, YoungSTAR Party (YEP) Karnataka. This template can be fully customized, edited, or replaced directly from your browser. Click anywhere in this body section to start typing your content.
@@ -561,10 +561,10 @@
     // Reset default document text layout
     function resetLetterBody() {
       if (confirm("Are you sure you want to reset the letter text body to the default template?")) {
-        document.getElementById('letter-ref-no').textContent = "YEP-KA-2026-REF-001";
-        document.getElementById('letter-date').textContent = "--/--/----";
+        document.getElementById('letter-ref-no').textContent = "";
+        document.getElementById('letter-date').textContent = "";
         document.getElementById('letter-text-body').innerHTML = `
-          <div class="subject-line">SUB: Official YoungSTAR Party Communication</div>
+          <div class="subject-line">SUB: </div>
           <p class="paragraph">To Whom It May Concern,</p>
           <p class="paragraph">
             This is an official communication from the office of the President, YoungSTAR Party (YEP) Karnataka. This template can be fully customized, edited, or replaced directly from your browser. Click anywhere in this body section to start typing your content.
@@ -586,8 +586,7 @@
 
     // Auto load current date and ref number on load
     window.addEventListener('DOMContentLoaded', () => {
-      insertTodayDate();
-      generateRefNumber();
+      // Start empty/blank as requested
     });
   </script>
 </body>
