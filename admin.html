@@ -2066,6 +2066,20 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
             </div>
           </div>
 
+          <!-- Page Statistics Reset Card -->
+          <div class="settings-card" style="border-color: rgba(244, 196, 48, 0.2);">
+            <div class="settings-title" style="color: var(--gold); border-color: rgba(244, 196, 48, 0.2);">Reset Page Statistics</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+              Reset the visitor and click counters on the main landing page back to zero.
+            </p>
+            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+              <button class="nav-cta" id="btn-reset-stats" onclick="resetPageStats()" style="background: var(--gold); color: black; font-weight: 700; border: none; height: auto; padding: 12px 24px; cursor: pointer; border-radius: 6px; font-family: 'Rajdhani', sans-serif; transition: background 0.2s;" onmouseover="this.style.background='#ffc107'" onmouseout="this.style.background='var(--gold)'">
+                🔄 Reset Visitor & Click Counts
+              </button>
+              <div id="reset-stats-status" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;"></div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -3576,6 +3590,47 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
       statusEl.style.color = "#FF5252";
     } finally {
       btnPurge.disabled = false;
+    }
+  }
+
+  async function resetPageStats() {
+    const confirmed = await showConfirmModal("Are you sure you want to reset both the Visitor and Click counts back to 0? This will reset the statistics displayed on the public landing page.", "Yes, Reset");
+    if (!confirmed) return;
+
+    const statusEl = document.getElementById('reset-stats-status');
+    const btnReset = document.getElementById('btn-reset-stats');
+    btnReset.disabled = true;
+    statusEl.textContent = "Resetting stats...";
+    statusEl.style.color = "var(--gold)";
+
+    if (!supabaseClient) {
+      statusEl.textContent = "Reset simulation successful (Mock Mode).";
+      statusEl.style.color = "var(--green)";
+      btnReset.disabled = false;
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('page_stats')
+        .update({ count: 0 })
+        .in('id', ['visitors', 'clicks']);
+
+      if (error) throw error;
+
+      statusEl.textContent = "Success! Reset both counters to 0.";
+      statusEl.style.color = "var(--green)";
+      if (typeof showToast === 'function') {
+        showToast("Visitor and click statistics successfully reset!", "success");
+      }
+    } catch (err) {
+      statusEl.textContent = "Reset failed: " + err.message;
+      statusEl.style.color = "#FF5252";
+      if (typeof showToast === 'function') {
+        showToast("Failed to reset statistics: " + err.message, "error");
+      }
+    } finally {
+      btnReset.disabled = false;
     }
   }
 
