@@ -2048,7 +2048,22 @@ BEGIN
   RETURNING count INTO new_count;
   RETURN new_count;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create RPC function to safely reset counters bypassing RLS
+CREATE OR REPLACE FUNCTION reset_page_stats()
+RETURNS VOID AS $$
+BEGIN
+  UPDATE public.page_stats
+  SET count = 0
+  WHERE id IN ('visitors', 'clicks');
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Enable RLS on page_stats and allow read/update access
+ALTER TABLE public.page_stats ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to page_stats" ON public.page_stats FOR SELECT USING (true);
+CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE TO authenticated USING (true) WITH CHECK (true);</pre>
             </div>
           </div>
 
@@ -3611,12 +3626,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;</pre>
     }
 
     try {
-      const { error } = await supabaseClient
-        .from('page_stats')
-        .update({ count: 0 })
-        .in('id', ['visitors', 'clicks']);
+      // 1. Try calling the RPC function (bypasses RLS using SECURITY DEFINER)
+      const { error: rpcError } = await supabaseClient.rpc('reset_page_stats');
 
-      if (error) throw error;
+      if (rpcError) {
+        console.warn("RPC reset failed, trying direct table update fallback...", rpcError);
+        // 2. Fallback to direct table update
+        const { error: updateError } = await supabaseClient
+          .from('page_stats')
+          .update({ count: 0 })
+          .in('id', ['visitors', 'clicks']);
+
+        if (updateError) throw updateError;
+      }
 
       statusEl.textContent = "Success! Reset both counters to 0.";
       statusEl.style.color = "var(--green)";
