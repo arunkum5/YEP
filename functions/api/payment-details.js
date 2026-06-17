@@ -12,7 +12,7 @@ export async function onRequestPost(context) {
     }
 
     // Load UPI details from Cloudflare environment variables or fallbacks
-    const upiId = env.UPI_VPA || "yepkarnataka@ybl";
+    const upiId = env.UPI_VPA || "9448610107-3@ybl";
     const partyName = env.UPI_PARTY_NAME || "YoungSTAR Empowerment Party";
     
     // Resolve membership fee dynamically from Supabase if possible

@@ -1614,7 +1614,7 @@
         </div>
 
         <!-- Sub-Option B: Copy UPI ID & Pay manually -->
-        <div>
+        <div style="margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 14px;">
           <div style="font-size: 0.76rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
             📋 <span class="en">Way B: Copy UPI ID & Pay Manually</span>
             <span class="kn">ವಿಧಾನ B: ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಿ ಪಾವತಿಸಿ</span>
@@ -1624,7 +1624,7 @@
             <span class="kn">ಕೆಳಗಿನ ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಿ, ಜಿಪೇ/ಫೋನ್ ಪೇನಲ್ಲಿ ಮ್ಯಾನುವಲ್ ಆಗಿ ಪಾವತಿಸಿ.</span>
           </div>
           <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.05);">
-            <span id="upi-id-text" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold); word-break: break-all; flex: 1;">yepkarnataka@ybl</span>
+            <span id="upi-id-text" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold); word-break: break-all; flex: 1;">9448610107-3@ybl</span>
             <button type="button" id="btn-copy-upi" onclick="copyUPIVal()" style="background: rgba(244,196,48,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
               📋 <span class="en">Copy</span><span class="kn">ಕಾಪಿ</span>
             </button>
@@ -1633,6 +1633,39 @@
             ✅ <span class="en">UPI ID Copied! Paste it in your UPI app.</span>
             <span class="kn">ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಲಾಗಿದೆ!</span>
           </div>
+        </div>
+
+        <!-- IMPORTANT NOTE: Include registered number in payment note -->
+        <div style="background: rgba(244,196,48,0.06); border: 1px dashed rgba(244,196,48,0.3); border-radius: 8px; padding: 10px; margin-bottom: 14px; font-family: 'Rajdhani', sans-serif; font-size: 0.78rem; line-height: 1.35;">
+          <span style="color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">
+            ⚠️ <span class="en">Important: Add Note during payment</span>
+            <span class="kn">ಪ್ರಮುಖ ಮಾಹಿತಿ: ಪಾವತಿ ಟಿಪ್ಪಣಿ ಸೇರಿಸಿ</span>
+          </span>
+          <span class="en" style="color: rgba(255,255,255,0.85);">
+            Please write your **registered mobile number** (the one you used to register) in the **"Add a note" / "Remarks"** field inside Google Pay/PhonePe/Paytm so we can identify your payment.
+          </span>
+          <span class="kn" style="color: rgba(255,255,255,0.85);">
+            ನಿಮ್ಮ ಪಾವತಿಯನ್ನು ಗುರುತಿಸಲು ದಯವಿಟ್ಟು ಜಿಪೇ/ಫೋನ್ ಪೇನಲ್ಲಿ ಪಾವತಿಸುವಾಗ **"Add a note" / "Remarks"** ಜಾಗದಲ್ಲಿ ನಿಮ್ಮ **ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು** ಬರೆಯಿರಿ.
+          </span>
+        </div>
+
+        <!-- UTR / Transaction reference submission for verification -->
+        <div>
+          <div style="font-size: 0.76rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+            📝 <span class="en">Submit Transaction Reference / UTR</span>
+            <span class="kn">ಟ್ರಾನ್ಸಾಕ್ಷನ್ ರೆಫರೆನ್ಸ್ / UTR ಸಲ್ಲಿಸಿ</span>
+          </div>
+          <div style="font-size: 0.68rem; color: rgba(255,255,255,0.5); line-height: 1.35; margin-bottom: 8px;">
+            <span class="en">Enter the 12-digit UPI Ref No./UTR number from your payment confirmation screen for verification.</span>
+            <span class="kn">ಪಾವತಿ ಪೂರ್ಣಗೊಂಡ ನಂತರ ಕನ್ಫರ್ಮೇಷನ್ ಸ್ಕ್ರೀನ್‌ನಲ್ಲಿರುವ 12-ಅಂಕಿಯ ಯುಟಿಆರ್ (UTR) ಸಂಖ್ಯೆಯನ್ನು ಇಲ್ಲಿ ಸಲ್ಲಿಸಿ.</span>
+          </div>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <input type="text" id="upi-utr-input" placeholder="e.g. 612345678901" maxlength="12" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: white; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 8px 10px; flex: 1; box-sizing: border-box; outline: none; transition: border 0.2s;">
+            <button type="button" id="btn-submit-utr" onclick="submitUTRVal()" style="background: var(--gold); border: none; color: black; padding: 8px 16px; border-radius: 6px; font-size: 0.76rem; font-weight: 800; cursor: pointer; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; transition: all 0.2s;">
+              <span class="en">Submit</span><span class="kn">ಸಲ್ಲಿಸಿ</span>
+            </button>
+          </div>
+          <div id="utr-status-msg" style="display: none; font-size: 0.72rem; font-weight: 700; margin-top: 8px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;"></div>
         </div>
       </div>
 
@@ -1739,6 +1772,7 @@
   let membershipFee = 1000;
   let localVideoStream = null;
   let capturedPhotoData = null;
+  let registeredMemberPhone = "";
 
   function updateMembershipFeeUI(fee) {
     const descEn = document.getElementById('fee-desc-en');
@@ -2275,6 +2309,7 @@
 
   /* ── FORM SUBMISSION & SUCCESS MODAL ── */
   async function showSuccessUI(name, phone, district, taluk, photoUrl) {
+    registeredMemberPhone = phone;
     document.getElementById('card-photo').src = photoUrl;
     document.getElementById('card-name-val').textContent = name;
     document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
@@ -2579,6 +2614,45 @@
     } finally {
       downloadBtn.disabled = false;
       downloadBtn.innerHTML = originalText;
+    }
+  }
+
+  async function submitUTRVal() {
+    const utrVal = document.getElementById('upi-utr-input').value.trim();
+    const statusMsg = document.getElementById('utr-status-msg');
+    const submitBtn = document.getElementById('btn-submit-utr');
+    
+    if (!/^\d{12}$/.test(utrVal)) {
+      statusMsg.style.display = 'block';
+      statusMsg.style.color = '#FF5252';
+      statusMsg.innerHTML = '<span class="en">Please enter a valid 12-digit UPI UTR / Ref No.</span><span class="kn">ದಯವಿಟ್ಟು 12-ಅಂಕಿಯ ಸರಿಯಾದ ಯುಟಿಆರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.</span>';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    const originalContent = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳...';
+
+    try {
+      const { error } = await supabaseClient
+        .from('members')
+        .update({ payment_id: utrVal })
+        .eq('phone', registeredMemberPhone);
+
+      if (error) throw error;
+
+      statusMsg.style.display = 'block';
+      statusMsg.style.color = '#4CAF50';
+      statusMsg.innerHTML = '✅ <span class="en">Reference ID submitted successfully!</span><span class="kn">ರೆಫರೆನ್ಸ್ ಸಂಖ್ಯೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!</span>';
+      document.getElementById('upi-utr-input').disabled = true;
+      submitBtn.style.display = 'none';
+    } catch (err) {
+      console.error("Failed to submit UTR:", err);
+      statusMsg.style.display = 'block';
+      statusMsg.style.color = '#FF5252';
+      statusMsg.innerHTML = '❌ <span class="en">Failed to submit. Please try again.</span><span class="kn">ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.</span>';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalContent;
     }
   }
 
