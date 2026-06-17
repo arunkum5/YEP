@@ -1574,76 +1574,65 @@
         <span style="color: var(--gold); font-size: 1.25rem; font-weight: 800;">₹<span id="upi-amount-display">1000</span></span>
       </div>
       
-      <!-- Clear Option Instruction Box -->
-      <div style="background: rgba(244,196,48,0.06); border: 1.5px dashed rgba(244,196,48,0.3); border-radius: 8px; padding: 10px; margin-bottom: 14px; font-family: 'Rajdhani', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.35;">
-        <span class="en">📲 Scan QR code on computer OR Tap button on mobile</span>
-        <span class="kn" style="display: block; margin-top: 2px;">📲 ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ ಕ್ಯೂಆರ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಅಥವಾ ಮೊಬೈಲ್‌ನಲ್ಲಿ ಬಟನ್ ಕ್ಲಿಕ್ ಮಾಡಿ</span>
-      </div>
-
-      <!-- Option A: QR Code (for desktops) -->
-      <div style="background: white; padding: 10px; display: inline-block; border-radius: 10px; margin: 4px auto 10px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid var(--gold); width: fit-content;">
-        <img id="upi-qr-image" src="" alt="Scan to Pay" style="width: 140px; height: 140px; display: block; margin: 0;">
-      </div>
-
-      <div style="font-size: 0.76rem; color: rgba(255,255,255,0.7); margin-bottom: 12px; line-height: 1.35;">
-        <span class="en">Scan QR using Google Pay, PhonePe, Paytm, or BHIM.</span>
-        <span class="kn">ಜಿಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಭೀಮ್ ಬಳಸಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</span>
-      </div>
-
-      <!-- OR separator -->
-      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; color: rgba(255,255,255,0.25); font-size: 0.75rem; margin-bottom: 12px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
-        <span style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></span>
-        <span>OR / ಅಥವಾ</span>
-        <span style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></span>
-      </div>
-
-      <!-- Option B: Direct UPI App Buttons (for mobiles) -->
-      <div id="upi-apps-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; width: 100%; box-sizing: border-box;">
+      <!-- Option 1: QR Code Scanner (Desktop Users) -->
+      <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px; margin-bottom: 14px; text-align: center;">
+        <div style="font-size: 0.82rem; font-weight: 700; color: var(--gold); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+          <span class="en">💻 Method 1: Scan QR Code (If on Computer)</span>
+          <span class="kn">💻 ವಿಧಾನ 1: ಕ್ಯೂಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ (ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ)</span>
+        </div>
         
-        <!-- Google Pay -->
-        <a id="upi-btn-gpay" href="#" class="modal-btn" style="background: #FFFFFF; color: #3c4043; font-weight: 700; border: 1px solid #dadce0; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: all 0.2s;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" style="height: 18px;">
-          <span>Google Pay</span>
-        </a>
+        <div style="background: white; padding: 10px; display: inline-block; border-radius: 10px; margin: 4px auto 8px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid var(--gold); width: fit-content;">
+          <img id="upi-qr-image" src="" alt="Scan to Pay" style="width: 140px; height: 140px; display: block; margin: 0;">
+        </div>
 
-        <!-- PhonePe -->
-        <a id="upi-btn-phonepe" href="#" class="modal-btn" style="background: #5f259f; color: #FFFFFF; font-weight: 700; border: none; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(95,37,159,0.3); transition: all 0.2s;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/PhonePe_Logo.svg" alt="PhonePe" style="height: 18px; filter: brightness(0) invert(1);">
-          <span>PhonePe</span>
-        </a>
-
-        <!-- Paytm -->
-        <a id="upi-btn-paytm" href="#" class="modal-btn" style="background: #00baf2; color: #FFFFFF; font-weight: 700; border: none; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(0,186,242,0.3); transition: all 0.2s;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Paytm_Logo.svg" alt="Paytm" style="height: 15px; filter: brightness(0) invert(1);">
-          <span>Paytm</span>
-        </a>
-
-        <!-- BHIM / Generic UPI -->
-        <a id="upi-btn-bhim" href="#" class="modal-btn" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 800; border: none; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(244,196,48,0.2); transition: all 0.2s;">
-          ⚡ <span class="en">Other UPI App</span><span class="kn">ಇತರ ಯುಪಿಐ ಆಪ್</span>
-        </a>
-
+        <div style="font-size: 0.72rem; color: rgba(255,255,255,0.6); line-height: 1.3;">
+          <span class="en">Scan using Google Pay, PhonePe, Paytm, or BHIM.</span>
+          <span class="kn">ಜಿಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಭೀಮ್ ಬಳಸಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</span>
+        </div>
       </div>
 
-      <!-- Option C: Manual Copy VPA (Fallback for mobile deep link security declines) -->
-      <div id="upi-copy-container" style="margin-top: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; box-sizing: border-box; text-align: left;">
-        <div style="font-size: 0.72rem; color: #FFD700; font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
-          ⚠️ <span class="en">If deep link is blocked/declined:</span>
-          <span class="kn">ಒಂದು ವೇಳೆ ಪಾವತಿ ವಿಫಲವಾದರೆ:</span>
+      <!-- Option 2: Mobile Users (Foolproof Fallbacks) -->
+      <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px; text-align: left; margin-bottom: 14px;">
+        <div style="font-size: 0.82rem; font-weight: 700; color: var(--gold); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+          <span class="en">📱 Method 2: Pay on Mobile (100% Working)</span>
+          <span class="kn">📱 ವಿಧಾನ 2: ಮೊಬೈಲ್‌ನಲ್ಲಿ ಪಾವತಿಸಿ</span>
         </div>
-        <div style="font-size: 0.68rem; color: rgba(255,255,255,0.6); line-height: 1.35; margin-bottom: 8px;">
-          <span class="en">Copy the UPI ID, open Google Pay / PhonePe / Paytm, and pay ₹1000 manually to it.</span>
-          <span class="kn">ಕೆಳಗಿನ ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಿ, ಜಿಪೇ/ಫೋನ್ ಪೇ/ಪೇಟಿಎಂ ನಲ್ಲಿ ₹1000 ಪಾವತಿಸಿ.</span>
-        </div>
-        <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.05);">
-          <span id="upi-id-text" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold); word-break: break-all; flex: 1;">yepkarnataka@ybl</span>
-          <button id="btn-copy-upi" onclick="copyUPIVal()" style="background: rgba(244,196,48,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
-            📋 <span class="en">Copy</span><span class="kn">ಕಾಪಿ</span>
+
+        <!-- Sub-Option A: Download QR and Upload from Gallery -->
+        <div style="margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 14px;">
+          <div style="font-size: 0.76rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+            📸 <span class="en">Way A: Save QR & Scan from Gallery</span>
+            <span class="kn">ವಿಧಾನ A: ಕ್ಯೂಆರ್ ಸೇವ್ ಮಾಡಿ ಗ್ಯಾಲರಿಯಿಂದ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</span>
+          </div>
+          <div style="font-size: 0.68rem; color: rgba(255,255,255,0.5); line-height: 1.35; margin-bottom: 8px;">
+            <span class="en">Save the QR to your photos. Open Google Pay/PhonePe, select scan, and choose "Upload from Gallery".</span>
+            <span class="kn">ಕ್ಯೂಆರ್ ಕೋಡ್ ಅನ್ನು ನಿಮ್ಮ ಫೋನ್‌ಗೆ ಸೇವ್ ಮಾಡಿ. ಜಿಪೇ/ಫೋನ್ ಪೇ ಓಪನ್ ಮಾಡಿ ಗ್ಯಾಲರಿಯಿಂದ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.</span>
+          </div>
+          <button type="button" id="btn-download-qr" onclick="downloadQRCode()" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 800; border: none; padding: 10px 14px; border-radius: 6px; font-size: 0.76rem; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 8px rgba(244,196,48,0.15); transition: all 0.2s;">
+            📥 <span class="en">Save QR to Gallery</span><span class="kn">ಗ್ಯಾಲರಿಗೆ ಕ್ಯೂಆರ್ ಸೇವ್ ಮಾಡಿ</span>
           </button>
         </div>
-        <div id="copy-success-msg" style="display: none; font-size: 0.68rem; color: #4CAF50; font-weight: 700; margin-top: 6px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;">
-          ✅ <span class="en">UPI ID Copied! Paste it in your UPI app.</span>
-          <span class="kn">ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಲಾಗಿದೆ!</span>
+
+        <!-- Sub-Option B: Copy UPI ID & Pay manually -->
+        <div>
+          <div style="font-size: 0.76rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+            📋 <span class="en">Way B: Copy UPI ID & Pay Manually</span>
+            <span class="kn">ವಿಧಾನ B: ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಿ ಪಾವತಿಸಿ</span>
+          </div>
+          <div style="font-size: 0.68rem; color: rgba(255,255,255,0.5); line-height: 1.35; margin-bottom: 8px;">
+            <span class="en">Copy the ID below, paste it into any UPI app (GPay/PhonePe/Paytm), and pay ₹1000 manually.</span>
+            <span class="kn">ಕೆಳಗಿನ ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಿ, ಜಿಪೇ/ಫೋನ್ ಪೇನಲ್ಲಿ ಮ್ಯಾನುವಲ್ ಆಗಿ ಪಾವತಿಸಿ.</span>
+          </div>
+          <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.05);">
+            <span id="upi-id-text" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold); word-break: break-all; flex: 1;">yepkarnataka@ybl</span>
+            <button type="button" id="btn-copy-upi" onclick="copyUPIVal()" style="background: rgba(244,196,48,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
+              📋 <span class="en">Copy</span><span class="kn">ಕಾಪಿ</span>
+            </button>
+          </div>
+          <div id="copy-success-msg" style="display: none; font-size: 0.68rem; color: #4CAF50; font-weight: 700; margin-top: 6px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;">
+            ✅ <span class="en">UPI ID Copied! Paste it in your UPI app.</span>
+            <span class="kn">ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಲಾಗಿದೆ!</span>
+          </div>
         </div>
       </div>
 
@@ -2324,35 +2313,6 @@
               if (data.upi_id) {
                 document.getElementById('upi-id-text').textContent = data.upi_id;
               }
-
-              // Dynamically configure platform-specific intents/deep-links
-              const queryParams = data.upi_url.includes('?') ? data.upi_url.substring(data.upi_url.indexOf('?')) : '';
-              
-              const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-              const isAndroid = /android/i.test(userAgent);
-              const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
-              let gpayUrl = data.upi_url;
-              let phonepeUrl = data.upi_url;
-              let paytmUrl = data.upi_url;
-              let bhimUrl = data.upi_url;
-
-              if (isAndroid) {
-                gpayUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-                phonepeUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=com.phonepe.app;end`;
-                paytmUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=net.one97.paytm;end`;
-                bhimUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=in.org.npci.upiapp;end`;
-              } else if (isIOS) {
-                gpayUrl = `gpay://upi/pay${queryParams}`;
-                phonepeUrl = `phonepe://upi/pay${queryParams}`;
-                paytmUrl = `paytmmp://upi/pay${queryParams}`;
-                bhimUrl = `bhim://upi/pay${queryParams}`;
-              }
-
-              document.getElementById('upi-btn-gpay').href = gpayUrl;
-              document.getElementById('upi-btn-phonepe').href = phonepeUrl;
-              document.getElementById('upi-btn-paytm').href = paytmUrl;
-              document.getElementById('upi-btn-bhim').href = bhimUrl;
             }
           }
         } catch (err) {
@@ -2587,6 +2547,38 @@
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalContent;
       }
+    }
+  }
+
+  async function downloadQRCode() {
+    const qrImg = document.getElementById('upi-qr-image');
+    if (!qrImg || !qrImg.src) return;
+
+    const downloadBtn = document.getElementById('btn-download-qr');
+    const originalText = downloadBtn.innerHTML;
+    downloadBtn.disabled = true;
+    downloadBtn.innerHTML = '⏳ <span class="en">Saving...</span><span class="kn">ಉಳಿಸಲಾಗುತ್ತಿದೆ...</span>';
+
+    try {
+      const proxyUrl = `/api/proxy?url=${encodeURIComponent(qrImg.src)}`;
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error("Proxy fetch failed");
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = 'YEP_Payment_QR.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Failed to download QR code:", err);
+      window.open(qrImg.src, '_blank');
+    } finally {
+      downloadBtn.disabled = false;
+      downloadBtn.innerHTML = originalText;
     }
   }
 
