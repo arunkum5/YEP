@@ -39,7 +39,7 @@ export async function onRequestPost(context) {
     }
 
     // Construct UPI pay URL and dynamic QR code image URL
-    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(partyName)}&am=${membershipFee}&cu=INR&tn=${encodeURIComponent("YEP Membership " + phone)}`;
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(partyName)}&am=${membershipFee}&cu=INR&tn=${encodeURIComponent("YEP " + phone)}`;
     const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
 
     return new Response(JSON.stringify({
