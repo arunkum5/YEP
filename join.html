@@ -1601,6 +1601,28 @@
         <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">BHIM</span>
       </div>
 
+      <!-- Option C: Manual Copy VPA (Fallback for mobile deep link security declines) -->
+      <div id="upi-copy-container" style="margin-top: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; box-sizing: border-box; text-align: left;">
+        <div style="font-size: 0.72rem; color: #FFD700; font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+          ⚠️ <span class="en">If deep link is blocked/declined:</span>
+          <span class="kn">ಒಂದು ವೇಳೆ ಪಾವತಿ ವಿಫಲವಾದರೆ:</span>
+        </div>
+        <div style="font-size: 0.68rem; color: rgba(255,255,255,0.6); line-height: 1.35; margin-bottom: 8px;">
+          <span class="en">Copy the UPI ID, open Google Pay / PhonePe / Paytm, and pay ₹1000 manually to it.</span>
+          <span class="kn">ಕೆಳಗಿನ ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಿ, ಜಿಪೇ/ಫೋನ್ ಪೇ/ಪೇಟಿಎಂ ನಲ್ಲಿ ₹1000 ಪಾವತಿಸಿ.</span>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.05);">
+          <span id="upi-id-text" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold); word-break: break-all; flex: 1;">yepkarnataka@ybl</span>
+          <button id="btn-copy-upi" onclick="copyUPIVal()" style="background: rgba(244,196,48,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
+            📋 <span class="en">Copy</span><span class="kn">ಕಾಪಿ</span>
+          </button>
+        </div>
+        <div id="copy-success-msg" style="display: none; font-size: 0.68rem; color: #4CAF50; font-weight: 700; margin-top: 6px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;">
+          ✅ <span class="en">UPI ID Copied! Paste it in your UPI app.</span>
+          <span class="kn">ಯುಪಿಐ ಐಡಿ ಕಾಪಿ ಮಾಡಲಾಗಿದೆ!</span>
+        </div>
+      </div>
+
       <div style="font-size: 0.68rem; color: rgba(255,255,255,0.35); margin-top: 14px; line-height: 1.35; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
         <span class="en">* Keep your transaction receipt. Your ID card will be activated once payment is approved by admin.</span>
         <span class="kn" style="display: block; margin-top: 2px;">* ಪಾವತಿ ರಸೀದಿಯನ್ನು ಇಟ್ಟುಕೊಳ್ಳಿ. ಅಡ್ಮಿನ್ ಅನುಮೋದಿಸಿದ ನಂತರ ನಿಮ್ಮ ಐಡಿ ಕಾರ್ಡ್ ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ.</span>
@@ -2277,6 +2299,9 @@
               document.getElementById('upi-pay-button').href = data.upi_url;
               document.getElementById('upi-amount-val-en').textContent = data.amount;
               document.getElementById('upi-amount-val-kn').textContent = data.amount;
+              if (data.upi_id) {
+                document.getElementById('upi-id-text').textContent = data.upi_id;
+              }
             }
           }
         } catch (err) {
@@ -2511,6 +2536,46 @@
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalContent;
       }
+    }
+  }
+
+  function copyUPIVal() {
+    const upiIdText = document.getElementById('upi-id-text').textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(upiIdText).then(showCopySuccess).catch(err => {
+        console.error('Failed to copy text: ', err);
+        fallbackCopyText(upiIdText);
+      });
+    } else {
+      fallbackCopyText(upiIdText);
+    }
+  }
+
+  function fallbackCopyText(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) showCopySuccess();
+    } catch (err) {
+      console.error('Fallback copy failed: ', err);
+    }
+    document.body.removeChild(textArea);
+  }
+
+  function showCopySuccess() {
+    const msg = document.getElementById('copy-success-msg');
+    if (msg) {
+      msg.style.display = 'block';
+      setTimeout(() => {
+        msg.style.display = 'none';
+      }, 3000);
     }
   }
 

@@ -44,6 +44,7 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({
       success: true,
+      upi_id: upiId,
       upi_url: upiUrl,
       qr_image_url: qrImageUrl,
       amount: membershipFee
