@@ -1565,6 +1565,15 @@
     <div id="upi-payment-section" class="success-right-panel" style="display: none;">
       <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.25rem; color: var(--gold); margin: 0 0 12px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Membership Fee Payment / ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿ</h3>
       
+      <!-- Payable Amount Box -->
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; font-family: 'Rajdhani', sans-serif; font-weight: 700; box-sizing: border-box;">
+        <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
+          <span class="en">Amount Payable:</span>
+          <span class="kn">ಪಾವತಿಸಬೇಕಾದ ಮೊತ್ತ:</span>
+        </span>
+        <span style="color: var(--gold); font-size: 1.25rem; font-weight: 800;">₹<span id="upi-amount-display">1000</span></span>
+      </div>
+      
       <!-- Clear Option Instruction Box -->
       <div style="background: rgba(244,196,48,0.06); border: 1.5px dashed rgba(244,196,48,0.3); border-radius: 8px; padding: 10px; margin-bottom: 14px; font-family: 'Rajdhani', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.35;">
         <span class="en">📲 Scan QR code on computer OR Tap button on mobile</span>
@@ -1588,17 +1597,32 @@
         <span style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></span>
       </div>
 
-      <!-- Option B: Direct UPI Deep Link (for mobiles) -->
-      <a id="upi-pay-button" href="#" class="modal-btn" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 800; border: none; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.92rem; box-shadow: 0 4px 15px rgba(244,196,48,0.2); transition: all 0.2s;">
-        ⚡ <span class="en">Tap to Pay: ₹<span id="upi-amount-val-en">1000</span></span><span class="kn">ಪಾವತಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ: ₹<span id="upi-amount-val-kn">1000</span></span>
-      </a>
+      <!-- Option B: Direct UPI App Buttons (for mobiles) -->
+      <div id="upi-apps-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; width: 100%; box-sizing: border-box;">
+        
+        <!-- Google Pay -->
+        <a id="upi-btn-gpay" href="#" class="modal-btn" style="background: #FFFFFF; color: #3c4043; font-weight: 700; border: 1px solid #dadce0; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: all 0.2s;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" style="height: 18px;">
+          <span>Google Pay</span>
+        </a>
 
-      <!-- Supported Apps Badges -->
-      <div style="display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.5); font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">
-        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">Google Pay</span>
-        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">PhonePe</span>
-        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">Paytm</span>
-        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">BHIM</span>
+        <!-- PhonePe -->
+        <a id="upi-btn-phonepe" href="#" class="modal-btn" style="background: #5f259f; color: #FFFFFF; font-weight: 700; border: none; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(95,37,159,0.3); transition: all 0.2s;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/PhonePe_Logo.svg" alt="PhonePe" style="height: 18px; filter: brightness(0) invert(1);">
+          <span>PhonePe</span>
+        </a>
+
+        <!-- Paytm -->
+        <a id="upi-btn-paytm" href="#" class="modal-btn" style="background: #00baf2; color: #FFFFFF; font-weight: 700; border: none; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(0,186,242,0.3); transition: all 0.2s;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Paytm_Logo.svg" alt="Paytm" style="height: 15px; filter: brightness(0) invert(1);">
+          <span>Paytm</span>
+        </a>
+
+        <!-- BHIM / Generic UPI -->
+        <a id="upi-btn-bhim" href="#" class="modal-btn" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 800; border: none; padding: 10px 16px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(244,196,48,0.2); transition: all 0.2s;">
+          ⚡ <span class="en">Other UPI App</span><span class="kn">ಇತರ ಯುಪಿಐ ಆಪ್</span>
+        </a>
+
       </div>
 
       <!-- Option C: Manual Copy VPA (Fallback for mobile deep link security declines) -->
@@ -2282,8 +2306,7 @@
         upiSection.style.display = 'block';
         // Set placeholders while fetching
         document.getElementById('upi-qr-image').style.opacity = '0.3';
-        document.getElementById('upi-amount-val-en').textContent = membershipFee;
-        document.getElementById('upi-amount-val-kn').textContent = membershipFee;
+        document.getElementById('upi-amount-display').textContent = membershipFee;
 
         try {
           const res = await fetch('/api/payment-details', {
@@ -2296,12 +2319,40 @@
             if (data.success) {
               document.getElementById('upi-qr-image').src = data.qr_image_url;
               document.getElementById('upi-qr-image').style.opacity = '1';
-              document.getElementById('upi-pay-button').href = data.upi_url;
-              document.getElementById('upi-amount-val-en').textContent = data.amount;
-              document.getElementById('upi-amount-val-kn').textContent = data.amount;
+              document.getElementById('upi-amount-display').textContent = data.amount;
+              
               if (data.upi_id) {
                 document.getElementById('upi-id-text').textContent = data.upi_id;
               }
+
+              // Dynamically configure platform-specific intents/deep-links
+              const queryParams = data.upi_url.includes('?') ? data.upi_url.substring(data.upi_url.indexOf('?')) : '';
+              
+              const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+              const isAndroid = /android/i.test(userAgent);
+              const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+
+              let gpayUrl = data.upi_url;
+              let phonepeUrl = data.upi_url;
+              let paytmUrl = data.upi_url;
+              let bhimUrl = data.upi_url;
+
+              if (isAndroid) {
+                gpayUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+                phonepeUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=com.phonepe.app;end`;
+                paytmUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=net.one97.paytm;end`;
+                bhimUrl = `intent://pay${queryParams}#Intent;scheme=upi;package=in.org.npci.upiapp;end`;
+              } else if (isIOS) {
+                gpayUrl = `gpay://upi/pay${queryParams}`;
+                phonepeUrl = `phonepe://upi/pay${queryParams}`;
+                paytmUrl = `paytmmp://upi/pay${queryParams}`;
+                bhimUrl = `bhim://upi/pay${queryParams}`;
+              }
+
+              document.getElementById('upi-btn-gpay').href = gpayUrl;
+              document.getElementById('upi-btn-phonepe').href = phonepeUrl;
+              document.getElementById('upi-btn-paytm').href = paytmUrl;
+              document.getElementById('upi-btn-bhim').href = bhimUrl;
             }
           }
         } catch (err) {
