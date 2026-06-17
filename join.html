@@ -455,6 +455,65 @@
     to { opacity: 1; transform: scale(1); }
   }
 
+  /* Success Modal Responsive Styling */
+  .success-modal-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+    max-width: 860px;
+    width: 100%;
+    margin: auto;
+    box-sizing: border-box;
+  }
+  .success-left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 380px;
+    width: 100%;
+  }
+  .success-right-panel {
+    flex: 1.1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 24px;
+    box-sizing: border-box;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    max-width: 420px;
+    width: 100%;
+  }
+  .success-bottom-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  /* Responsive media query for Mobile */
+  @media (max-width: 768px) {
+    .success-modal-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .success-left-panel, .success-right-panel {
+      max-width: 100%;
+    }
+    /* Scale card down slightly to fit on small mobile screens without scrolling */
+    .success-left-panel .membership-card {
+      transform: scale(0.9);
+      margin-top: -20px;
+      margin-bottom: -20px;
+    }
+  }
+
   /* Membership Card mockup style */
   .membership-card {
     background: linear-gradient(180deg, #FFD54F 0%, #FFC107 35%, #D84315 70%, #B71C1C 100%);
@@ -1435,102 +1494,125 @@
 
 <!-- SUCCESS CARD MODAL -->
 <div class="modal-overlay" id="success-modal">
-  <div style="width:100%; max-width:440px; display:flex; flex-direction:column; align-items:center; gap:20px; margin: auto;">
-    <div class="membership-card pending-watermark" id="membership-id-card" style="width:100%;">
-      <div class="card-header">
-        <div class="card-logo">
-          <img src="yep_leader_seal.png" alt="YEP logo">
-          <div class="card-title-wrap">
-            <span class="card-title-main">YoungSTAR PARTY</span>
-            <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
-            <div class="card-leader-info">
-              K N Jagadish Kumar – Advocate – High Court of Delhi<br>
-              <span class="card-leader-info-kn">ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್</span>
-            </div>
-            <span class="card-title-sub">YEP KARNATAKA MEMBERSHIP CARD</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-body">
-        <div class="card-avatar">
-          <img id="card-photo" src="" alt="Member Photo">
-        </div>
-        <div class="card-info">
-          <div class="card-provisional" style="font-size: 0.62rem; color: #ffbc00; font-weight: 800; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: -4px; margin-bottom: 2px; width: 100%;">Provisional digital copy. Physical card to be issued</div>
-          <div class="card-field name" id="card-name-val" style="padding-top: 4px;">Loading Name</div>
-          
-          <div class="card-details-grid">
-            <div class="card-field">
-              <div class="card-label">Member ID</div>
-              <div class="card-val card-id-highlight" id="card-id-val" style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</div>
-            </div>
-
-            <div class="card-field">
-              <div class="card-label">Mobile Phone</div>
-              <div class="card-val" id="card-phone-val">N/A</div>
-            </div>
-
-            <div class="card-field">
-              <div class="card-label">District &amp; Taluk</div>
-              <div class="card-val" id="card-location-val">Bengaluru · South</div>
+  <div class="success-modal-container">
+    
+    <!-- LEFT PANEL: Provisional ID Card & Status -->
+    <div class="success-left-panel">
+      <div class="membership-card pending-watermark" id="membership-id-card" style="width:100%;">
+        <div class="card-header">
+          <div class="card-logo">
+            <img src="yep_leader_seal.png" alt="YEP logo">
+            <div class="card-title-wrap">
+              <span class="card-title-main">YoungSTAR PARTY</span>
+              <span class="card-title-main-kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷ</span>
+              <div class="card-leader-info">
+                K N Jagadish Kumar – Advocate – High Court of Delhi<br>
+                <span class="card-leader-info-kn">ಕೆ.ಎನ್. ಜಗದೀಶ್ ಕುಮಾರ್ – ವಕೀಲರು – ದೆಹಲಿ ಹೈಕೋರ್ಟ್</span>
+              </div>
+              <span class="card-title-sub">YEP KARNATAKA MEMBERSHIP CARD</span>
             </div>
           </div>
         </div>
+
+        <div class="card-body">
+          <div class="card-avatar">
+            <img id="card-photo" src="" alt="Member Photo">
+          </div>
+          <div class="card-info">
+            <div class="card-provisional" style="font-size: 0.62rem; color: #ffbc00; font-weight: 800; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: -4px; margin-bottom: 2px; width: 100%;">Provisional digital copy. Physical card to be issued</div>
+            <div class="card-field name" id="card-name-val" style="padding-top: 4px;">Loading Name</div>
+            
+            <div class="card-details-grid">
+              <div class="card-field">
+                <div class="card-label">Member ID</div>
+                <div class="card-val card-id-highlight" id="card-id-val" style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</div>
+              </div>
+
+              <div class="card-field">
+                <div class="card-label">Mobile Phone</div>
+                <div class="card-val" id="card-phone-val">N/A</div>
+              </div>
+
+              <div class="card-field">
+                <div class="card-label">District &amp; Taluk</div>
+                <div class="card-val" id="card-location-val">Bengaluru · South</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-seal">
+            YoungSTAR Empowerment Party · @2026<br>
+            <span>Youth Power – Our Strength – Our Future</span>
+          </div>
+          <div class="card-validity" id="card-validity-val">Issued: --/--/---- · Validity: 1 Year</div>
+        </div>
       </div>
 
-      <div class="card-footer">
-        <div class="card-seal">
-          YoungSTAR Empowerment Party · @2026<br>
-          <span>Youth Power – Our Strength – Our Future</span>
+      <!-- Success Notice Message -->
+      <div class="success-notice-box" style="margin-top:12px; width:100%; box-sizing: border-box;">
+        <div class="notice-icon">⏱️</div>
+        <div class="notice-content" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+          <span class="notice-text-en" style="font-weight: 700; color: white;">Under Review</span>
+          <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">/</span>
+          <span class="notice-text-kn" style="margin-top: 0; display: inline; font-weight: 700;">ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ</span>
         </div>
-        <div class="card-validity" id="card-validity-val">Issued: --/--/---- · Validity: 1 Year</div>
       </div>
     </div>
 
-    <!-- UPI Payment Section (Secured Server-Side) -->
-    <div id="upi-payment-section" style="width: 100%; display: none; background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; text-align: center; box-sizing: border-box;">
+    <!-- RIGHT PANEL: UPI Payment Section (Secured Server-Side) -->
+    <div id="upi-payment-section" class="success-right-panel" style="display: none;">
       <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.25rem; color: var(--gold); margin: 0 0 12px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Membership Fee Payment / ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿ</h3>
       
-      <p style="font-size: 0.82rem; color: rgba(255,255,255,0.5); margin: 0 0 12px 0; line-height: 1.45;">
-        <span class="en">Please pay the membership fee of <strong>₹<span id="upi-amount-val-en">1000</span></strong> to approve your membership and issue your official Party ID card.</span>
-        <span class="kn">ನಿಮ್ಮ ಸದಸ್ಯತ್ವವನ್ನು ಅನುಮೋದಿಸಲು ಮತ್ತು ಪಕ್ಷದ ಅಧಿಕೃತ ಗುರುತಿನ ಚೀಟಿ ಪಡೆಯಲು ದಯವಿಟ್ಟು <strong>₹<span id="upi-amount-val-kn">1000</span></strong> ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿಸಿ.</span>
-      </p>
-
-      <div style="background: white; padding: 12px; display: inline-block; border-radius: 10px; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2.5px solid var(--gold);">
-        <img id="upi-qr-image" src="" alt="Scan to Pay" style="width: 160px; height: 160px; display: block; margin: 0;">
+      <!-- Clear Option Instruction Box -->
+      <div style="background: rgba(244,196,48,0.06); border: 1.5px dashed rgba(244,196,48,0.3); border-radius: 8px; padding: 10px; margin-bottom: 14px; font-family: 'Rajdhani', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.35;">
+        <span class="en">📲 Scan QR code on computer OR Tap button on mobile</span>
+        <span class="kn" style="display: block; margin-top: 2px;">📲 ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ ಕ್ಯೂಆರ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಅಥವಾ ಮೊಬೈಲ್‌ನಲ್ಲಿ ಬಟನ್ ಕ್ಲಿಕ್ ಮಾಡಿ</span>
       </div>
 
-      <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-bottom: 14px; line-height: 1.45;">
-        <span class="en">Scan the QR code using Google Pay, PhonePe, Paytm or any UPI app.</span>
-        <span class="kn">ಗೂಗಲ್ ಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಯಾವುದೇ ಯುಪಿಐ ಆಪ್ ಬಳಸಿ ಕ್ಯೂಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</span>
+      <!-- Option A: QR Code (for desktops) -->
+      <div style="background: white; padding: 10px; display: inline-block; border-radius: 10px; margin: 4px auto 10px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid var(--gold); width: fit-content;">
+        <img id="upi-qr-image" src="" alt="Scan to Pay" style="width: 140px; height: 140px; display: block; margin: 0;">
       </div>
 
-      <a id="upi-pay-button" href="#" class="modal-btn" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 700; border: none; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(244,196,48,0.2); transition: all 0.2s;">
-        ⚡ <span class="en">Pay via UPI App (Mobile Only)</span><span class="kn">ಯುಪಿಐ ಮೂಲಕ ಪಾವತಿಸಿ (ಮೊಬೈಲ್ ಮಾತ್ರ)</span>
+      <div style="font-size: 0.76rem; color: rgba(255,255,255,0.7); margin-bottom: 12px; line-height: 1.35;">
+        <span class="en">Scan QR using Google Pay, PhonePe, Paytm, or BHIM.</span>
+        <span class="kn">ಜಿಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಭೀಮ್ ಬಳಸಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</span>
+      </div>
+
+      <!-- OR separator -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; color: rgba(255,255,255,0.25); font-size: 0.75rem; margin-bottom: 12px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
+        <span style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></span>
+        <span>OR / ಅಥವಾ</span>
+        <span style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></span>
+      </div>
+
+      <!-- Option B: Direct UPI Deep Link (for mobiles) -->
+      <a id="upi-pay-button" href="#" class="modal-btn" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 800; border: none; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.92rem; box-shadow: 0 4px 15px rgba(244,196,48,0.2); transition: all 0.2s;">
+        ⚡ <span class="en">Tap to Pay: ₹<span id="upi-amount-val-en">1000</span></span><span class="kn">ಪಾವತಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ: ₹<span id="upi-amount-val-kn">1000</span></span>
       </a>
 
-      <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 10px; line-height: 1.35;">
-        <span class="en">* Note: Keep your payment receipt. Your membership ID card status will be updated upon admin verification.</span>
-        <span class="kn">* ಸೂಚನೆ: ಪಾವತಿ ರಸೀದಿಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಿ. ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸಿದ ನಂತರ ನಿಮ್ಮ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ.</span>
+      <!-- Supported Apps Badges -->
+      <div style="display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.5); font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">
+        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">Google Pay</span>
+        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">PhonePe</span>
+        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">Paytm</span>
+        <span style="background: rgba(255,255,255,0.05); padding: 3px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">BHIM</span>
+      </div>
+
+      <div style="font-size: 0.68rem; color: rgba(255,255,255,0.35); margin-top: 14px; line-height: 1.35; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+        <span class="en">* Keep your transaction receipt. Your ID card will be activated once payment is approved by admin.</span>
+        <span class="kn" style="display: block; margin-top: 2px;">* ಪಾವತಿ ರಸೀದಿಯನ್ನು ಇಟ್ಟುಕೊಳ್ಳಿ. ಅಡ್ಮಿನ್ ಅನುಮೋದಿಸಿದ ನಂತರ ನಿಮ್ಮ ಐಡಿ ಕಾರ್ಡ್ ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ.</span>
       </div>
     </div>
 
-    <!-- Success Notice Message -->
-    <div class="success-notice-box" style="margin-top:0;">
-      <div class="notice-icon">⏱️</div>
-      <div class="notice-content" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
-        <span class="notice-text-en" style="font-weight: 700; color: white;">Under Review</span>
-        <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">/</span>
-        <span class="notice-text-kn" style="margin-top: 0; display: inline; font-weight: 700;">ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ</span>
-      </div>
-    </div>
+  </div>
 
-    <div class="modal-actions" style="margin-top:0;">
-      <a href="index.html" class="modal-btn home">
-        🏠 <span class="en">Return to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
-      </a>
-    </div>
+  <div class="success-bottom-actions">
+    <a href="index.html" class="modal-btn home">
+      🏠 <span class="en">Return to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಮರಳಿ</span>
+    </a>
   </div>
 </div>
 
