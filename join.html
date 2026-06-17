@@ -1488,6 +1488,34 @@
       </div>
     </div>
 
+    <!-- UPI Payment Section (Secured Server-Side) -->
+    <div id="upi-payment-section" style="width: 100%; display: none; background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; text-align: center; box-sizing: border-box;">
+      <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 1.25rem; color: var(--gold); margin: 0 0 12px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Membership Fee Payment / ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿ</h3>
+      
+      <p style="font-size: 0.82rem; color: rgba(255,255,255,0.5); margin: 0 0 12px 0; line-height: 1.45;">
+        <span class="en">Please pay the membership fee of <strong>₹<span id="upi-amount-val-en">1000</span></strong> to approve your membership and issue your official Party ID card.</span>
+        <span class="kn">ನಿಮ್ಮ ಸದಸ್ಯತ್ವವನ್ನು ಅನುಮೋದಿಸಲು ಮತ್ತು ಪಕ್ಷದ ಅಧಿಕೃತ ಗುರುತಿನ ಚೀಟಿ ಪಡೆಯಲು ದಯವಿಟ್ಟು <strong>₹<span id="upi-amount-val-kn">1000</span></strong> ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿಸಿ.</span>
+      </p>
+
+      <div style="background: white; padding: 12px; display: inline-block; border-radius: 10px; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2.5px solid var(--gold);">
+        <img id="upi-qr-image" src="" alt="Scan to Pay" style="width: 160px; height: 160px; display: block; margin: 0;">
+      </div>
+
+      <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-bottom: 14px; line-height: 1.45;">
+        <span class="en">Scan the QR code using Google Pay, PhonePe, Paytm or any UPI app.</span>
+        <span class="kn">ಗೂಗಲ್ ಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಯಾವುದೇ ಯುಪಿಐ ಆಪ್ ಬಳಸಿ ಕ್ಯೂಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</span>
+      </div>
+
+      <a id="upi-pay-button" href="#" class="modal-btn" style="background: linear-gradient(135deg, var(--saffron), var(--gold)); color: black; font-weight: 700; border: none; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(244,196,48,0.2); transition: all 0.2s;">
+        ⚡ <span class="en">Pay via UPI App (Mobile Only)</span><span class="kn">ಯುಪಿಐ ಮೂಲಕ ಪಾವತಿಸಿ (ಮೊಬೈಲ್ ಮಾತ್ರ)</span>
+      </a>
+
+      <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 10px; line-height: 1.35;">
+        <span class="en">* Note: Keep your payment receipt. Your membership ID card status will be updated upon admin verification.</span>
+        <span class="kn">* ಸೂಚನೆ: ಪಾವತಿ ರಸೀದಿಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಿ. ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸಿದ ನಂತರ ನಿಮ್ಮ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ.</span>
+      </div>
+    </div>
+
     <!-- Success Notice Message -->
     <div class="success-notice-box" style="margin-top:0;">
       <div class="notice-icon">⏱️</div>
@@ -1535,8 +1563,6 @@
   </div>
 </footer>
 
-<!-- RAZORPAY SDK -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <!-- SUPABASE CLIENT SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2131,7 +2157,7 @@
   }
 
   /* ── FORM SUBMISSION & SUCCESS MODAL ── */
-  function showSuccessUI(name, phone, district, taluk, photoUrl) {
+  async function showSuccessUI(name, phone, district, taluk, photoUrl) {
     document.getElementById('card-photo').src = photoUrl;
     document.getElementById('card-name-val').textContent = name;
     document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
@@ -2144,6 +2170,40 @@
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
     document.getElementById('card-validity-val').textContent = `Issued: ${dd}/${mm}/${yyyy} · Validity: 1 Year`;
+
+    // Configure UPI Payment Section if payment is required
+    const upiSection = document.getElementById('upi-payment-section');
+    if (upiSection) {
+      if (paymentRequired) {
+        upiSection.style.display = 'block';
+        // Set placeholders while fetching
+        document.getElementById('upi-qr-image').style.opacity = '0.3';
+        document.getElementById('upi-amount-val-en').textContent = membershipFee;
+        document.getElementById('upi-amount-val-kn').textContent = membershipFee;
+
+        try {
+          const res = await fetch('/api/payment-details', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: phone })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success) {
+              document.getElementById('upi-qr-image').src = data.qr_image_url;
+              document.getElementById('upi-qr-image').style.opacity = '1';
+              document.getElementById('upi-pay-button').href = data.upi_url;
+              document.getElementById('upi-amount-val-en').textContent = data.amount;
+              document.getElementById('upi-amount-val-kn').textContent = data.amount;
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load secure payment details:", err);
+        }
+      } else {
+        upiSection.style.display = 'none';
+      }
+    }
 
     // Show modal
     const successModal = document.getElementById('success-modal');
@@ -2250,7 +2310,7 @@
         // 1. Check if member already successfully registered (paid or free status)
         const { data: existingMember, error: fetchError } = await supabaseClient
           .from('members')
-          .select('id, payment_status')
+          .select('id, payment_status, name, phone, district, taluk, photo_url')
           .or(`phone.eq.${phone},aadhaar.eq.${secureAadhaarPayload}`)
           .maybeSingle();
 
@@ -2261,141 +2321,42 @@
               ? "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಆಧಾರ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಈಗಾಗಲೇ ಸದಸ್ಯರೊಬ್ಬರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ."
               : "A member with this mobile number or Aadhaar number is already registered.";
             throw new Error(duplicateMsg);
+          } else if (existingMember.payment_status === 'pending') {
+            // Already registered but payment is pending, show UPI screen
+            await showSuccessUI(existingMember.name, existingMember.phone, existingMember.district, existingMember.taluk, existingMember.photo_url);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalContent;
+            return;
           }
         }
 
-        // 2. Initialize Payment Gateway order, passing the full registration details in notes
-        const checkoutRes = await fetch('/api/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: membershipFee,
-            currency: 'INR',
-            phone: phone,
-            name: name,
-            notes: {
-              name: name,
-              phone: phone,
-              aadhaar: secureAadhaarPayload,
-              qualification: qualification || '',
-              state: stateVal || '',
-              district: district || '',
-              taluk: taluk || '',
-              village: village || '',
-              photo_url: photoUrl || ''
-            }
-          })
-        });
-
-        if (!checkoutRes.ok) {
-          throw new Error(`Server failed to initialize checkout (Status ${checkoutRes.status})`);
-        }
-
-        const checkoutData = await checkoutRes.json();
-        if (!checkoutData.success) {
-          throw new Error(checkoutData.error || "Order creation failed.");
-        }
-
-        // Initialize Razorpay options
-        const options = {
-          key: checkoutData.key_id,
-          amount: checkoutData.order.amount,
-          currency: checkoutData.order.currency,
-          name: "YoungSTAR Party",
-          description: "Membership Registration Fee",
-          image: "logo.png",
-          order_id: checkoutData.order.id,
-          handler: async function (paymentResponse) {
-            try {
-              // 3. Insert member record to Supabase as 'paid'
-              const memberData = {
-                name: name,
-                phone: phone,
-                aadhaar: secureAadhaarPayload,
-                qualification: qualification || null,
-                state: stateVal,
-                district: district,
-                taluk: taluk,
-                village: village || null,
-                photo_url: photoUrl,
-                approved: false,
-                payment_status: 'paid',
-                payment_id: paymentResponse.razorpay_payment_id,
-                amount_paid: membershipFee
-              };
-
-              let webhookAlreadyInserted = false;
-              const { error: dbError } = await supabaseClient
-                .from('members')
-                .insert([memberData]);
-
-              if (dbError) {
-                // If it fails with duplicate key, check if webhook already inserted it
-                if (dbError.code === "23505") {
-                  const { data: verifiedMember, error: verifyError } = await supabaseClient
-                    .from('members')
-                    .select('id, payment_status')
-                    .or(`phone.eq.${phone},aadhaar.eq.${secureAadhaarPayload}`)
-                    .maybeSingle();
-
-                  if (!verifyError && verifiedMember && verifiedMember.payment_status === 'paid') {
-                    console.log("Member was already successfully inserted by webhook:", verifiedMember.id);
-                    webhookAlreadyInserted = true;
-                  } else {
-                    throw dbError; // Real error
-                  }
-                } else {
-                  throw dbError;
-                }
-              }
-
-              // 4. Trigger WhatsApp welcome message (only if webhook has not already done so)
-              if (!webhookAlreadyInserted) {
-                try {
-                  await fetch('/api/send-whatsapp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      phone: phone,
-                      name: name
-                    })
-                  });
-                } catch (waErr) {
-                  console.error("Failed to trigger WhatsApp message:", waErr);
-                }
-              }
-
-              showSuccessUI(name, phone, district, taluk, photoUrl);
-
-            } catch (updateErr) {
-              console.error(updateErr);
-              showCustomAlert("Payment succeeded, but failed to update status in database. Please contact support with Payment Reference: " + paymentResponse.razorpay_payment_id);
-            } finally {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalContent;
-            }
-          },
-          prefill: {
-            name: name,
-            contact: phone
-          },
-          theme: {
-            color: "#F4C430"
-          },
-          modal: {
-            ondismiss: function () {
-              showCustomAlert("Checkout closed. Your registration details were not saved. Please try again to complete your registration.");
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalContent;
-            }
-          }
+        // 2. Insert member record to Supabase as 'pending'
+        const memberData = {
+          name: name,
+          phone: phone,
+          aadhaar: secureAadhaarPayload,
+          qualification: qualification || null,
+          state: stateVal,
+          district: district,
+          taluk: taluk,
+          village: village || null,
+          photo_url: photoUrl,
+          approved: false,
+          payment_status: 'pending',
+          payment_id: 'UPI_PENDING',
+          amount_paid: 0.00
         };
 
-        const rzp = new Razorpay(options);
-        rzp.open();
+        const { error: dbError } = await supabaseClient
+          .from('members')
+          .insert([memberData]);
+
+        if (dbError) throw dbError;
+
+        await showSuccessUI(name, phone, district, taluk, photoUrl);
 
       } catch (payErr) {
-        let friendlyMsg = payErr.message || "Payment Error.";
+        let friendlyMsg = payErr.message || "Registration Error.";
         if (payErr.code === "23505") {
           const activeLang = document.body.classList.contains('lang-kn') ? 'kn' : 'en';
           if (payErr.message.includes("phone")) {
@@ -2413,7 +2374,8 @@
           }
         }
         showCustomAlert("Registration Error: " + friendlyMsg);
-        cleanupPhoto();
+        await cleanupPhoto();
+      } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalContent;
       }

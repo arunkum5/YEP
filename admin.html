@@ -3351,6 +3351,10 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
           const seq = generateNextMemberId(statePrefix, tempAssigned[statePrefix]);
           tempAssigned[statePrefix].add(seq);
           member.member_id = `YEP-${statePrefix}-2026-${String(seq).padStart(5, '0')}`;
+          if (member.payment_status === 'pending') {
+            member.payment_status = 'paid';
+            member.amount_paid = lastSavedMembershipFee;
+          }
         }
       });
       alert(`Successfully approved ${selectedIds.length} members.`);
@@ -3374,9 +3378,15 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
           tempAssigned[statePrefix].add(seq);
           const generatedYepId = `YEP-${statePrefix}-2026-${String(seq).padStart(5, '0')}`;
 
+          const updateData = { approved: true, member_id: generatedYepId };
+          if (targetMember.payment_status === 'pending') {
+            updateData.payment_status = 'paid';
+            updateData.amount_paid = lastSavedMembershipFee;
+          }
+
           const p = supabaseClient
             .from('members')
-            .update({ approved: true, member_id: generatedYepId })
+            .update(updateData)
             .eq('id', id);
           updatePromises.push(p);
         }
@@ -3474,6 +3484,10 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
         const statePrefix = member.state === 'Karnataka' ? 'KA' : 'IN';
         const seq = generateNextMemberId(statePrefix);
         member.member_id = `YEP-${statePrefix}-2026-${String(seq).padStart(5, '0')}`;
+        if (member.payment_status === 'pending') {
+          member.payment_status = 'paid';
+          member.amount_paid = lastSavedMembershipFee;
+        }
         updateMetrics();
         applyFilters();
         renderVisualAnalytics();
@@ -3492,16 +3506,27 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       const seq = generateNextMemberId(statePrefix);
       const generatedYepId = `YEP-${statePrefix}-2026-${String(seq).padStart(5, '0')}`;
 
+      const updateData = { approved: true, member_id: generatedYepId };
+      if (targetMember.payment_status === 'pending') {
+        updateData.payment_status = 'paid';
+        updateData.amount_paid = lastSavedMembershipFee;
+      }
+
       const { error } = await supabaseClient
         .from('members')
-        .update({ approved: true, member_id: generatedYepId })
+        .update(updateData)
         .eq('id', id);
 
       if (error) throw error;
       
       // Refresh modal
       if (activeDetailMember && activeDetailMember.id === id) {
-        const updatedMember = {...targetMember, approved: true, member_id: generatedYepId};
+        const updatedMember = {
+          ...targetMember, 
+          approved: true, 
+          member_id: generatedYepId,
+          ...(targetMember.payment_status === 'pending' ? { payment_status: 'paid', amount_paid: lastSavedMembershipFee } : {})
+        };
         openDetailsModal(updatedMember);
       }
 
