@@ -2711,25 +2711,20 @@
     submitBtn.innerHTML = '⏳...';
 
     try {
-      // Use .select() so we can detect if 0 rows were matched
-      const { data: updatedRows, error } = await supabaseClient
+      const { error } = await supabaseClient
         .from('members')
         .update({ payment_id: utrVal })
-        .eq('phone', phoneToUse)
-        .select('id');
+        .eq('phone', phoneToUse);
 
       if (error) throw error;
-
-      if (!updatedRows || updatedRows.length === 0) {
-        // No matching row found — phone mismatch or member not yet inserted
-        throw new Error('No member record found for phone: ' + phoneToUse);
-      }
 
       statusMsg.style.display = 'block';
       statusMsg.style.color = '#4CAF50';
       statusMsg.innerHTML = '✅ <span class="en">Reference ID submitted successfully!</span><span class="kn">ರೆಫರೆನ್ಸ್ ಸಂಖ್ಯೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!</span>';
       document.getElementById('upi-utr-input').disabled = true;
       submitBtn.style.display = 'none';
+      // Clear the stored phone after successful submission
+      try { localStorage.removeItem('yep_pending_phone'); } catch(e) {}
     } catch (err) {
       console.error('[UTR Submit] Failed:', err.message);
       statusMsg.style.display = 'block';
