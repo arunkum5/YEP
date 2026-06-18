@@ -505,19 +505,60 @@
 
   /* Responsive media query for Mobile */
   @media (max-width: 768px) {
+    /* Align modal to top so content isn't clipped */
+    #success-modal {
+      align-items: flex-start;
+      padding: 12px 10px 24px;
+    }
     .success-modal-container {
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
+      width: 100%;
     }
     .success-left-panel, .success-right-panel {
       max-width: 100%;
+      width: 100%;
     }
     /* Hide ID card panel entirely on mobile */
     .success-left-panel {
       display: none;
     }
-    /* Hide the ₹1000 info text block on mobile (now removed) */
+    /* Compact the right payment panel on mobile */
+    .success-right-panel {
+      padding: 14px 12px;
+      border-radius: 14px;
+    }
+    /* Shrink the Payable Amount box */
+    .success-right-panel h3 {
+      font-size: 1rem !important;
+      margin-bottom: 8px !important;
+    }
+    /* Compact inner sections padding */
+    #upi-payment-section > div {
+      padding: 10px !important;
+      margin-bottom: 10px !important;
+    }
+    /* Smaller QR image */
+    #upi-qr-image {
+      width: 110px !important;
+      height: 110px !important;
+    }
+    /* Smaller phone number display */
+    #upi-phone-display {
+      font-size: 1.1rem !important;
+    }
+    /* Compact UTR input fields */
+    #utr-phone-input,
+    #upi-utr-input {
+      padding: 8px 10px !important;
+      font-size: 0.9rem !important;
+    }
+    /* Compact submit button */
+    #btn-submit-utr {
+      padding: 10px !important;
+      font-size: 0.85rem !important;
+    }
   }
 
   /* Membership Card mockup style */
