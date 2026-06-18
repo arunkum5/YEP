@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1C1C2E">
+<title>Membership Policy – YoungSTAR Empowerment Party</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --deep-saffron: #E05500;
+    --white: #FFFFFF;
+    --green: #138808;
+    --dark-green: #0A5C06;
+    --navy: #1A237E;
+    --gold: #F4C430;
+    --dark-gold: #C9A227;
+    --charcoal: #1C1C2E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 40px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 5px 14px; border-radius: 40px;
+    border: none; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+
+  /* lang-aware text: show/hide based on body class */
+  body.lang-en  .kn { display: none !important; }
+  body.lang-kn  .en { display: none !important; }
+  .kn { font-family: 'Tiro Kannada', serif !important; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(28,28,46,0.92);
+    backdrop-filter: blur(12px);
+    padding: 12px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  nav::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.3s ease; text-decoration: none; }
+  .nav-logo:hover { transform: scale(1.02); }
+  .nav-logo img { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold); transition: all 0.3s ease; }
+  .nav-logo:hover img { border-color: var(--saffron); box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); }
+  .nav-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.35rem; font-weight: 700;
+    color: var(--gold); letter-spacing: 1px;
+    line-height: 1.2;
+  }
+  .nav-brand span.youngstar-gradient {
+    background: linear-gradient(135deg, var(--gold) 20%, var(--saffron) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: #ccc; text-decoration: none; letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--saffron); color: white;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 0.9rem; letter-spacing: 1px;
+    padding: 8px 18px; border: none; border-radius: 4px;
+    cursor: pointer; text-decoration: none; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--deep-saffron); }
+
+  /* ── CONTAINER & LAYOUT ── */
+  .main-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    padding: 130px 5% 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .policy-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .policy-header h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--gold), var(--saffron));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .policy-header p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .sidebar {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px;
+    position: sticky;
+    top: 100px;
+    backdrop-filter: blur(10px);
+  }
+  .sidebar h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px;
+  }
+  .sidebar-link {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    margin-bottom: 6px;
+  }
+  .sidebar-link:hover, .sidebar-link.active {
+    background: rgba(255, 107, 0, 0.1);
+    color: var(--saffron);
+    border-left: 3px solid var(--saffron);
+    padding-left: 15px;
+  }
+
+  /* ── CONTENT CARDS ── */
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .policy-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 36px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    scroll-margin-top: 100px;
+  }
+  .policy-card:hover {
+    border-color: rgba(255, 107, 0, 0.3);
+  }
+  .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .policy-card h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 12px;
+  }
+  .policy-card h2 span.sub-title {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 1.3rem;
+    font-weight: normal;
+    color: var(--saffron);
+    display: block;
+    margin-top: 4px;
+  }
+
+  .policy-block {
+    margin-bottom: 24px;
+  }
+  .policy-block:last-child {
+    margin-bottom: 0;
+  }
+  .policy-block h4 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--saffron);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .policy-block p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .policy-block ul {
+    list-style-type: none;
+    margin-left: 0;
+    margin-bottom: 12px;
+  }
+  .policy-block ul li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+  }
+  .policy-block ul li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  .highlight-box {
+    background: rgba(255, 82, 82, 0.06);
+    border-left: 3px solid #ff5252;
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin-top: 14px;
+    font-size: 0.92rem;
+    color: #ff8b8b;
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080810;
+    padding: 40px 5% 30px;
+    border-top: 2px solid var(--saffron);
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .footer-top-links {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+  }
+  .footer-top-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: color 0.25s;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+  .footer-top-links a:hover {
+    color: var(--gold);
+  }
+  .footer-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 20px 0;
+  }
+  .footer-copy {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+  }
+  .footer-copy .party-name {
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .footer-support {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-support a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-support a:hover {
+    color: var(--gold);
+  }
+
+  /* Twinkle Animation */
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+  /* Responsive styling */
+  @media (max-width: 768px) {
+    .layout-grid {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      position: static;
+      margin-bottom: 20px;
+    }
+    .policy-header h1 {
+      font-size: 2.2rem;
+    }
+    .nav-links {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body class="lang-en">
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="YEP Logo">
+    <div class="nav-brand">
+      <span class="youngstar-gradient">YoungSTAR</span> PARTY<br>
+      <small style="font-size: 0.7rem; color: var(--saffron); font-weight: 600; letter-spacing: 0.5px; display: block; margin-top: 2px;" class="en">Voice of Karnataka</small>
+      <small style="font-size: 0.7rem; color: var(--saffron); font-weight: 600; letter-spacing: 0px; display: block; margin-top: 2px;" class="kn">ಕರ್ನಾಟಕದ ಧ್ವನಿ</small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#manifesto"><span class="en">Manifesto</span><span class="kn">ಪ್ರಣಾಳಿಕೆ</span></a></li>
+      <li><a href="index.html#leader"><span class="en">Leadership</span><span class="kn">ನಾಯಕತ್ವ</span></a></li>
+      <li><a href="index.html#contact"><span class="en">Contact</span><span class="kn">ಸಂಪರ್ಕ</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-kn" onclick="setLang('kn')">ಕನ್ನಡ</button>
+    </div>
+    <a href="join.html" class="nav-cta">
+      <span class="en">Join Us</span>
+      <span class="kn">ಸೇರಿ</span>
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN CONTAINER -->
+<main class="main-content">
+  <div class="policy-header">
+    <h1 class="en">Membership Policy</h1>
+    <h1 class="kn">ಸದಸ್ಯತ್ವ ನಿಯಮಾವಳಿ</h1>
+    <p class="en">Rules, Terms, Refunds, and Delivery Policies for YEP Members</p>
+    <p class="kn">YEP ಸದಸ್ಯರಿಗಾಗಿ ನಿಯಮಗಳು, ಮರುಪಾವತಿ ಮತ್ತು ವಿತರಣಾ ನೀತಿಗಳು</p>
+  </div>
+
+  <div class="layout-grid">
+    <!-- Sidebar navigation -->
+    <aside class="sidebar">
+      <h3 class="en">Sections</h3>
+      <h3 class="kn">ವಿಭಾಗಗಳು</h3>
+      <a href="#terms" class="sidebar-link active" onclick="activateLink(this)">
+        <span class="en">Terms & Conditions</span>
+        <span class="kn">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು</span>
+      </a>
+      <a href="#refund" class="sidebar-link" onclick="activateLink(this)">
+        <span class="en">Refund Policy</span>
+        <span class="kn">ಮರುಪಾವತಿ ನೀತಿ</span>
+      </a>
+      <a href="#delivery" class="sidebar-link" onclick="activateLink(this)">
+        <span class="en">Card Delivery Policy</span>
+        <span class="kn">ಕಾರ್ಡ್ ವಿತರಣಾ ನೀತಿ</span>
+      </a>
+    </aside>
+
+    <!-- Content Sections -->
+    <div class="content-section">
+      
+      <!-- TERMS AND CONDITIONS -->
+      <section id="terms" class="policy-card">
+        <span class="card-icon">📋</span>
+        <h2>
+          <span class="en">Terms & Conditions</span>
+          <span class="kn">ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. Membership Eligibility</h4>
+          <h4 class="kn">1. ಸದಸ್ಯತ್ವ ಅರ್ಹತೆ</h4>
+          <p class="en">To be eligible for membership in the YoungSTAR Empowerment Party (YEP), you must satisfy the following conditions:</p>
+          <p class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಸಬಲೀಕರಣ ಪಕ್ಷದಲ್ಲಿ (YEP) ಸದಸ್ಯತ್ವ ಪಡೆಯಲು, ನೀವು ಈ ಕೆಳಗಿನ ಷರತ್ತುಗಳನ್ನು ಪೂರೈಸಬೇಕು:</p>
+          <ul>
+            <li class="en">You must be a citizen of India.</li>
+            <li class="kn">ನೀವು ಭಾರತದ ನಾಗರಿಕರಾಗಿರಬೇಕು.</li>
+            <li class="en">You must be of age 18 years and above.</li>
+            <li class="kn">ನಿಮ್ಮ ವಯಸ್ಸು 18 ವರ್ಷ ಮತ್ತು ಅದಕ್ಕಿಂತ ಮೇಲ್ಪಟ್ಟಿರಬೇಕು.</li>
+            <li class="en">You must not be a member of any other registered political party in India.</li>
+            <li class="kn">ನೀವು ಭಾರತದ ಇತರ ಯಾವುದೇ ನೋಂದಾಯಿತ ರಾಜಕೀಯ ಪಕ್ಷದ ಸದಸ್ಯರಾಗಿರಬಾರದು.</li>
+          </ul>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. Membership Fee</h4>
+          <h4 class="kn">2. ಸದಸ್ಯತ್ವ ಶುಲ್ಕ</h4>
+          <p class="en">The annual membership subscription fee is ₹1000. This subscription is valid for one year from the date of official membership approval and is strictly non-transferable under any circumstances.</p>
+          <p class="kn">ವಾರ್ಷಿಕ ಸದಸ್ಯತ್ವ ಚಂದಾದಾರಿಕೆ ಶುಲ್ಕವು ₹1000 ಆಗಿದೆ. ಈ ಚಂದಾದಾರಿಕೆಯು ಅಧಿಕೃತ ಸದಸ್ಯತ್ವ ಅನುಮೋದನೆಯ ದಿನಾಂಕದಿಂದ ಒಂದು ವರ್ಷದವರೆಗೆ ಮಾನ್ಯವಾಗಿರುತ್ತದೆ ಮತ್ತು ಯಾವುದೇ ಕಾರಣಕ್ಕೂ ವರ್ಗಾಯಿಸಲಾಗುವುದಿಲ್ಲ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">3. Member Obligations</h4>
+          <h4 class="kn">3. ಸದಸ್ಯರ ಬಾಧ್ಯತೆಗಳು</h4>
+          <p class="en">Every registered member is expected to adhere to the core principles and values of the party constitution, maintain ethical conduct, and pay the annual renewal fee upon expiry to keep the membership active.</p>
+          <p class="kn">ಪ್ರತಿಯೊಬ್ಬ ನೋಂದಾಯಿತ ಸದಸ್ಯರು ಪಕ್ಷದ ಸಂವಿಧಾನದ ಪ್ರಮುಖ ತತ್ವಗಳು ಮತ್ತು ಮೌಲ್ಯಗಳಿಗೆ ಬದ್ಧರಾಗಿರಬೇಕು, ನೈತಿಕ ನಡವಳಿಕೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಬೇಕು ಮತ್ತು ಸದಸ್ಯತ್ವವನ್ನು ಸಕ್ರಿಯವಾಗಿರಿಸಲು ವಾರ್ಷಿಕ ನವೀಕರಣ ಶುಲ್ಕವನ್ನು ಪಾವತಿಸಬೇಕು.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">4. Party Rights</h4>
+          <h4 class="kn">4. ಪಕ್ಷದ ಹಕ್ಕುಗಳು</h4>
+          <p class="en">The leadership of the YoungSTAR Empowerment Party reserves the right to terminate or suspend membership at any time due to anti-party activities, breach of code of conduct, or non-compliance with the constitution. The party reserves the right to modify these terms and conditions by providing notice on the website.</p>
+          <p class="kn">ಯಂಗ್‌ಸ್ಟಾರ್ ಸಬಲೀಕರಣ ಪಕ್ಷದ ನಾಯಕತ್ವವು ಪಕ್ಷ ವಿರೋಧಿ ಚಟುವಟಿಕೆಗಳು, ನೀತಿ ಸಂಹಿತೆ ಉಲ್ಲಂಘನೆ ಅಥವಾ ಸಂವಿಧಾನದ ಅಸಹಕಾರಕ್ಕಾಗಿ ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಸದಸ್ಯತ್ವವನ್ನು ರದ್ದುಗೊಳಿಸುವ ಅಥವಾ ಅಮಾನತುಗೊಳಿಸುವ ಹಕ್ಕನ್ನು ಕಾಯ್ದಿರಿಸಿಕೊಂಡಿದೆ. ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಸೂಚನೆ ನೀಡುವ ಮೂಲಕ ಈ ನಿಯಮಗಳನ್ನು ಮಾರ್ಪಡಿಸುವ ಹಕ್ಕನ್ನು ಪಕ್ಷವು ಹೊಂದಿದೆ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">5. Governing Law & Jurisdiction</h4>
+          <h4 class="kn">5. ಅನ್ವಯವಾಗುವ ಕಾನೂನು ಮತ್ತು ನ್ಯಾಯವ್ಯಾಪ್ತಿ</h4>
+          <p class="en">These Terms and Conditions shall be governed by and construed in accordance with the laws of India. Any disputes arising under these terms shall be subject to the exclusive jurisdiction of the courts in Bengaluru, Karnataka.</p>
+          <p class="kn">ಈ ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು ಭಾರತದ ಕಾನೂನುಗಳಿಗೆ ಅನುಗುಣವಾಗಿ ನಿಯಂತ್ರಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ವ್ಯಾಖ್ಯಾನಿಸಲಾಗುತ್ತದೆ. ಈ ನಿಯಮಗಳ ಅಡಿಯಲ್ಲಿ ಉದ್ಭವಿಸುವ ಯಾವುದೇ ವಿವಾದಗಳು ಬೆಂಗಳೂರು, ಕರ್ನಾಟಕದ ನ್ಯಾಯಾಲಯಗಳ ವ್ಯಾಪ್ತಿಗೆ ಒಳಪಟ್ಟಿರುತ್ತವೆ.</p>
+        </div>
+
+        <div class="footer-divider" style="margin-top: 30px;"></div>
+        <p style="font-size: 0.8rem; opacity: 0.6; text-align: right;" class="en">Last Updated: June 18, 2026</p>
+        <p style="font-size: 0.8rem; opacity: 0.6; text-align: right;" class="kn">ಕೊನೆಯದಾಗಿ ನವೀಕರಿಸಿದ್ದು: ಜೂನ್ 18, 2026</p>
+      </section>
+
+      <!-- REFUND AND CANCELLATION POLICY -->
+      <section id="refund" class="policy-card">
+        <span class="card-icon">💸</span>
+        <h2>
+          <span class="en">Refund & Cancellation Policy</span>
+          <span class="kn">ಮರುಪಾವತಿ ಮತ್ತು ರದ್ದುಗೊಳಿಸುವಿಕೆ ನೀತಿ</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. Membership Fee Refund Rule</h4>
+          <h4 class="kn">1. ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಮರುಪಾವತಿ ನಿಯಮ</h4>
+          <p class="en">Once a membership application is submitted and approved by the party administrators, the membership fee of ₹1000 is <strong>strictly non-refundable</strong>.</p>
+          <p class="kn">ಸದಸ್ಯತ್ವ ಅರ್ಜಿಯನ್ನು ಸಲ್ಲಿಸಿದ ನಂತರ ಮತ್ತು ಪಕ್ಷದ ನಿರ್ವಾಹಕರಿಂದ ಅನುಮೋದನೆ ಪಡೆದ ನಂತರ, ₹1000 ಸದಸ್ಯತ್ವ ಶುಲ್ಕವನ್ನು <strong>ಯಾವುದೇ ಕಾರಣಕ್ಕೂ ಮರುಪಾವತಿಸಲಾಗುವುದಿಲ್ಲ</strong>.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. Exceptions</h4>
+          <h4 class="kn">2. ವಿನಾಯಿತಿಗಳು</h4>
+          <p class="en">Refund requests will only be evaluated under the following specific circumstances:</p>
+          <p class="kn">ಮರುಪಾವತಿ ವಿನಂತಿಗಳನ್ನು ಈ ಕೆಳಗಿನ ನಿರ್ದಿಷ್ಟ ಸಂದರ್ಭಗಳಲ್ಲಿ ಮಾತ್ರ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ:</p>
+          <ul>
+            <li class="en"><strong>Duplicate Payment:</strong> If the user paid the fee multiple times due to a transaction failure or refresh.</li>
+            <li class="kn"><strong>ನಕಲಿ ಪಾವತಿ:</strong> ತಾಂತ್ರಿಕ ದೋಷದಿಂದಾಗಿ ಬಳಕೆದಾರರು ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಬಾರಿ ಶುಲ್ಕವನ್ನು ಪಾವತಿಸಿದ್ದರೆ.</li>
+            <li class="en"><strong>Technical Error:</strong> If the payment gateway charged the user but the application failed to register on the server.</li>
+            <li class="kn"><strong>ತಾಂತ್ರಿಕ ದೋಷ:</strong> ಪಾವತಿ ಗೇಟ್‌ವೇ ಬಳಕೆದಾರರಿಂದ ಹಣ ಕಡಿತಗೊಳಿಸಿದ್ದು, ಆದರೆ ಸರ್ವರ್‌ನಲ್ಲಿ ಅರ್ಜಿ ದಾಖಲಾಗದೇ ಇದ್ದರೆ.</li>
+          </ul>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">3. Refund Request Process</h4>
+          <h4 class="kn">3. ಮರುಪಾವತಿ ವಿನಂತಿ ಪ್ರಕ್ರಿಯೆ</h4>
+          <p class="en">If your case qualifies for an exception, follow these steps to claim a refund:</p>
+          <p class="kn">ನಿಮ್ಮ ಪ್ರಕರಣವು ವಿನಾಯಿತಿಗೆ ಅರ್ಹವಾಗಿದ್ದರೆ, ಮರುಪಾವತಿ ಪಡೆಯಲು ಈ ಕ್ರಮಗಳನ್ನು ಅನುಸರಿಸಿ:</p>
+          <ul>
+            <li class="en">Submit a formal refund request via email to <strong>support@trustwork.co.in</strong>.</li>
+            <li class="kn"><strong>support@trustwork.co.in</strong> ಇಮೇಲ್‌ಗೆ ಔಪಚಾರಿಕ ಮರುಪಾವತಿ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿ.</li>
+            <li class="en">The request must be raised <strong>within 48 hours</strong> of the payment timestamp. Requests raised after 48 hours will not be entertained.</li>
+            <li class="kn">ಪಾವತಿಯ <strong>48 ಗಂಟೆಗಳ ಒಳಗೆ</strong> ವಿನಂತಿಯನ್ನು ಸಲ್ಲಿಸಬೇಕು. 48 ಗಂಟೆಗಳ ನಂತರದ ವಿನಂತಿಗಳನ್ನು ಪರಿಗಣಿಸಲಾಗುವುದಿಲ್ಲ.</li>
+            <li class="en">Include payment receipts, transaction reference number (UTR), registered phone number, and a screenshot of the debited amount.</li>
+            <li class="kn">ಪಾವತಿ ರಸೀದಿಗಳು, ವಹಿವಾಟು ಉಲ್ಲೇಖ ಸಂಖ್ಯೆ (UTR), ನೋಂದಾಯಿತ ಫೋನ್ ಸಂಖ್ಯೆ ಮತ್ತು ಕಡಿತಗೊಂಡ ಮೊತ್ತದ ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ಅನ್ನು ಲಗತ್ತಿಸಿ.</li>
+          </ul>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">4. Processing Timeline</h4>
+          <h4 class="kn">4. ಮರುಪಾವತಿ ಅವಧಿ</h4>
+          <p class="en">Upon validation of the issue, refunds will be approved and credited back to the original source account (UPI, credit/debit card, or bank account) within <strong>7 to 10 working days</strong>.</p>
+          <p class="kn">ಸಮಸ್ಯೆಯನ್ನು ದೃಢೀಕರಿಸಿದ ನಂತರ, ಮರುಪಾವತಿಯನ್ನು ಅನುಮೋದಿಸಿ <strong>7 ರಿಂದ 10 ಕೆಲಸದ ದಿನಗಳೊಳಗೆ</strong> ಮೂಲ ಪಾವತಿ ಮೂಲಕ್ಕೆ ಜಮಾ ಮಾಡಲಾಗುತ್ತದೆ.</p>
+        </div>
+
+        <div class="highlight-box">
+          <span class="en">⚠️ Note: Memberships canceled due to disciplinary issues or code of conduct violations are completely ineligible for any refunds.</span>
+          <span class="kn">⚠️ ಗಮನಿಸಿ: ಶಿಸ್ತು ಕ್ರಮ ಅಥವಾ ನೀತಿ ಸಂಹಿತೆ ಉಲ್ಲಂಘನೆಯಿಂದಾಗಿ ರದ್ದಾದ ಸದಸ್ಯತ್ವಗಳು ಯಾವುದೇ ಮರುಪಾವತಿಗೆ ಅರ್ಹವಾಗಿರುವುದಿಲ್ಲ.</span>
+        </div>
+      </section>
+
+      <!-- DIGITAL CARD DELIVERY POLICY -->
+      <section id="delivery" class="policy-card">
+        <span class="card-icon">📲</span>
+        <h2>
+          <span class="en">Digital Card Delivery Policy</span>
+          <span class="kn">ಡಿಜಿಟಲ್ ಕಾರ್ಡ್ ವಿತರಣಾ ನೀತಿ</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. Instant Generation</h4>
+          <h4 class="kn">1. ತ್ವರಿತ ಜನರೇಷನ್</h4>
+          <p class="en">The YoungSTAR Empowerment Party issues digital membership cards to promote eco-friendly and immediate access. Upon successful payment verification and membership registration, your digital membership card (provisional copy) is generated instantaneously on our system.</p>
+          <p class="kn">ಪರಿಸರ ಸ್ನೇಹಿ ಮತ್ತು ತಕ್ಷಣದ ಪ್ರವೇಶಕ್ಕಾಗಿ ಯಂಗ್‌ಸ್ಟಾರ್ ಪಕ್ಷವು ಡಿಜಿಟಲ್ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್‌ಗಳನ್ನು ನೀಡುತ್ತದೆ. ಯಶಸ್ವಿ ಪಾವತಿ ಪರಿಶೀಲನೆ ಮತ್ತು ಸದಸ್ಯತ್ವ ನೋಂದಣಿಯ ನಂತರ, ನಿಮ್ಮ ಡಿಜಿಟಲ್ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ (ತಾತ್ಕಾಲಿಕ ಪ್ರತಿ) ನಮ್ಮ ವ್ಯವಸ್ಥೆಯಲ್ಲಿ ತಕ್ಷಣವೇ ತಯಾರಾಗುತ್ತದೆ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. Methods of Access</h4>
+          <h4 class="kn">2. ಪ್ರವೇಶ ಪಡೆಯುವ ವಿಧಾನಗಳು</h4>
+          <p class="en">Members can access and download their high-resolution digital card using two convenient channels:</p>
+          <p class="kn">ಸದಸ್ಯರು ಈ ಕೆಳಗಿನ ಎರಡು ವಿಧಾನಗಳ ಮೂಲಕ ತಮ್ಮ ಉನ್ನತ ಗುಣಮಟ್ಟದ ಡಿಜಿಟಲ್ ಕಾರ್ಡ್ ಅನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿಕೊಳ್ಳಬಹುದು:</p>
+          <ul>
+            <li class="en"><strong>Direct Website Download:</strong> Use the "Download ID" tool on the homepage, enter your registered 10-digit mobile number, verify, and save the image directly.</li>
+            <li class="kn"><strong>ವೆಬ್‌ಸೈಟ್ ಡೌನ್‌ಲೋಡ್:</strong> ಮುಖಪುಟದಲ್ಲಿರುವ "Download ID" ಲಿಂಕ್ ಬಳಸಿ, ನೋಂದಾಯಿತ 10-ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ.</li>
+            <li class="en"><strong>WhatsApp Notification:</strong> Once confirmed, a confirmation notification with card details is sent to your registered WhatsApp mobile number.</li>
+            <li class="kn"><strong>ವಾಟ್ಸಾಪ್ ಸಂದೇಶ:</strong> ಸದಸ್ಯತ್ವ ಖಚಿತಗೊಂಡ ನಂತರ, ನಿಮ್ಮ ನೋಂದಾಯಿತ ವಾಟ್ಸಾಪ್ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ದೃಢೀಕರಣ ಸಂದೇಶವನ್ನು ಕಳುಹಿಸಲಾಗುತ್ತದೆ.</li>
+          </ul>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">3. Physical Card Delivery</h4>
+          <h4 class="kn">3. ಭೌತಿಕ ಕಾರ್ಡ್ ವಿತರಣೆ</h4>
+          <p class="en">The instantly downloaded card is a provisional digital copy. Physical identity cards, if printed under special party drives, will be dispatched to the member's registered residential address or distributed locally at the taluk/district party offices. No shipping fee is charged for default digital deliveries.</p>
+          <p class="kn">ತಕ್ಷಣ ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾದ ಕಾರ್ಡ್ ತಾತ್ಕಾಲಿಕ ಡಿಜಿಟಲ್ ಪ್ರತಿಯಾಗಿದೆ. ಭೌತಿಕ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್‌ಗಳನ್ನು ಮುದ್ರಿಸಿದರೆ, ಸದಸ್ಯರ ನೋಂದಾಯಿತ ವಸತಿ ವಿಳಾಸಕ್ಕೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ ಅಥವಾ ಆಯಾ ತಾಲ್ಲೂಕು/ಜಿಲ್ಲಾ ಕಚೇರಿಗಳಲ್ಲಿ ವಿತರಿಸಲಾಗುತ್ತದೆ. ಡಿಜಿಟಲ್ ವಿತರಣೆಗೆ ಯಾವುದೇ ಶುಲ್ಕ ಇರುವುದಿಲ್ಲ.</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top-links">
+      <a href="index.html"><span class="en">Home</span><span class="kn">ಮುಖಪುಟ</span></a>
+      <a href="index.html#leader"><span class="en">About Us</span><span class="kn">ನಮ್ಮ ಬಗ್ಗೆ</span></a>
+      <a href="index.html#contact"><span class="en">Contact Us</span><span class="kn">ಸಂಪರ್ಕಿಸಿ</span></a>
+      <a href="membership-policy.html" style="color: var(--gold);"><span class="en">Membership Policy</span><span class="kn">ಸದಸ್ಯತ್ವ ನೀತಿ</span></a>
+      <a href="privacy-policy.html"><span class="en">Privacy Policy</span><span class="kn">ಗೌಪ್ಯತಾ ನೀತಿ</span></a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy">
+      © 2026 <span class="party-name">YoungSTAR Empowerment Party</span> · Karnataka · All Rights Reserved
+    </div>
+    <div class="footer-support">
+      by <a href="https://www.trustwork.co.in" target="_blank">www.trustwork.co.in</a> | 
+      <a href="mailto:support@trustwork.co.in">support@trustwork.co.in</a> | 
+      <a href="tel:+919353010107" style="color:var(--gold);font-weight:600;">+91 93530 10107</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── LANGUAGE SWITCHING ── */
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    const btnEn = document.getElementById('btn-en');
+    const btnKn = document.getElementById('btn-kn');
+    if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+    if (btnKn) btnKn.classList.toggle('active', lang === 'kn');
+    
+    // Save language selection to localStorage so it persists across pages
+    localStorage.setItem('selected_lang', lang);
+  }
+
+  // Auto-load saved language or default to English
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selected_lang') || 'en';
+    setLang(savedLang);
+    createStars();
+  });
+
+  /* ── ACTIVATE SIDEBAR LINKS ON CLICK ── */
+  function activateLink(element) {
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    element.classList.add('active');
+  }
+
+  /* ── SIDEBAR HIGHLIGHT ON SCROLL ── */
+  window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('.policy-card');
+    const scrollPos = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    
+    sections.forEach(sec => {
+      if (scrollPos >= sec.offsetTop - 150 && scrollPos < sec.offsetTop + sec.offsetHeight - 150) {
+        const id = sec.getAttribute('id');
+        const activeLinkEl = document.querySelector(`.sidebar-link[href="#${id}"]`);
+        if (activeLinkEl) {
+          document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+          activeLinkEl.classList.add('active');
+        }
+      }
+    });
+  });
+
+  /* ── FLOATING STARFIELD BACKGROUND ── */
+  function createStars() {
+    const starfield = document.createElement('div');
+    starfield.id = 'starfield';
+    starfield.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden;';
+    document.body.appendChild(starfield);
+
+    const numStars = 60;
+    const colors = ['#ffffff', 'var(--gold)', 'var(--saffron)', 'var(--green)'];
+
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      
+      const size = Math.random() * 2 + 1;
+      const top = Math.random() * 100;
+      const left = Math.random() * 100;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const delay = Math.random() * 5;
+      const duration = Math.random() * 3 + 2;
+      
+      star.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        top: ${top}%;
+        left: ${left}%;
+        background-color: ${color};
+        border-radius: 50%;
+        opacity: 0;
+        box-shadow: 0 0 ${size * 2}px ${color};
+        animation: twinkle ${duration}s infinite ease-in-out;
+        animation-delay: ${delay}s;
+      `;
+      starfield.appendChild(star);
+    }
+  }
+</script>
+</body>
+</html>

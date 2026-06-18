@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1C1C2E">
+<title>Privacy Policy – YoungSTAR Empowerment Party</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Tiro+Kannada&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --deep-saffron: #E05500;
+    --white: #FFFFFF;
+    --green: #138808;
+    --dark-green: #0A5C06;
+    --navy: #1A237E;
+    --gold: #F4C430;
+    --dark-gold: #C9A227;
+    --charcoal: #1C1C2E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 40px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 5px 14px; border-radius: 40px;
+    border: none; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+  .lang-btn:hover:not(.active) { color: var(--white); }
+
+  /* lang-aware text: show/hide based on body class */
+  body.lang-en  .kn { display: none !important; }
+  body.lang-kn  .en { display: none !important; }
+  .kn { font-family: 'Tiro Kannada', serif !important; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(28,28,46,0.92);
+    backdrop-filter: blur(12px);
+    padding: 12px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  nav::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.3s ease; text-decoration: none; }
+  .nav-logo:hover { transform: scale(1.02); }
+  .nav-logo img { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold); transition: all 0.3s ease; }
+  .nav-logo:hover img { border-color: var(--saffron); box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); }
+  .nav-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.35rem; font-weight: 700;
+    color: var(--gold); letter-spacing: 1px;
+    line-height: 1.2;
+  }
+  .nav-brand span.youngstar-gradient {
+    background: linear-gradient(135deg, var(--gold) 20%, var(--saffron) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: #ccc; text-decoration: none; letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--saffron); color: white;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 0.9rem; letter-spacing: 1px;
+    padding: 8px 18px; border: none; border-radius: 4px;
+    cursor: pointer; text-decoration: none; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--deep-saffron); }
+
+  /* ── CONTAINER & LAYOUT ── */
+  .main-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    padding: 130px 5% 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .policy-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .policy-header h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--gold), var(--saffron));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .policy-header p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .sidebar {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px;
+    position: sticky;
+    top: 100px;
+    backdrop-filter: blur(10px);
+  }
+  .sidebar h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px;
+  }
+  .sidebar-link {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    margin-bottom: 6px;
+  }
+  .sidebar-link:hover, .sidebar-link.active {
+    background: rgba(255, 107, 0, 0.1);
+    color: var(--saffron);
+    border-left: 3px solid var(--saffron);
+    padding-left: 15px;
+  }
+
+  /* ── CONTENT CARDS ── */
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .policy-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 36px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    scroll-margin-top: 100px;
+  }
+  .policy-card:hover {
+    border-color: rgba(255, 107, 0, 0.3);
+  }
+  .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .policy-card h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 12px;
+  }
+  .policy-card h2 span.sub-title {
+    font-family: 'Tiro Kannada', serif;
+    font-size: 1.3rem;
+    font-weight: normal;
+    color: var(--saffron);
+    display: block;
+    margin-top: 4px;
+  }
+
+  .policy-block {
+    margin-bottom: 24px;
+  }
+  .policy-block:last-child {
+    margin-bottom: 0;
+  }
+  .policy-block h4 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--saffron);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .policy-block p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .policy-block ul {
+    list-style-type: none;
+    margin-left: 0;
+    margin-bottom: 12px;
+  }
+  .policy-block ul li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+  }
+  .policy-block ul li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  .highlight-box {
+    background: rgba(244, 196, 48, 0.04);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin-top: 14px;
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080810;
+    padding: 40px 5% 30px;
+    border-top: 2px solid var(--saffron);
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .footer-top-links {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+  }
+  .footer-top-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: color 0.25s;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+  .footer-top-links a:hover {
+    color: var(--gold);
+  }
+  .footer-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 20px 0;
+  }
+  .footer-copy {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+  }
+  .footer-copy .party-name {
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .footer-support {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-support a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-support a:hover {
+    color: var(--gold);
+  }
+
+  /* Twinkle Animation */
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+  /* Responsive styling */
+  @media (max-width: 768px) {
+    .layout-grid {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      position: static;
+      margin-bottom: 20px;
+    }
+    .policy-header h1 {
+      font-size: 2.2rem;
+    }
+    .nav-links {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body class="lang-en">
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="YEP Logo">
+    <div class="nav-brand">
+      <span class="youngstar-gradient">YoungSTAR</span> PARTY<br>
+      <small style="font-size: 0.7rem; color: var(--saffron); font-weight: 600; letter-spacing: 0.5px; display: block; margin-top: 2px;" class="en">Voice of Karnataka</small>
+      <small style="font-size: 0.7rem; color: var(--saffron); font-weight: 600; letter-spacing: 0px; display: block; margin-top: 2px;" class="kn">ಕರ್ನಾಟಕದ ಧ್ವನಿ</small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#manifesto"><span class="en">Manifesto</span><span class="kn">ಪ್ರಣಾಳಿಕೆ</span></a></li>
+      <li><a href="index.html#leader"><span class="en">Leadership</span><span class="kn">ನಾಯಕತ್ವ</span></a></li>
+      <li><a href="index.html#contact"><span class="en">Contact</span><span class="kn">ಸಂಪರ್ಕ</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-kn" onclick="setLang('kn')">ಕನ್ನಡ</button>
+    </div>
+    <a href="join.html" class="nav-cta">
+      <span class="en">Join Us</span>
+      <span class="kn">ಸೇರಿ</span>
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN CONTAINER -->
+<main class="main-content">
+  <div class="policy-header">
+    <h1 class="en">Privacy Policy</h1>
+    <h1 class="kn">ಗೌಪ್ಯತಾ ನೀತಿ</h1>
+    <p class="en">Data Collection, Usage, Protection, and Member Rights</p>
+    <p class="kn">ಡೇಟಾ ಸಂಗ್ರಹಣೆ, ಬಳಕೆ, ರಕ್ಷಣೆ ಮತ್ತು ಸದಸ್ಯರ ಹಕ್ಕುಗಳು</p>
+  </div>
+
+  <div class="layout-grid">
+    <!-- Sidebar navigation -->
+    <aside class="sidebar">
+      <h3 class="en">Sections</h3>
+      <h3 class="kn">ವಿಭಾಗಗಳು</h3>
+      <a href="#collection" class="sidebar-link active" onclick="activateLink(this)">
+        <span class="en">Data Collection & Use</span>
+        <span class="kn">ಡೇಟಾ ಸಂಗ್ರಹಣೆ ಮತ್ತು ಬಳಕೆ</span>
+      </a>
+      <a href="#storage" class="sidebar-link" onclick="activateLink(this)">
+        <span class="en">Security & Sharing</span>
+        <span class="kn">ಭದ್ರತೆ ಮತ್ತು ಹಂಚಿಕೆ</span>
+      </a>
+      <a href="#cookies" class="sidebar-link" onclick="activateLink(this)">
+        <span class="en">Cookie Policy</span>
+        <span class="kn">ಕುಕಿ ನೀತಿ</span>
+      </a>
+      <a href="#rights" class="sidebar-link" onclick="activateLink(this)">
+        <span class="en">Member Rights</span>
+        <span class="kn">ಸದಸ್ಯರ ಹಕ್ಕುಗಳು</span>
+      </a>
+    </aside>
+
+    <!-- Content Sections -->
+    <div class="content-section">
+      
+      <!-- DATA COLLECTION & USE -->
+      <section id="collection" class="policy-card">
+        <span class="card-icon">👤</span>
+        <h2>
+          <span class="en">Data Collection & Usage</span>
+          <span class="kn">ಡೇಟಾ ಸಂಗ್ರಹಣೆ ಮತ್ತು ಬಳಕೆ</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. What Data We Collect</h4>
+          <h4 class="kn">1. ನಾವು ಸಂಗ್ರಹಿಸುವ ವಿವರಗಳು</h4>
+          <p class="en">During the membership registration process, we collect the following personal information to process your application and generate your digital membership card:</p>
+          <p class="kn">ಸದಸ್ಯತ್ವ ನೋಂದಣಿ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿ, ನಿಮ್ಮ ಅರ್ಜಿಯನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲು ಮತ್ತು ನಿಮ್ಮ ಡಿಜಿಟಲ್ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ತಯಾರಿಸಲು ನಾವು ಈ ಕೆಳಗಿನ ವೈಯಕ್ತಿಕ ವಿವರಗಳನ್ನು ಸಂಗ್ರಹಿಸುತ್ತೇವೆ:</p>
+          <ul>
+            <li class="en"><strong>Full Name</strong> (for display on the membership card)</li>
+            <li class="kn"><strong>ಪೂರ್ಣ ಹೆಸರು</strong> (ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್‌ನಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲು)</li>
+            <li class="en"><strong>Mobile Number</strong> (for status check, OTP verification, and notifications)</li>
+            <li class="kn"><strong>ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</strong> (ಸ್ಥಿತಿ ಪರಿಶೀಲನೆ, OTP ದೃಢೀಕರಣ ಮತ್ತು ಸಂದೇಶಗಳಿಗಾಗಿ)</li>
+            <li class="en"><strong>Email Address</strong> (for communications and digital receipts)</li>
+            <li class="kn"><strong>ಇಮೇಲ್ ವಿಳಾಸ</strong> (ಸಂಪರ್ಕ ಮತ್ತು ಡಿಜಿಟಲ್ ರಸೀದಿಗಳಿಗಾಗಿ)</li>
+            <li class="en"><strong>Address / Location Details</strong> (including District and Taluk to confirm local constituency representation)</li>
+            <li class="kn"><strong>ವಿಳಾಸ / ಸ್ಥಳ ವಿವರಗಳು</strong> (ಕ್ಷೇತ್ರ ಪ್ರಾತಿನಿಧ್ಯವನ್ನು ಖಚಿತಪಡಿಸಲು ಜಿಲ್ಲೆ ಮತ್ತು ತಾಲ್ಲೂಕು ಸೇರಿ)</li>
+          </ul>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. How Data is Used</h4>
+          <h4 class="kn">2. ಡೇಟಾವನ್ನು ಹೇಗೆ ಬಳಸಲಾಗುತ್ತದೆ</h4>
+          <p class="en">We use your collected personal information strictly for <strong>Membership Processing and Management Only</strong>. This includes verifying eligibility, keeping internal party directories, sending party-related alerts, and generating and issuing cards. We do not use this data for advertisements or unsolicited marketing purposes.</p>
+          <p class="kn">ನಾವು ಸಂಗ್ರಹಿಸಿದ ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ವಿವರಗಳನ್ನು ಕಟ್ಟುನಿಟ್ಟಾಗಿ <strong>ಸದಸ್ಯತ್ವ ಪ್ರಕ್ರಿಯೆ ಮತ್ತು ಆಡಳಿತಕ್ಕಾಗಿ ಮಾತ್ರ</strong> ಬಳಸುತ್ತೇವೆ. ಇದರಲ್ಲಿ ಅರ್ಹತೆ ಪರಿಶೀಲನೆ, ಪಕ್ಷದ ಆಂತರಿಕ ಸದಸ್ಯರ ಡೈರೆಕ್ಟರಿ, ಪಕ್ಷಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಮಾಹಿತಿಗಳನ್ನು ಕಳುಹಿಸುವುದು ಮತ್ತು ಕಾರ್ಡ್ ನೀಡುವುದು ಸೇರಿವೆ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">3. Data Retention</h4>
+          <h4 class="kn">3. ಡೇಟಾ ಉಳಿಸಿಕೊಳ್ಳುವಿಕೆ ಅವಧಿ</h4>
+          <p class="en">We keep your personal data only as long as your membership is active, or for as long as necessary to fulfill the services related to party registration and satisfy constitutional compliance or legal obligations.</p>
+          <p class="kn">ನಿಮ್ಮ ಸದಸ್ಯತ್ವವು ಸಕ್ರಿಯವಾಗಿರುವವರೆಗೆ ಅಥವಾ ಪಕ್ಷದ ನೋಂದಣಿ ಸೇವೆಗಳನ್ನು ಒದಗಿಸಲು ಮತ್ತು ಸಾಂವಿಧಾನಿಕ ಅಥವಾ ಕಾನೂನುಬದ್ಧ ಬಾಧ್ಯತೆಗಳನ್ನು ಪೂರೈಸಲು ಅಗತ್ಯವಿರುವ ಅವಧಿಯವರೆಗೆ ಮಾತ್ರ ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ವಿವರಗಳನ್ನು ನಾವು ಉಳಿಸಿಕೊಳ್ಳುತ್ತೇವೆ.</p>
+        </div>
+
+        <div class="footer-divider" style="margin-top: 30px;"></div>
+        <p style="font-size: 0.8rem; opacity: 0.6; text-align: right;" class="en">Last Updated: June 18, 2026</p>
+        <p style="font-size: 0.8rem; opacity: 0.6; text-align: right;" class="kn">ಕೊನೆಯದಾಗಿ ನವೀಕರಿಸಿದ್ದು: ಜೂನ್ 18, 2026</p>
+      </section>
+
+      <!-- DATA SECURITY & SHARING -->
+      <section id="storage" class="policy-card">
+        <span class="card-icon">🔒</span>
+        <h2>
+          <span class="en">Data Security & Sharing</span>
+          <span class="kn">ಡೇಟಾ ಭದ್ರತೆ ಮತ್ತು ಹಂಚಿಕೆ</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. Secure Data Storage</h4>
+          <h4 class="kn">1. ಸುರಕ್ಷಿತ ಡೇಟಾ ಸಂಗ್ರಹಣೆ</h4>
+          <p class="en">Your data is stored securely on <strong>secure encrypted servers</strong>. We use industry-standard encryption protocols (like SSL/TLS) for data transfer and secure storage mechanisms to prevent unauthorized access, alteration, disclosure, or destruction of your personal details.</p>
+          <p class="kn">ನಿಮ್ಮ ಡೇಟಾವನ್ನು <strong>ಸುರಕ್ಷಿತ ಎನ್‌ಕ್ರಿಪ್ಟ್ ಮಾಡಿದ ಸರ್ವರ್‌ಗಳಲ್ಲಿ</strong> ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ. ಅನಧಿಕೃತ ಪ್ರವೇಶ, ಮಾರ್ಪಾಡು ಅಥವಾ ದುರುಪಯೋಗವನ್ನು ತಡೆಗಟ್ಟಲು ನಾವು ಎಸ್‌ಎಸ್‌ಎಲ್/ಟಿಎಲ್‌ಎಸ್‌ನಂತಹ ಉದ್ಯಮ-ದರ್ಜೆಯ ಎನ್‌ಕ್ರಿಪ್ಶನ್ ಪ್ರೋಟೋಕಾಲ್‌ಗಳನ್ನು ಬಳಸುತ್ತೇವೆ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. Data Sharing Limitations</h4>
+          <h4 class="kn">2. ಡೇಟಾ ಹಂಚಿಕೆ ಮಿತಿಗಳು</h4>
+          <p class="en">We respect your privacy and enforce strict limitations on who can access your personal data:</p>
+          <p class="kn">ನಿಮ್ಮ ಗೌಪ್ಯತೆಯನ್ನು ನಾವು ಗೌರವಿಸುತ್ತೇವೆ ಮತ್ತು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಡೇಟಾ ಪ್ರವೇಶದ ಮೇಲೆ ಕಟ್ಟುನಿಟ್ಟಾದ ನಿಯಮಗಳನ್ನು ಜಾರಿಗೊಳಿಸುತ್ತೇವೆ:</p>
+          <ul>
+            <li class="en"><strong>No Sale of Data:</strong> We never sell, rent, trade, or distribute your personal information to third-party marketing agencies or corporations.</li>
+            <li class="kn"><strong>ಡೇಟಾ ಮಾರಾಟವಿಲ್ಲ:</strong> ನಾವು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ವಿವರಗಳನ್ನು ಯಾವುದೇ ಮೂರನೇ ವ್ಯಕ್ತಿಯ ಜಾಹೀರಾತು ಸಂಸ್ಥೆಗಳಿಗೆ ಮಾರಾಟ ಮಾಡುವುದಿಲ್ಲ ಅಥವಾ ಹಂಚಿಕೊಳ್ಳುವುದಿಲ್ಲ.</li>
+            <li class="en"><strong>Payment Gateway Sharing:</strong> To process your membership fee securely, your essential payment transaction details are shared only with our authorized, RBI-compliant payment gateway provider.</li>
+            <li class="kn"><strong>ಪಾವತಿ ಗೇಟ್‌ವೇ ಹಂಚಿಕೆ:</strong> ಸದಸ್ಯತ್ವ ಶುಲ್ಕವನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಪಾವತಿಸಲು ಅಗತ್ಯವಿರುವ ವಿವರಗಳನ್ನು ಮಾತ್ರ ಆರ್‌ಬಿಐ ನಿಯಮಾವಳಿಗೆ ಬದ್ಧವಾಗಿರುವ ನಮ್ಮ ಅಧಿಕೃತ ಪಾವತಿ ಗೇಟ್‌ವೇ ಜೊತೆಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- COOKIE POLICY -->
+      <section id="cookies" class="policy-card">
+        <span class="card-icon">🍪</span>
+        <h2>
+          <span class="en">Cookie Policy</span>
+          <span class="kn">ಕುಕಿ ನೀತಿ</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. What Cookies We Use</h4>
+          <h4 class="kn">1. ನಾವು ಬಳಸುವ ಕುಕಿಗಳು</h4>
+          <p class="en">We use essential cookies and similar tracking technologies to store system session data, maintain your language preference (English/Kannada), and ensure smooth functionality of the membership application and verification system.</p>
+          <p class="kn">ಸಿಸ್ಟಮ್ ಸೆಶನ್ ಡೇಟಾವನ್ನು ಉಳಿಸಲು, ನಿಮ್ಮ ಭಾಷೆಯ ಆದ್ಯತೆಯನ್ನು (ಇಂಗ್ಲಿಷ್/ಕನ್ನಡ) ಕಾಪಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಸದಸ್ಯತ್ವ ಅಪ್ಲಿಕೇಶನ್‌ನ ಸುಗಮ ಕಾರ್ಯನಿರ್ವಹಣೆಯನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಲು ನಾವು ಅಗತ್ಯವಾದ ಕುಕಿಗಳನ್ನು ಬಳಸುತ್ತೇವೆ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. Managing and Disabling Cookies</h4>
+          <h4 class="kn">2. ಕುಕಿಗಳನ್ನು ನಿರ್ವಹಿಸುವುದು ಮತ್ತು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸುವುದು</h4>
+          <p class="en">You can choose to disable cookies through your individual browser settings. Please note that disabling essential cookies may impact certain dynamic features of this website, such as language persistence or member status checks.</p>
+          <p class="kn">ನಿಮ್ಮ ಬ್ರೌಸರ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳ ಮೂಲಕ ನೀವು ಕುಕಿಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲು ಆಯ್ಕೆ ಮಾಡಬಹುದು. ಆದರೆ ಅಗತ್ಯ ಕುಕಿಗಳನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸುವುದರಿಂದ ಭಾಷೆಯ ಆಯ್ಕೆ ಅಥವಾ ಸದಸ್ಯತ್ವ ಸ್ಥಿತಿ ಪರಿಶೀಲನೆಯಂತಹ ವೆಬ್‌ಸೈಟ್‌ನ ಕೆಲವು ಸಕ್ರಿಯ ಸೌಲಭ್ಯಗಳಿಗೆ ಅಡಚಣೆಯಾಗಬಹುದು.</p>
+        </div>
+      </section>
+
+      <!-- MEMBER RIGHTS -->
+      <section id="rights" class="policy-card">
+        <span class="card-icon">⚖️</span>
+        <h2>
+          <span class="en">Member Rights</span>
+          <span class="kn">ಸದಸ್ಯರ ಹಕ್ಕುಗಳು</span>
+        </h2>
+
+        <div class="policy-block">
+          <h4 class="en">1. Updating Your Personal Details</h4>
+          <h4 class="kn">1. ವೈಯಕ್ತಿಕ ವಿವರಗಳನ್ನು ನವೀಕರಿಸುವುದು</h4>
+          <p class="en">If your registered address, email, or profile name has changed, or if there was a typo during registration, you can request an update. To update your profile, contact our support desk at <strong>support@trustwork.co.in</strong> with your registered mobile number and valid proof of identification.</p>
+          <p class="kn">ನಿಮ್ಮ ನೋಂದಾಯಿತ ವಿಳಾಸ, ಇಮೇಲ್ ಅಥವಾ ಹೆಸರು ಬದಲಾಗಿದ್ದರೆ ಅಥವಾ ನೋಂದಣಿ ಸಮಯದಲ್ಲಿ ತಪ್ಪುಗಳಾಗಿದ್ದರೆ, ನೀವು ಅದನ್ನು ನವೀಕರಿಸಲು ವಿನಂತಿಸಬಹುದು. ವಿವರಗಳನ್ನು ನವೀಕರಿಸಲು ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ಐಡಿ ದಾಖಲೆಯೊಂದಿಗೆ <strong>support@trustwork.co.in</strong> ಗೆ ಇಮೇಲ್ ಕಳುಹಿಸಿ.</p>
+        </div>
+
+        <div class="policy-block">
+          <h4 class="en">2. Requesting Data Deletion</h4>
+          <h4 class="kn">2. ಡೇಟಾ ಅಳಿಸುವಿಕೆಗೆ ವಿನಂತಿಸುವುದು</h4>
+          <p class="en">You have the right to request deletion of your personal data from our servers. If you wish to withdraw your membership and purge your records from our database:</p>
+          <p class="kn">ನಮ್ಮ ಸರ್ವರ್‌ಗಳಿಂದ ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ಅಳಿಸಲು ವಿನಂತಿಸುವ ಹಕ್ಕು ನಿಮಗೆ ಇದೆ. ನಿಮ್ಮ ಸದಸ್ಯತ್ವವನ್ನು ಹಿಂಪಡೆಯಲು ಮತ್ತು ನಮ್ಮ ಡೇಟಾಬೇಸ್‌ನಿಂದ ನಿಮ್ಮ ವಿವರಗಳನ್ನು ತೆಗೆದುಹಾಕಲು:</p>
+          <ul>
+            <li class="en">Send an email to <strong>support@trustwork.co.in</strong> from your registered email address.</li>
+            <li class="kn">ನಿಮ್ಮ ನೋಂದಾಯಿತ ಇಮೇಲ್ ವಿಳಾಸದಿಂದ <strong>support@trustwork.co.in</strong> ಗೆ ಇಮೇಲ್ ಕಳುಹಿಸಿ.</li>
+            <li class="en">State your registered mobile number and request a complete data removal.</li>
+            <li class="kn">ಇಮೇಲ್‌ನಲ್ಲಿ ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ ಮತ್ತು ಸಂಪೂರ್ಣ ಡೇಟಾ ತೆಗೆದುಹಾಕಲು ವಿನಂತಿಸಿ.</li>
+            <li class="en">Our administrative team will verify the request and delete your personal information within 15 working days, which will immediately render your membership card void.</li>
+            <li class="kn">ನಮ್ಮ ತಂಡವು ವಿನಂತಿಯನ್ನು ಪರಿಶೀಲಿಸುತ್ತದೆ ಮತ್ತು 15 ಕೆಲಸದ ದಿನಗಳೊಳಗೆ ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಅಳಿಸುತ್ತದೆ. ಇದರ ನಂತರ ನಿಮ್ಮ ಸದಸ್ಯತ್ವ ಕಾರ್ಡ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅಮಾನ್ಯಗೊಳ್ಳುತ್ತದೆ.</li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top-links">
+      <a href="index.html"><span class="en">Home</span><span class="kn">ಮುಖಪುಟ</span></a>
+      <a href="index.html#leader"><span class="en">About Us</span><span class="kn">ನಮ್ಮ ಬಗ್ಗೆ</span></a>
+      <a href="index.html#contact"><span class="en">Contact Us</span><span class="kn">ಸಂಪರ್ಕಿಸಿ</span></a>
+      <a href="membership-policy.html"><span class="en">Membership Policy</span><span class="kn">ಸದಸ್ಯತ್ವ ನೀತಿ</span></a>
+      <a href="privacy-policy.html" style="color: var(--gold);"><span class="en">Privacy Policy</span><span class="kn">ಗೌಪ್ಯತಾ ನೀತಿ</span></a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy">
+      © 2026 <span class="party-name">YoungSTAR Empowerment Party</span> · Karnataka · All Rights Reserved
+    </div>
+    <div class="footer-support">
+      by <a href="https://www.trustwork.co.in" target="_blank">www.trustwork.co.in</a> | 
+      <a href="mailto:support@trustwork.co.in">support@trustwork.co.in</a> | 
+      <a href="tel:+919353010107" style="color:var(--gold);font-weight:600;">+91 93530 10107</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── LANGUAGE SWITCHING ── */
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    const btnEn = document.getElementById('btn-en');
+    const btnKn = document.getElementById('btn-kn');
+    if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+    if (btnKn) btnKn.classList.toggle('active', lang === 'kn');
+    
+    // Save language selection to localStorage so it persists across pages
+    localStorage.setItem('selected_lang', lang);
+  }
+
+  // Auto-load saved language or default to English
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selected_lang') || 'en';
+    setLang(savedLang);
+    createStars();
+  });
+
+  /* ── ACTIVATE SIDEBAR LINKS ON CLICK ── */
+  function activateLink(element) {
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    element.classList.add('active');
+  }
+
+  /* ── SIDEBAR HIGHLIGHT ON SCROLL ── */
+  window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('.policy-card');
+    const scrollPos = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    
+    sections.forEach(sec => {
+      if (scrollPos >= sec.offsetTop - 150 && scrollPos < sec.offsetTop + sec.offsetHeight - 150) {
+        const id = sec.getAttribute('id');
+        const activeLinkEl = document.querySelector(`.sidebar-link[href="#${id}"]`);
+        if (activeLinkEl) {
+          document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+          activeLinkEl.classList.add('active');
+        }
+      }
+    });
+  });
+
+  /* ── FLOATING STARFIELD BACKGROUND ── */
+  function createStars() {
+    const starfield = document.createElement('div');
+    starfield.id = 'starfield';
+    starfield.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden;';
+    document.body.appendChild(starfield);
+
+    const numStars = 60;
+    const colors = ['#ffffff', 'var(--gold)', 'var(--saffron)', 'var(--green)'];
+
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      
+      const size = Math.random() * 2 + 1;
+      const top = Math.random() * 100;
+      const left = Math.random() * 100;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const delay = Math.random() * 5;
+      const duration = Math.random() * 3 + 2;
+      
+      star.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        top: ${top}%;
+        left: ${left}%;
+        background-color: ${color};
+        border-radius: 50%;
+        opacity: 0;
+        box-shadow: 0 0 ${size * 2}px ${color};
+        animation: twinkle ${duration}s infinite ease-in-out;
+        animation-delay: ${delay}s;
+      `;
+      starfield.appendChild(star);
+    }
+  }
+</script>
+</body>
+</html>
