@@ -2680,11 +2680,23 @@
     const utrVal = document.getElementById('upi-utr-input').value.trim();
     const statusMsg = document.getElementById('utr-status-msg');
     const submitBtn = document.getElementById('btn-submit-utr');
-    
+
+    // Use the pre-filled phone input as primary source (reliable on mobile),
+    // fall back to the global variable set during form submission
+    const phoneFromField = (document.getElementById('utr-phone-input') || {}).value || '';
+    const phoneToUse = phoneFromField.trim() || registeredMemberPhone;
+
     if (!/^\d{12}$/.test(utrVal)) {
       statusMsg.style.display = 'block';
       statusMsg.style.color = '#FF5252';
       statusMsg.innerHTML = '<span class="en">Please enter a valid 12-digit UPI UTR / Ref No.</span><span class="kn">ದಯವಿಟ್ಟು 12-ಅಂಕಿಯ ಸರಿಯಾದ ಯುಟಿಆರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.</span>';
+      return;
+    }
+
+    if (!phoneToUse) {
+      statusMsg.style.display = 'block';
+      statusMsg.style.color = '#FF5252';
+      statusMsg.innerHTML = '<span class="en">Phone number not found. Please re-submit the form.</span><span class="kn">ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಸಿಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.</span>';
       return;
     }
 
@@ -2696,7 +2708,7 @@
       const { error } = await supabaseClient
         .from('members')
         .update({ payment_id: utrVal })
-        .eq('phone', registeredMemberPhone);
+        .eq('phone', phoneToUse);
 
       if (error) throw error;
 
