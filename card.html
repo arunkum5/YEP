@@ -570,7 +570,7 @@
       const pendingNotice = document.getElementById('pending-notice-box');
 
       // Fill in details
-      document.getElementById('retrieved-photo').src = member.photo_url || "yep_leader_seal.png";
+      document.getElementById('retrieved-photo').src = member.photo_url ? ("/api/photo?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
       document.getElementById('retrieved-name-val').textContent = member.name;
       document.getElementById('retrieved-phone-val').textContent = member.phone;
       
@@ -670,7 +670,7 @@
       };
 
       sealImg.src = "yep_leader_seal.png";
-      photoImg.src = member.photo_url ? ("/api/proxy?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
+      photoImg.src = member.photo_url ? ("/api/photo?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
 
       function drawAndDownload() {
         try {

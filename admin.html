@@ -2333,6 +2333,15 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
   let selectedIds = [];
   // Active detail member object
   let activeDetailMember = null;
+
+  // Helper to resolve member photo URL, proxying R2 URLs through /api/photo
+  function getPhotoSrc(url) {
+    if (!url) return 'leader_profile.jpg';
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return `/api/photo?url=${encodeURIComponent(url)}`;
+    }
+    return url;
+  }
   // Aadhaar masking toggle map
   let unmaskedAadhaars = {};
 
@@ -3006,7 +3015,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       const rowHtml = `
         <div class="log-item clickable" onclick="openDetailsModalFromLog(${member.id})" title="Click to view full member details">
           <div class="activity-log-left">
-            <img class="activity-avatar-thumb" src="${member.photo_url || 'leader_profile.jpg'}" alt="Avatar">
+            <img class="activity-avatar-thumb" src="${getPhotoSrc(member.photo_url)}" alt="Avatar">
             <div class="activity-details">
               <span class="activity-name-row">${member.name || 'Unnamed'}</span>
               <span class="activity-subtext">${distName} · ${talukName}</span>
@@ -3122,7 +3131,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       tdPhoto.setAttribute('data-label', 'Photo');
       const img = document.createElement('img');
       img.className = 'avatar-thumb';
-      img.src = member.photo_url || 'leader_profile.jpg';
+      img.src = getPhotoSrc(member.photo_url);
       img.alt = 'Portrait';
       img.onclick = () => openLightbox(img.src);
       tdPhoto.appendChild(img);
@@ -3717,7 +3726,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
     activeDetailMember = member;
 
     // Fill left pane
-    document.getElementById('detail-portrait').src = member.photo_url || 'leader_profile.jpg';
+    document.getElementById('detail-portrait').src = getPhotoSrc(member.photo_url);
     document.getElementById('detail-full-name').textContent = member.name || 'Unnamed';
     document.getElementById('detail-edu-qualification').textContent = member.qualification || 'None';
 
@@ -3740,7 +3749,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
     const cardPhone = document.getElementById('detail-card-phone-val');
     const cardLocation = document.getElementById('detail-card-location-val');
 
-    cardAvatar.src = member.photo_url || 'leader_profile.jpg';
+    cardAvatar.src = getPhotoSrc(member.photo_url);
     cardName.textContent = member.name || 'Unnamed';
     cardPhone.textContent = member.phone || 'N/A';
 
@@ -4126,7 +4135,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
     };
 
     sealImg.src = "yep_leader_seal.png";
-    photoImg.src = member.photo_url ? ("/api/proxy?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
+    photoImg.src = member.photo_url ? ("/api/photo?url=" + encodeURIComponent(member.photo_url)) : "yep_leader_seal.png";
 
     function drawAndDownload() {
       try {

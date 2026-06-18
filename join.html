@@ -1704,9 +1704,9 @@
 
         <!-- UTR / Ref Number -->
         <div style="margin-bottom: 12px;">
-          <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
-            <span class="en">UTR / Reference Number (12 digits)</span>
-            <span class="kn">UTR / ರೆಫರೆನ್ಸ್ ಸಂಖ್ಯೆ (12 ಅಂಕಿ)</span>
+          <div style="font-size: 0.75rem; color: rgba(255,255,255,0.9); font-weight: 800; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
+            <span class="en">UTR / UPI Payment Number (12 digits)</span>
+            <span class="kn">UTR / UPI ಪಾವತಿ ಸಂಖ್ಯೆ (12 ಅಂಕಿ)</span>
           </div>
           <input
             type="text"
@@ -2376,7 +2376,16 @@
     registeredMemberPhone = phone;
     // Persist to localStorage so it survives mobile app-switching
     try { localStorage.setItem('yep_pending_phone', phone); } catch(e) {}
-    document.getElementById('card-photo').src = photoUrl;
+
+    // Use local captured photo data if available (instant & reliable)
+    // Otherwise fallback to /api/photo API which fetches directly from R2 bucket
+    let displayPhotoUrl = photoUrl;
+    if (capturedPhotoData) {
+      displayPhotoUrl = capturedPhotoData;
+    } else if (photoUrl) {
+      displayPhotoUrl = `/api/photo?url=${encodeURIComponent(photoUrl)}`;
+    }
+    document.getElementById('card-photo').src = displayPhotoUrl || 'leader_profile.jpg';
     document.getElementById('card-name-val').textContent = name;
     document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
     document.getElementById('card-phone-val').textContent = phone;
