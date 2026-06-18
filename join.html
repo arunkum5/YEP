@@ -513,12 +513,13 @@
     .success-left-panel, .success-right-panel {
       max-width: 100%;
     }
-    /* Keep same 40% reduction on mobile, collapse layout space */
-    .success-left-panel .membership-card {
-      transform: scale(0.6);
-      transform-origin: top center;
-      margin-top: 0;
-      margin-bottom: -244px;
+    /* Hide ID card panel entirely on mobile */
+    .success-left-panel {
+      display: none;
+    }
+    /* Hide the ₹1000 info text block on mobile */
+    .mobile-hide-payment-note {
+      display: none !important;
     }
   }
 
@@ -1558,7 +1559,7 @@
         </div>
       </div>
 
-      <!-- Success Notice Message -->
+      <!-- Success Notice Message (hidden on mobile) -->
       <div class="success-notice-box" style="margin-top:12px; width:100%; box-sizing: border-box;">
         <div class="notice-icon">⏱️</div>
         <div class="notice-content" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
@@ -1585,8 +1586,8 @@
       <!-- Option 1: QR Code Scanner (Desktop Users) -->
       <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px; margin-bottom: 14px; text-align: center;">
         <div style="font-size: 0.82rem; font-weight: 700; color: var(--gold); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-          <span class="en">💻 Method 1: Scan QR Code (If on Computer)</span>
-          <span class="kn">💻 ವಿಧಾನ 1: ಕ್ಯೂಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ (ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ)</span>
+          <span class="en">📷 Scan QR Code</span>
+          <span class="kn">📷 ಕ್ಯೂಆರ್ ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</span>
         </div>
         
         <div style="background: white; padding: 10px; display: inline-block; border-radius: 10px; margin: 4px auto 8px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid var(--gold); width: fit-content;">
@@ -1594,16 +1595,16 @@
         </div>
 
         <div style="font-size: 0.72rem; color: rgba(255,255,255,0.6); line-height: 1.3;">
-          <span class="en">Scan using Google Pay, PhonePe, Paytm, or BHIM.</span>
-          <span class="kn">ಜಿಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಭೀಮ್ ಬಳಸಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</span>
+          <span class="en">Pay using Google Pay, PhonePe, Paytm, or BHIM.</span>
+          <span class="kn">ಜಿಪೇ, ಫೋನ್ ಪೇ, ಪೇಟಿಎಂ ಅಥವಾ ಭೀಮ್ ಬಳಸಿ ಪಾವತಿಸಿ.</span>
         </div>
       </div>
 
       <!-- Option 2: Mobile Users — Pay to Phone Number -->
       <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; text-align: left; margin-bottom: 14px;">
         <div style="font-size: 0.82rem; font-weight: 700; color: var(--gold); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
-          <span class="en">📱 On Mobile — Pay to Phone Number</span>
-          <span class="kn">📱 ಮೊಬೈಲ್‌ನಲ್ಲಿ — ಫೋನ್ ಸಂಖ್ಯೆಗೆ ಪಾವತಿಸಿ</span>
+          <span class="en">📱 Pay to Phone Number</span>
+          <span class="kn">📱 ಫೋನ್ ಸಂಖ್ಯೆಗೆ ಪಾವತಿಸಿ</span>
         </div>
 
         <!-- Phone number display -->
@@ -1623,9 +1624,18 @@
           ✅ <span class="en">Number copied! Now open your UPI app.</span><span class="kn">ಸಂಖ್ಯೆ ಕಾಪಿ ಆಗಿದೆ!</span>
         </div>
 
+        <!-- WhatsApp receipt note -->
+        <div style="background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.25); border-radius: 8px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;">
+          <svg style="width:20px;height:20px;flex-shrink:0;margin-top:1px;" viewBox="0 0 24 24"><path fill="#25D366" d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.347a9.945 9.945 0 0 0 4.88 1.277h.005c5.505 0 9.99-4.478 9.99-9.985 0-2.667-1.037-5.176-2.923-7.062A9.925 9.925 0 0 0 12.012 2zm5.72 14.12c-.25.7-1.44 1.372-2 1.428-.56.057-1.296.287-3.807-.73-3.21-1.302-5.225-4.578-5.385-4.793-.16-.215-1.296-1.724-1.296-3.29 0-1.566.817-2.337 1.108-2.65.29-.312.64-.39.85-.39.22 0 .43.01.62.02.2.01.46-.08.72.54.26.63.9 2.19.98 2.35.08.16.13.35.03.55-.1.2-.15.3-.3.48-.15.17-.32.39-.46.52-.16.16-.33.33-.14.65.19.32.85 1.4 1.83 2.27.98.87 1.81 1.14 2.07 1.27.26.13.41.11.56-.06.15-.17.65-.75.82-.96.17-.21.34-.18.57-.09.24.09 1.51.71 1.77.84.26.13.43.2.49.31.06.11.06.66-.19 1.36z"/></svg>
+          <div style="font-size: 0.74rem; color: rgba(255,255,255,0.8); line-height: 1.5;">
+            <span class="en">After payment, send your <strong style="color:#25D366;">payment receipt</strong> on WhatsApp to confirm your membership.</span>
+            <span class="kn" style="display:block; margin-top:3px; font-family:'Tiro Kannada',serif; font-size:0.7rem;">ಪಾವತಿಯ ನಂತರ ನಿಮ್ಮ <strong style="color:#25D366;">ಪಾವತಿ ರಸೀದಿ</strong> WhatsApp ನಲ್ಲಿ ಕಳುಹಿಸಿ.</span>
+          </div>
+        </div>
+
       </div>
 
-      <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 14px 16px; margin-top: 4px; line-height: 1.6;">
+      <div class="mobile-hide-payment-note" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 14px 16px; margin-top: 4px; line-height: 1.6;">
         <div style="font-size: 0.82rem; color: rgba(255,255,255,0.9); font-weight: 600;">
           <span class="en">Pay ₹1000/- membership fee. After verification, your Member ID card will be issued.</span>
           <span class="kn" style="display: block; margin-top: 4px; font-family: 'Tiro Kannada', serif; font-size: 0.78rem;">₹1000/- ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿಸಿ. ಪರಿಶೀಲನೆ ನಂತರ ಸದಸ್ಯ ಐಡಿ ಕಾರ್ಡ್ ನೀಡಲಾಗುತ್ತದೆ.</span>
