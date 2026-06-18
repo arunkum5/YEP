@@ -14,6 +14,8 @@ export async function onRequestPost(context) {
     // Load UPI details from Cloudflare environment variables or fallbacks
     const upiId = env.UPI_VPA || "9448610107-3@ybl";
     const partyName = env.UPI_PARTY_NAME || "YoungSTAR Empowerment Party";
+    // UPI phone: explicit env var, or derived from VPA by taking digits before first non-digit
+    const upiPhone = env.UPI_PHONE || upiId.replace(/@.*$/, '').replace(/-.*$/, '').replace(/\D/g, '') || "9448610107";
     
     // Resolve membership fee dynamically from Supabase if possible
     let membershipFee = 1000;
@@ -45,6 +47,7 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({
       success: true,
       upi_id: upiId,
+      upi_phone: upiPhone,
       upi_url: upiUrl,
       qr_image_url: qrImageUrl,
       amount: membershipFee

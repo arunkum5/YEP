@@ -2406,7 +2406,9 @@
               document.getElementById('upi-qr-image').src = data.qr_image_url;
               document.getElementById('upi-qr-image').style.opacity = '1';
               document.getElementById('upi-amount-display').textContent = data.amount;
-              
+              if (data.upi_phone) {
+                document.getElementById('upi-phone-display').textContent = data.upi_phone;
+              }
               if (data.upi_id) {
                 document.getElementById('upi-id-text').textContent = data.upi_id;
               }
