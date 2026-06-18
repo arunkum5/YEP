@@ -2687,9 +2687,8 @@
     // Read phone from all 3 sources — input field, global var, localStorage
     const phoneFromField = (document.getElementById('utr-phone-input') || {}).value || '';
     const phoneFromStorage = (function() { try { return localStorage.getItem('yep_pending_phone') || ''; } catch(e) { return ''; } })();
-    // Strip all non-digits to normalize (prevents mobile browser tel formatting like +91, spaces, dashes)
+    // Strip all non-digits to normalize
     const phoneToUse = (phoneFromField.trim() || registeredMemberPhone || phoneFromStorage).replace(/\D/g, '');
-    console.log('[UTR] field:', phoneFromField, '| global:', registeredMemberPhone, '| storage:', phoneFromStorage, '| using:', phoneToUse);
 
     // Accept 8–20 digit reference numbers (covers all UPI apps: GPay, PhonePe, Paytm, BHIM)
     if (!/^\d{8,20}$/.test(utrVal)) {
@@ -2713,22 +2712,22 @@
     submitBtn.innerHTML = '⏳...';
 
     try {
-      const { error } = await supabaseClient
-        .from('members')
-        .update({ payment_id: utrVal })
-        .eq('phone', phoneToUse);
-
-      if (error) throw error;
+      // Server-side API — uses service role key, bypasses RLS on mobile & desktop
+      const res = await fetch('/api/submit-utr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phoneToUse, utr: utrVal })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Submission failed');
 
       statusMsg.style.display = 'block';
       statusMsg.style.color = '#4CAF50';
       statusMsg.innerHTML = '✅ <span class="en">Reference ID submitted successfully!</span><span class="kn">ರೆಫರೆನ್ಸ್ ಸಂಖ್ಯೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!</span>';
       document.getElementById('upi-utr-input').disabled = true;
       submitBtn.style.display = 'none';
-      // Clear the stored phone after successful submission
       try { localStorage.removeItem('yep_pending_phone'); } catch(e) {}
     } catch (err) {
-      console.error('[UTR Submit] Failed:', err.message);
       statusMsg.style.display = 'block';
       statusMsg.style.color = '#FF5252';
       statusMsg.innerHTML = `❌ <span class="en">Failed: ${err.message}</span>`;
