@@ -2366,6 +2366,8 @@
   /* ── FORM SUBMISSION & SUCCESS MODAL ── */
   async function showSuccessUI(name, phone, district, taluk, photoUrl) {
     registeredMemberPhone = phone;
+    // Persist to localStorage so it survives mobile app-switching
+    try { localStorage.setItem('yep_pending_phone', phone); } catch(e) {}
     document.getElementById('card-photo').src = photoUrl;
     document.getElementById('card-name-val').textContent = name;
     document.getElementById('card-id-val').innerHTML = '<span style="color:rgba(255,255,255,0.4);font-size:0.95rem;letter-spacing:1px;">PENDING VERIFICATION</span>';
@@ -2681,10 +2683,11 @@
     const statusMsg = document.getElementById('utr-status-msg');
     const submitBtn = document.getElementById('btn-submit-utr');
 
-    // Use the pre-filled phone input as primary source (reliable on mobile),
-    // fall back to the global variable set during form submission
+    // Read phone from all 3 sources — input field, global var, localStorage
     const phoneFromField = (document.getElementById('utr-phone-input') || {}).value || '';
-    const phoneToUse = phoneFromField.trim() || registeredMemberPhone;
+    const phoneFromStorage = (function() { try { return localStorage.getItem('yep_pending_phone') || ''; } catch(e) { return ''; } })();
+    const phoneToUse = phoneFromField.trim() || registeredMemberPhone || phoneFromStorage;
+    console.log('[UTR] field:', phoneFromField, '| global:', registeredMemberPhone, '| storage:', phoneFromStorage, '| using:', phoneToUse);
 
     // Accept 8–20 digit reference numbers (covers all UPI apps: GPay, PhonePe, Paytm, BHIM)
     if (!/^\d{8,20}$/.test(utrVal)) {
