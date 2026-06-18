@@ -517,10 +517,7 @@
     .success-left-panel {
       display: none;
     }
-    /* Hide the ₹1000 info text block on mobile */
-    .mobile-hide-payment-note {
-      display: none !important;
-    }
+    /* Hide the ₹1000 info text block on mobile (now removed) */
   }
 
   /* Membership Card mockup style */
@@ -1635,18 +1632,61 @@
 
       </div>
 
-      <div class="mobile-hide-payment-note" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 14px 16px; margin-top: 4px; line-height: 1.6;">
-        <div style="font-size: 0.82rem; color: rgba(255,255,255,0.9); font-weight: 600;">
-          <span class="en">Pay ₹1000/- membership fee. After verification, your Member ID card will be issued.</span>
-          <span class="kn" style="display: block; margin-top: 4px; font-family: 'Tiro Kannada', serif; font-size: 0.78rem;">₹1000/- ಸದಸ್ಯತ್ವ ಶುಲ್ಕ ಪಾವತಿಸಿ. ಪರಿಶೀಲನೆ ನಂತರ ಸದಸ್ಯ ಐಡಿ ಕಾರ್ಡ್ ನೀಡಲಾಗುತ್ತದೆ.</span>
+      <!-- UTR / Payment Reference Submission Form -->
+      <div style="background: rgba(255,255,255,0.04); border: 1.5px solid rgba(244,196,48,0.25); border-radius: 12px; padding: 16px; margin-top: 6px;">
+        <div style="font-size: 0.82rem; font-weight: 700; color: var(--gold); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+          <span>✅</span>
+          <span class="en">After Payment — Enter Reference Details</span>
+          <span class="kn">ಪಾವತಿ ನಂತರ — ವಿವರ ನಮೂದಿಸಿ</span>
         </div>
-        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.07); font-size: 0.74rem; color: #FFA000; font-weight: 700; font-family: 'Rajdhani', sans-serif; display: flex; align-items: flex-start; gap: 6px;">
-          <span>📌</span>
-          <span>
-            <span class="en">Keep your payment slip / screenshot for future reference.</span>
-            <span class="kn" style="display: block; font-family: 'Tiro Kannada', serif; font-size: 0.7rem; margin-top: 2px;">ಭವಿಷ್ಯದ ಉಪಯೋಗಕ್ಕಾಗಿ ನಿಮ್ಮ ಪಾವತಿ ರಸೀದಿ / ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ಇಟ್ಟುಕೊಳ್ಳಿ.</span>
-          </span>
+
+        <!-- Phone Number (pre-filled, read-only) -->
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
+            <span class="en">Registered Mobile Number</span>
+            <span class="kn">ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</span>
+          </div>
+          <input
+            type="tel"
+            id="utr-phone-input"
+            readonly
+            style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; font-size: 1rem; font-family: monospace; font-weight: 700; color: rgba(255,255,255,0.6); cursor: not-allowed; letter-spacing: 1px;"
+          >
         </div>
+
+        <!-- UTR / Ref Number -->
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">
+            <span class="en">UTR / Reference Number (12 digits)</span>
+            <span class="kn">UTR / ರೆಫರೆನ್ಸ್ ಸಂಖ್ಯೆ (12 ಅಂಕಿ)</span>
+          </div>
+          <input
+            type="text"
+            id="upi-utr-input"
+            inputmode="numeric"
+            maxlength="12"
+            placeholder="e.g. 123456789012"
+            style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(244,196,48,0.3); border-radius: 8px; padding: 10px 14px; font-size: 1rem; font-family: monospace; font-weight: 700; color: white; outline: none; transition: border-color 0.2s; letter-spacing: 1px;"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+            onfocus="this.style.borderColor='var(--gold)'"
+            onblur="this.style.borderColor='rgba(244,196,48,0.3)'"
+          >
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="button"
+          id="btn-submit-utr"
+          onclick="submitUTRVal()"
+          style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f4c430, #e6a800); border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 800; font-family: 'Rajdhani', sans-serif; color: #1a0a00; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;"
+          onmouseover="this.style.opacity='0.88'"
+          onmouseout="this.style.opacity='1'"
+        >
+          ✊ <span class="en">Submit Payment Reference</span><span class="kn">ಪಾವತಿ ರೆಫರೆನ್ಸ್ ಸಲ್ಲಿಸಿ</span>
+        </button>
+
+        <!-- Status Message -->
+        <div id="utr-status-msg" style="display: none; margin-top: 10px; font-size: 0.78rem; font-weight: 700; font-family: 'Rajdhani', sans-serif; text-align: center; padding: 8px; border-radius: 6px;"></div>
       </div>
     </div>
 
@@ -2300,6 +2340,9 @@
 
     // Configure UPI Payment Section if payment is required
     const upiSection = document.getElementById('upi-payment-section');
+    // Pre-fill the UTR form phone field
+    const utrPhoneInput = document.getElementById('utr-phone-input');
+    if (utrPhoneInput) utrPhoneInput.value = phone;
     if (upiSection) {
       if (paymentRequired) {
         upiSection.style.display = 'block';
