@@ -1688,9 +1688,10 @@
             <span class="kn">ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</span>
           </div>
           <input
-            type="tel"
+            type="text"
             id="utr-phone-input"
             readonly
+            autocomplete="off"
             style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; font-size: 1rem; font-family: monospace; font-weight: 700; color: rgba(255,255,255,0.6); cursor: not-allowed; letter-spacing: 1px;"
           >
         </div>
@@ -2686,7 +2687,8 @@
     // Read phone from all 3 sources — input field, global var, localStorage
     const phoneFromField = (document.getElementById('utr-phone-input') || {}).value || '';
     const phoneFromStorage = (function() { try { return localStorage.getItem('yep_pending_phone') || ''; } catch(e) { return ''; } })();
-    const phoneToUse = phoneFromField.trim() || registeredMemberPhone || phoneFromStorage;
+    // Strip all non-digits to normalize (prevents mobile browser tel formatting like +91, spaces, dashes)
+    const phoneToUse = (phoneFromField.trim() || registeredMemberPhone || phoneFromStorage).replace(/\D/g, '');
     console.log('[UTR] field:', phoneFromField, '| global:', registeredMemberPhone, '| storage:', phoneFromStorage, '| using:', phoneToUse);
 
     // Accept 8–20 digit reference numbers (covers all UPI apps: GPay, PhonePe, Paytm, BHIM)
