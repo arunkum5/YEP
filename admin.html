@@ -2093,6 +2093,19 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
               </button>
               <div id="orphans-status" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;"></div>
             </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.07); padding-top: 16px; margin-top: 4px;">
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+                Download all photos currently stored in the R2 bucket as a single <strong style="color:white;">.zip</strong> archive.
+                The archive folder is named with the current UTC timestamp and original filenames are preserved.
+              </p>
+              <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                <button class="nav-cta" id="btn-backup-photos" onclick="downloadPhotoBackup()" style="background: #4caf50; color: white; font-weight: 700; border: none; height: auto; padding: 12px 24px; cursor: pointer; border-radius: 6px; font-family: 'Rajdhani', sans-serif; transition: background 0.2s;" onmouseover="this.style.background='#43a047'" onmouseout="this.style.background='#4caf50'">
+                  📦 Download Photo Backup (.zip)
+                </button>
+                <div id="backup-status" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;"></div>
+              </div>
+            </div>
           </div>
 
           <!-- Page Statistics Reset Card -->
@@ -3727,6 +3740,67 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       statusEl.style.color = "#FF5252";
     } finally {
       btnPurge.disabled = false;
+    }
+  }
+
+  async function downloadPhotoBackup() {
+    const statusEl = document.getElementById('backup-status');
+    const btn = document.getElementById('btn-backup-photos');
+
+    // Require a live Supabase session
+    if (!supabaseClient) {
+      statusEl.textContent = 'Backup requires a live Supabase session (not available in mock mode).';
+      statusEl.style.color = '#FF5252';
+      return;
+    }
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      statusEl.textContent = 'No active admin session found. Please log in.';
+      statusEl.style.color = '#FF5252';
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.style.color = 'var(--gold)';
+    statusEl.textContent = '⏳ Fetching photos from R2… this may take a moment.';
+
+    try {
+      const res = await fetch('/api/backup-photos', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${session.access_token}` },
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(err.error || `Server error ${res.status}`);
+      }
+
+      // Derive filename from Content-Disposition or generate one
+      let filename = 'photo_backup.zip';
+      const cd = res.headers.get('Content-Disposition');
+      if (cd) {
+        const match = cd.match(/filename="([^"]+)"/);
+        if (match) filename = match[1];
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      statusEl.textContent = `✅ Downloaded ${filename} successfully.`;
+      statusEl.style.color = 'var(--green)';
+    } catch (err) {
+      statusEl.textContent = 'Backup failed: ' + err.message;
+      statusEl.style.color = '#FF5252';
+    } finally {
+      btn.disabled = false;
     }
   }
 
