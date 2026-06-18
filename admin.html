@@ -3837,7 +3837,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       
       const payStatus = m.payment_status ? m.payment_status.toUpperCase() : 'PENDING';
       const amtPaid = m.amount_paid !== null && m.amount_paid !== undefined ? `₹${m.amount_paid}` : (payStatus === 'PAID' ? '₹1000' : '₹0');
-      const fmtTs = ts => ts ? ts.replace('T', ' ').substring(0, 19) : '';
+      const fmtTs = ts => { if (!ts) return ''; const ist = new Date(new Date(ts).getTime() + 330*60000); return ist.toISOString().replace('T',' ').substring(0,19)+' IST'; };
 
       return [
         m.name || '',
@@ -3882,7 +3882,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
     const rows = filteredPayments.map(m => {
       const payStatus = m.payment_status ? m.payment_status.toUpperCase() : 'PENDING';
       const amtPaid = m.amount_paid !== null && m.amount_paid !== undefined ? `₹${m.amount_paid}` : (payStatus === 'PAID' ? '₹1000' : '₹0');
-      const fmtTs = ts => ts ? ts.replace('T', ' ').substring(0, 19) : '';
+      const fmtTs = ts => { if (!ts) return ''; const ist = new Date(new Date(ts).getTime() + 330*60000); return ist.toISOString().replace('T',' ').substring(0,19)+' IST'; };
       return [
         m.name || '',
         m.phone || '',
