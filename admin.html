@@ -2081,6 +2081,20 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
             </div>
           </div>
 
+          <!-- R2 Storage Cleanup Utilities Card -->
+          <div class="settings-card" style="border-color: rgba(244, 196, 48, 0.2);">
+            <div class="settings-title" style="color: var(--gold); border-color: rgba(244, 196, 48, 0.2);">Cloudflare R2 Storage Cleanup</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+              If rows are deleted directly in the Supabase Dashboard, or if users abandon the signup page, orphaned photos can remain in R2. Use this utility to delete any files in your R2 bucket that are not referenced in the database.
+            </p>
+            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+              <button class="nav-cta" id="btn-purge-orphaned-photos" onclick="purgeOrphanedPhotos()" style="background: var(--gold); color: black; font-weight: 700; border: none; height: auto; padding: 12px 24px; cursor: pointer; border-radius: 6px; font-family: 'Rajdhani', sans-serif; transition: background 0.2s;" onmouseover="this.style.background='#ffc107'" onmouseout="this.style.background='var(--gold)'">
+                🧹 Purge Orphaned Photos from R2
+              </button>
+              <div id="orphans-status" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;"></div>
+            </div>
+          </div>
+
           <!-- Page Statistics Reset Card -->
           <div class="settings-card" style="border-color: rgba(244, 196, 48, 0.2);">
             <div class="settings-title" style="color: var(--gold); border-color: rgba(244, 196, 48, 0.2);">Reset Page Statistics</div>
@@ -3665,6 +3679,49 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       statusEl.textContent = `Success! Purged ${testMembers.length} test records and photos.`;
       statusEl.style.color = "var(--green)";
       fetchMembers();
+    } catch (err) {
+      statusEl.textContent = "Purge failed: " + err.message;
+      statusEl.style.color = "#FF5252";
+    } finally {
+      btnPurge.disabled = false;
+    }
+  }
+
+  async function purgeOrphanedPhotos() {
+    const confirmed = await showConfirmModal("Are you sure you want to scan your Cloudflare R2 bucket and permanently delete all orphaned member photos (images not referenced by any record in Supabase)? This action is irreversible.", "Yes, Clean");
+    if (!confirmed) return;
+
+    const statusEl = document.getElementById('orphans-status');
+    const btnPurge = document.getElementById('btn-purge-orphaned-photos');
+    btnPurge.disabled = true;
+    statusEl.textContent = "Scanning and cleaning R2 storage...";
+    statusEl.style.color = "var(--gold)";
+
+    try {
+      let token = "";
+      if (supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) token = session.access_token;
+      }
+
+      if (!token) {
+        throw new Error("No active administrator session found.");
+      }
+
+      const res = await fetch('/api/purge-orphans', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to purge orphaned photos.");
+      }
+
+      statusEl.textContent = `Success! Deleted ${data.deleted_count} orphaned photos from R2 bucket.`;
+      statusEl.style.color = "var(--green)";
     } catch (err) {
       statusEl.textContent = "Purge failed: " + err.message;
       statusEl.style.color = "#FF5252";
