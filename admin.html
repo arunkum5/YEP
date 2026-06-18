@@ -3378,7 +3378,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
           tempAssigned[statePrefix].add(seq);
           const generatedYepId = `YEP-${statePrefix}-2026-${String(seq).padStart(5, '0')}`;
 
-          const updateData = { approved: true, member_id: generatedYepId };
+          const updateData = { approved: true, member_id: generatedYepId, approved_at: new Date().toISOString() };
           if (targetMember.payment_status === 'pending') {
             updateData.payment_status = 'paid';
             updateData.amount_paid = lastSavedMembershipFee;
@@ -3506,7 +3506,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       const seq = generateNextMemberId(statePrefix);
       const generatedYepId = `YEP-${statePrefix}-2026-${String(seq).padStart(5, '0')}`;
 
-      const updateData = { approved: true, member_id: generatedYepId };
+      const updateData = { approved: true, member_id: generatedYepId, approved_at: new Date().toISOString() };
       if (targetMember.payment_status === 'pending') {
         updateData.payment_status = 'paid';
         updateData.amount_paid = lastSavedMembershipFee;
@@ -3825,7 +3825,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       return;
     }
 
-    const headers = ['Name', 'Phone', 'Aadhaar', 'Qualification', 'State', 'District', 'Taluk', 'Village', 'Member ID', 'Status', 'Signup Date', 'Payment Status', 'Transaction ID', 'Amount Paid'];
+    const headers = ['Name', 'Phone', 'Aadhaar', 'Qualification', 'State', 'District', 'Taluk', 'Village', 'Member ID', 'Status', 'Registered At', 'Payment Status', 'Transaction ID', 'Amount Paid', 'Payment Claimed At', 'Approved At'];
     const rows = filteredMembers.map(m => {
       const rawAadhaar = m.aadhaar || '';
       let displayAadhaar = rawAadhaar;
@@ -3837,6 +3837,7 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       
       const payStatus = m.payment_status ? m.payment_status.toUpperCase() : 'PENDING';
       const amtPaid = m.amount_paid !== null && m.amount_paid !== undefined ? `₹${m.amount_paid}` : (payStatus === 'PAID' ? '₹1000' : '₹0');
+      const fmtTs = ts => ts ? ts.replace('T', ' ').substring(0, 19) : '';
 
       return [
         m.name || '',
@@ -3849,10 +3850,12 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
         m.village || '',
         m.member_id || 'Pending',
         m.approved ? 'Approved' : 'Pending',
-        m.created_at ? m.created_at.split('T')[0] : '',
+        fmtTs(m.created_at),
         payStatus,
         m.payment_id || 'N/A',
-        amtPaid
+        amtPaid,
+        fmtTs(m.payment_claimed_at),
+        fmtTs(m.approved_at)
       ];
     });
 
@@ -3875,17 +3878,20 @@ CREATE POLICY "Allow admin to update page_stats" ON public.page_stats FOR UPDATE
       return;
     }
 
-    const headers = ['Applicant Name', 'Phone', 'Payment Status', 'Transaction ID', 'Amount Paid', 'Transaction Date'];
+    const headers = ['Applicant Name', 'Phone', 'Payment Status', 'Transaction ID', 'Amount Paid', 'Registered At', 'Payment Claimed At', 'Approved At'];
     const rows = filteredPayments.map(m => {
       const payStatus = m.payment_status ? m.payment_status.toUpperCase() : 'PENDING';
       const amtPaid = m.amount_paid !== null && m.amount_paid !== undefined ? `₹${m.amount_paid}` : (payStatus === 'PAID' ? '₹1000' : '₹0');
+      const fmtTs = ts => ts ? ts.replace('T', ' ').substring(0, 19) : '';
       return [
         m.name || '',
         m.phone || '',
         payStatus,
         m.payment_id || 'N/A',
         amtPaid,
-        m.created_at ? m.created_at.replace('T', ' ').substring(0, 19) : ''
+        fmtTs(m.created_at),
+        fmtTs(m.payment_claimed_at),
+        fmtTs(m.approved_at)
       ];
     });
 

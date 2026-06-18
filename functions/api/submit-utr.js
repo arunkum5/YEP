@@ -42,7 +42,7 @@ export async function onRequestPost(context) {
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
-        body: JSON.stringify({ payment_id: cleanUtr })
+        body: JSON.stringify({ payment_id: cleanUtr, payment_claimed_at: new Date().toISOString() })
       }
     );
 
