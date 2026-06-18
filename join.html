@@ -520,9 +520,15 @@
       max-width: 100%;
       width: 100%;
     }
-    /* Hide ID card panel entirely on mobile */
+    /* Hide ID card panel on mobile by default (shown via JS after UTR submit) */
     .success-left-panel {
       display: none;
+    }
+    /* When revealed on mobile after UTR submit — tighter card spacing */
+    .success-left-panel.mobile-revealed .membership-card {
+      transform: scale(0.58);
+      transform-origin: top center;
+      margin-bottom: -256px;
     }
     /* Compact the right payment panel on mobile */
     .success-right-panel {
@@ -1731,21 +1737,6 @@
         <div id="utr-status-msg" style="display: none; margin-top: 10px; font-size: 0.78rem; font-weight: 700; font-family: 'Rajdhani', sans-serif; text-align: center; padding: 8px; border-radius: 6px;"></div>
       </div>
 
-      <!-- Mobile-only: Pending ID card shown after UTR submit -->
-      <div id="mobile-utr-success-card" style="display: none; margin-top: 18px;">
-        <!-- Mini ID card -->
-        <div style="background: linear-gradient(180deg, #FFD54F 0%, #FFC107 35%, #D84315 70%, #B71C1C 100%); border: 2px solid var(--gold); border-radius: 16px; padding: 18px 16px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
-          <div style="font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 800; color: #1a0a00; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;">YoungSTAR PARTY · YEP Membership Card</div>
-          <div style="width: 64px; height: 64px; border-radius: 50%; border: 2.5px solid #1a0a00; overflow: hidden; margin: 0 auto 10px auto; background: rgba(0,0,0,0.15);">
-            <img id="mobile-card-photo-mini" src="" alt="Member Photo" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          <div id="mobile-card-name-mini" style="font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 800; color: #1a0a00; margin-bottom: 3px;"></div>
-          <div id="mobile-card-phone-mini" style="font-size: 0.78rem; color: rgba(26,10,0,0.65); margin-bottom: 12px; font-family: monospace; font-weight: 700;"></div>
-          <div style="background: rgba(26,10,0,0.12); border: 1.5px solid rgba(26,10,0,0.4); border-radius: 6px; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 800; color: #1a0a00; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ <span class="en">Pending Verification</span><span class="kn">ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ</span></div>
-        </div>
-        <!-- Go Home button -->
-        <a href="index.html" style="display: block; margin-top: 14px; padding: 14px; background: linear-gradient(135deg, #f4c430, #e6a800); border-radius: 10px; text-align: center; font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 800; color: #1a0a00; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(244,196,48,0.35);">🏠 <span class="en">Go to Home</span><span class="kn">ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ</span></a>
-      </div>
     </div>
 
   </div>
@@ -2746,21 +2737,15 @@
       submitBtn.style.display = 'none';
       try { localStorage.removeItem('yep_pending_phone'); } catch(e) {}
 
-      // On mobile: reveal pending ID card preview
+      // On mobile: hide payment panel, reveal the full ID card (same as desktop left panel)
       if (window.innerWidth <= 768) {
-        const mobileCard = document.getElementById('mobile-utr-success-card');
-        if (mobileCard) {
-          const mainPhoto = document.getElementById('card-photo');
-          const mainName  = document.getElementById('card-name-val');
-          const mainPhone = document.getElementById('card-phone-val');
-          const miniPhoto = document.getElementById('mobile-card-photo-mini');
-          const miniName  = document.getElementById('mobile-card-name-mini');
-          const miniPhone = document.getElementById('mobile-card-phone-mini');
-          if (miniPhoto && mainPhoto) miniPhoto.src = mainPhoto.src;
-          if (miniName  && mainName)  miniName.textContent  = mainName.textContent;
-          if (miniPhone && mainPhone) miniPhone.textContent = mainPhone.textContent;
-          mobileCard.style.display = 'block';
-          setTimeout(() => mobileCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+        const leftPanel  = document.querySelector('.success-left-panel');
+        const rightPanel = document.getElementById('upi-payment-section');
+        if (rightPanel) rightPanel.style.display = 'none';
+        if (leftPanel) {
+          leftPanel.classList.add('mobile-revealed');
+          leftPanel.style.display = 'flex';
+          setTimeout(() => leftPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
         }
       }
     } catch (err) {
